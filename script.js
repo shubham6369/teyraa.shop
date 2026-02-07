@@ -1,3 +1,33 @@
+// ===== SCROLL REVEAL ANIMATION =====
+const observeElements = () => {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                // Once revealed, stop observing
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Elements to observe
+    const revealElements = document.querySelectorAll('.reveal, .product-card, .category-card, .review-card, .section-header');
+    revealElements.forEach(el => {
+        el.classList.add('reveal-initial');
+        observer.observe(el);
+    });
+};
+
+// Initialize after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    observeElements();
+});
+
 // ===== MOBILE MENU TOGGLE =====
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 const mobileMenuClose = document.getElementById('mobileMenuClose');
