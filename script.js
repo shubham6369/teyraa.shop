@@ -503,4 +503,4 @@ window.addEventListener('scroll', () => {
     }
 });
 
-console.log('🛍️ patel.store E-commerce Website Loaded Successfully!');
+console.log('🛍️ teyraa.shop E-commerce Website Loaded Successfully!');

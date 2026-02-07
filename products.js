@@ -2,9 +2,9 @@
 
 // Function to render products by category
 function renderProducts(products) {
-    const categories = ['Patel Special', 'Jeans', 'Jacket', 'COMBOES'];
+    const categories = ['Teyraa Special', 'Jeans', 'Jacket', 'COMBOES'];
     const containerIds = {
-        'Patel Special': 'patelSpecialGrid',
+        'Teyraa Special': 'teyraaSpecialGrid',
         'Jeans': 'jeansGrid',
         'Jacket': 'jacketGrid',
         'COMBOES': 'comboesGrid'
@@ -66,10 +66,10 @@ function setupProductsListener() {
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('patel.store - Initializing Firebase Products...');
+    console.log('teyraa.shop - Initializing Firebase Products...');
 
     // Check if we need to migrate from localStorage (only once)
-    const localProducts = JSON.parse(localStorage.getItem('patelProducts') || '[]');
+    const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || localStorage.getItem('patelProducts') || '[]');
     if (localProducts.length > 0) {
         const snapshot = await productsCollection.get();
         if (snapshot.empty) {
@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { id, ...rest } = product;
                 await productsCollection.add(rest);
             }
-            // Clear localStorage migration flag
+            // Clear localStorage migration flags
+            localStorage.removeItem('teyraaProducts');
             localStorage.removeItem('patelProducts');
         }
     }

@@ -2,12 +2,12 @@
 
 // Initialize default products if localStorage is empty
 function initializeDefaultProducts() {
-    if (!localStorage.getItem('patelProducts')) {
+    if (!localStorage.getItem('teyraaProducts')) {
         const defaultProducts = [
             {
                 id: 1,
                 name: 'NYC Tie-Dye Street Shirt Set',
-                category: 'Patel Special',
+                category: 'Teyraa Special',
                 salePrice: 1299,
                 originalPrice: 2499,
                 image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop'
@@ -15,7 +15,7 @@ function initializeDefaultProducts() {
             {
                 id: 2,
                 name: 'Classic Stripe Co-Ord Set',
-                category: 'Patel Special',
+                category: 'Teyraa Special',
                 salePrice: 1499,
                 originalPrice: 2799,
                 image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=500&fit=crop'
@@ -23,7 +23,7 @@ function initializeDefaultProducts() {
             {
                 id: 3,
                 name: 'Candy Shirts / Straight Fit jeans',
-                category: 'Patel Special',
+                category: 'Teyraa Special',
                 salePrice: 1799,
                 originalPrice: 3299,
                 image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&h=500&fit=crop'
@@ -70,7 +70,7 @@ function initializeDefaultProducts() {
             }
         ];
 
-        localStorage.setItem('patelProducts', JSON.stringify(defaultProducts));
+        localStorage.setItem('teyraaProducts', JSON.stringify(defaultProducts));
     }
 }
 
@@ -437,7 +437,7 @@ async function updateCategoryCounts() {
         counts[product.category] = (counts[product.category] || 0) + 1;
     });
 
-    document.getElementById('count-patel').textContent = `${counts['Patel Special'] || 0} products`;
+    document.getElementById('count-teyraa').textContent = `${counts['Teyraa Special'] || 0} products`;
     document.getElementById('count-jeans').textContent = `${counts['Jeans'] || 0} products`;
     document.getElementById('count-jacket').textContent = `${counts['Jacket'] || 0} products`;
     document.getElementById('count-comboes').textContent = `${counts['COMBOES'] || 0} products`;
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Migration check: If Firestore is empty but localStorage has products, sync them
     const firestoreProducts = await getProducts();
     if (firestoreProducts.length === 0) {
-        const localProducts = JSON.parse(localStorage.getItem('patelProducts') || '[]');
+        const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || localStorage.getItem('patelProducts') || '[]');
         if (localProducts.length > 0) {
             console.log("Syncing localStorage products to Firestore...");
             for (const product of localProducts) {

@@ -1,4 +1,4 @@
-// Razorpay Configuration for patel.store
+// Razorpay Configuration for teyraa.shop
 // Replace with your actual Razorpay credentials after setup
 
 const razorpayConfig = {
@@ -18,7 +18,7 @@ const razorpayConfig = {
     mode: 'test',
 
     // Store details
-    businessName: "patel.store",
+    businessName: "teyraa.shop",
     logo: "https://your-logo-url.com/logo.png", // Update with your logo
     theme: {
         color: "#667eea" // Your brand color

@@ -1,4 +1,4 @@
-// Firebase Configuration for patel.store
+// Firebase Configuration for teyraa.shop
 // ✅ Connected to teyraa-bc405 Firebase project
 
 const firebaseConfig = {
@@ -25,4 +25,4 @@ const productsCollection = db.collection('products');
 const ordersCollection = db.collection('orders');
 const settingsCollection = db.collection('settings');
 
-console.log('🔥 Firebase initialized successfully for patel.store!');
+console.log('🔥 Firebase initialized successfully for teyraa.shop!');
