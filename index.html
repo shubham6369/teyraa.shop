@@ -20,13 +20,7 @@
             rel="stylesheet">
     </noscript>
 
-    <!-- Firebase SDK (Deferred for performance) -->
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-
-    <!-- Razorpay SDK (Deferred) -->
-    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase & Razorpay Loaded at bottom for better reliability -->
 
     <meta name="theme-color" content="#0f172a">
 </head>
@@ -828,10 +822,17 @@
         </div>
     </div>
 
-    <script defer src="firebase-config.js"></script>
-    <script defer src="razorpay-config.js"></script>
-    <script defer src="products.js"></script>
-    <script defer src="script.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- App Configuration -->
+    <script src="firebase-config.js"></script>
+    <script src="razorpay-config.js"></script>
+    <script src="products.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

@@ -21,8 +21,8 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // Collections references
-const productsCollection = db.collection('products');
-const ordersCollection = db.collection('orders');
-const settingsCollection = db.collection('settings');
+var productsCollection = db.collection('products');
+var ordersCollection = db.collection('orders');
+var settingsCollection = db.collection('settings');
 
 console.log('🔥 Firebase initialized successfully for teyraa.shop!');
