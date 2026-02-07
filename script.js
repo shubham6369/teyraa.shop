@@ -647,10 +647,12 @@ auth.onAuthStateChanged((user) => {
         document.getElementById('userAvatar').textContent = (user.displayName || user.email || user.phoneNumber || 'U').charAt(0).toUpperCase();
 
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
+        if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'block';
     } else {
         // Logged out
         if (profileSection) profileSection.style.display = 'none';
         if (userBtn) userBtn.style.color = '';
+        if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'none';
     }
 });
 
@@ -731,8 +733,18 @@ document.getElementById('resendOTP').addEventListener('click', () => {
 });
 
 // Handle Logout
-document.getElementById('customerLogout').addEventListener('click', () => {
-    auth.signOut();
-});
+const handleLogout = () => {
+    if (confirm('Are you sure you want to logout?')) {
+        auth.signOut();
+    }
+};
+
+if (document.getElementById('customerLogout')) {
+    document.getElementById('customerLogout').addEventListener('click', handleLogout);
+}
+
+if (document.getElementById('logoutHeader')) {
+    document.getElementById('logoutHeader').addEventListener('click', handleLogout);
+}
 
 console.log('🛍️ teyraa.shop Loaded Successfully!');
