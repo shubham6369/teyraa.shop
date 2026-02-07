@@ -568,11 +568,17 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
     }
 });
 
-// Toggle Modal
+// Toggle Login or Profile
 if (userBtn) {
     userBtn.addEventListener('click', () => {
-        userModal.classList.add('active');
-        overlay.classList.add('active');
+        if (!auth.currentUser) {
+            // Not logged in -> Go to Landing Page
+            window.location.href = 'login.html';
+        } else {
+            // Logged in -> Show Profile Modal
+            userModal.classList.add('active');
+            overlay.classList.add('active');
+        }
     });
 }
 
@@ -629,12 +635,12 @@ toLogin.addEventListener('click', (e) => {
 auth.onAuthStateChanged((user) => {
     if (user) {
         // Customer is logged in
-        loginSection.style.display = 'none';
-        signupSection.style.display = 'none';
-        phoneSection.style.display = 'none';
-        authTabs.style.display = 'none';
-        profileSection.style.display = 'block';
-        userModalTitle.textContent = 'My Account';
+        if (loginSection) loginSection.style.display = 'none';
+        if (signupSection) signupSection.style.display = 'none';
+        if (phoneSection) phoneSection.style.display = 'none';
+        if (authTabs) authTabs.style.display = 'none';
+        if (profileSection) profileSection.style.display = 'block';
+        if (userModalTitle) userModalTitle.textContent = 'My Account';
 
         document.getElementById('displayUserName').textContent = user.displayName || 'Customer';
         document.getElementById('displayUserEmail').textContent = user.email || user.phoneNumber;
@@ -643,14 +649,8 @@ auth.onAuthStateChanged((user) => {
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
     } else {
         // Logged out
-        loginSection.style.display = 'block';
-        signupSection.style.display = 'none';
-        phoneSection.style.display = 'none';
-        authTabs.style.display = 'flex';
-        profileSection.style.display = 'none';
-        userModalTitle.textContent = 'Customer Login';
+        if (profileSection) profileSection.style.display = 'none';
         if (userBtn) userBtn.style.color = '';
-        tabEmail.click();
     }
 });
 
