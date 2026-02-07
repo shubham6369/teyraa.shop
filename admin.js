@@ -82,15 +82,25 @@ const loginForm = document.getElementById('loginForm');
 const loginScreen = document.getElementById('loginScreen');
 const adminDashboard = document.getElementById('adminDashboard');
 
+// Authorized Admin Emails (Add your email here)
+const ADMIN_EMAILS = ['teyraa.shop@gmail.com', 'admin@teyraa.shop']; // ⚠️ ADD YOUR ADMIN EMAIL HERE
+
 // Check if user is already logged in
 auth.onAuthStateChanged((user) => {
     if (user) {
-        // User is signed in
-        console.log('User logged in:', user.email);
-        loginScreen.style.display = 'none';
-        adminDashboard.style.display = 'flex';
-        loadProducts();
-        updateStats();
+        // Check if the logged-in user's email is an authorized admin
+        if (ADMIN_EMAILS.includes(user.email)) {
+            console.log('Admin authorized:', user.email);
+            loginScreen.style.display = 'none';
+            adminDashboard.style.display = 'flex';
+            loadProducts();
+            updateStats();
+        } else {
+            // Logged in but not an admin
+            console.warn('Unauthorized access attempt by:', user.email);
+            auth.signOut(); // Force logout
+            showLoginError('Unauthorized! Only admin accounts can access this panel.');
+        }
     } else {
         // User is signed out
         loginScreen.style.display = 'flex';
@@ -98,24 +108,30 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
+function showLoginError(message) {
+    let errorMessage = document.getElementById('errorMessage');
+    if (!errorMessage) {
+        errorMessage = document.createElement('div');
+        errorMessage.id = 'errorMessage';
+        errorMessage.style.cssText = 'color: #f44336; background: #ffebee; padding: 0.75rem; border-radius: 4px; margin-top: 1rem; text-align: center; font-weight: 600;';
+        loginForm.appendChild(errorMessage);
+        setTimeout(() => errorMessage.remove(), 7000);
+    }
+    errorMessage.textContent = message;
+}
+
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('errorMessage');
 
     try {
         // Sign in with Firebase Authentication
         await auth.signInWithEmailAndPassword(email, password);
-
-        // Success - the onAuthStateChanged listener will handle the UI update
-        console.log('Login successful!');
-
+        // The onAuthStateChanged listener will handle the authorization check
     } catch (error) {
-        // Handle errors
         console.error('Login error:', error);
-
         let message = 'Login failed. Please try again.';
 
         if (error.code === 'auth/user-not-found') {
@@ -128,18 +144,7 @@ loginForm.addEventListener('submit', async (e) => {
             message = 'Too many failed attempts. Try again later.';
         }
 
-        // Show error message
-        if (!errorMessage) {
-            const error = document.createElement('div');
-            error.id = 'errorMessage';
-            error.style.cssText = 'color: #f44336; background: #ffebee; padding: 0.75rem; border-radius: 4px; margin-top: 1rem; text-align: center;';
-            error.textContent = message;
-            loginForm.appendChild(error);
-
-            setTimeout(() => error.remove(), 5000);
-        } else {
-            errorMessage.textContent = message;
-        }
+        showLoginError(message);
     }
 });
 
