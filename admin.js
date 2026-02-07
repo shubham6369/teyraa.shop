@@ -83,7 +83,7 @@ const loginScreen = document.getElementById('loginScreen');
 const adminDashboard = document.getElementById('adminDashboard');
 
 // Authorized Admin Emails (Add your email here)
-const ADMIN_EMAILS = ['teyraa.shop@gmail.com', 'admin@teyraa.shop']; // ⚠️ ADD YOUR ADMIN EMAIL HERE
+const ADMIN_EMAILS = ['shubham67257@gmail.com', 'teyraa.shop@gmail.com', 'admin@teyraa.shop']; // ⚠️ ADD YOUR ADMIN EMAIL HERE
 
 // Check if user is already logged in
 auth.onAuthStateChanged((user) => {
