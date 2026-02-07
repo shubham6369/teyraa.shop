@@ -1,4 +1,4 @@
-# 🔥 Firebase Setup Guide for patel.store
+# 🔥 Firebase Setup Guide for teyraa.shop
 
 ## Prerequisites
 - Google account
@@ -14,7 +14,7 @@
 
 ### 1.2 Create New Project
 1. Click **"Add project"** or **"Create a project"**
-2. Enter project name: **patel-store** (or any name you like)
+2. Enter project name: **teyraa-shop** (or any name you like)
 3. Click **Continue**
 4. **Google Analytics**: You can disable it for now (toggle OFF)
 5. Click **Create project**
@@ -52,7 +52,7 @@ You should see an empty database with "Start collection" button.
 ### 3.2 Create Admin User
 1. Click **"Users"** tab
 2. Click **"Add user"**
-3. Enter your admin email: `admin@patel.store` (or your own email)
+3. Enter your admin email: `admin@teyraa.shop` (or your own email)
 4. Enter password: `Admin@123` (or create your own strong password)
 5. Click **"Add user"**
 
@@ -69,7 +69,7 @@ You should see an empty database with "Start collection" button.
 ### 4.2 Add Web App
 1. Scroll down to **"Your apps"** section
 2. Click the **</>** (Web) icon
-3. Enter app nickname: **patel-store-web**
+3. Enter app nickname: **teyraa-shop-web**
 4. ✅ Check **"Also set up Firebase Hosting"**
 5. Click **"Register app"**
 
@@ -156,7 +156,7 @@ service cloud.firestore {
 2. You should see the login screen
 
 ### 6.2 Login with Admin Credentials
-1. Enter the email you created: `admin@patel.store`
+1. Enter the email you created: `admin@teyraa.shop`
 2. Enter the password you set: `Admin@123`
 3. Click **Login**
 
@@ -214,7 +214,7 @@ Select:
 - ✅ Hosting
 
 Follow the prompts:
-- Use existing project: Select your **patel-store** project
+- Use existing project: Select your **teyraa-shop** project
 - Firestore rules: Press Enter (use default)
 - Firestore indexes: Press Enter (use default)
 - Public directory: Type `.` (current directory)
@@ -294,4 +294,4 @@ After successful setup:
 
 ---
 
-**Your patel.store is now powered by Firebase! 🔥**
+**Your teyraa.shop is now powered by Firebase! 🔥**

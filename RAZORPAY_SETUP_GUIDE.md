@@ -1,7 +1,7 @@
 # 💳 Razorpay Payment Gateway Setup Guide
 
 ## Overview
-This guide will help you integrate Razorpay payment gateway into patel.store to accept real payments from customers.
+This guide will help you integrate Razorpay payment gateway into teyraa.shop to accept real payments from customers.
 
 ---
 
@@ -24,7 +24,7 @@ Click **"Sign Up"**
 
 ### 1.3 Business Details
 Fill in your business information:
-- **Business Name:** patel.store
+- **Business Name:** teyraa.shop
 - **Business Type:** Proprietorship / Partnership / Company
 - **Category:** Fashion & Lifestyle
 - **Sub-category:** Clothing & Accessories
