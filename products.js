@@ -10,32 +10,33 @@ function renderProducts(products) {
         'COMBOES': 'comboesGrid'
     };
 
-    console.log('Rendering products:', products.length);
+    console.log('Total products from Firestore:', products.length);
 
     categories.forEach(category => {
         const container = document.getElementById(containerIds[category]);
-        if (!container) {
-            console.warn(`Container not found for category: ${category}`);
-            return;
-        }
+        if (!container) return;
 
-        // Filter products for this category (also check for old category name if Teyraa Special)
+        // Case-insensitive filtering
         const categoryProducts = products.filter(p => {
-            if (category === 'Teyraa Special') {
-                return p.category === 'Teyraa Special' || p.category === 'Patel Special';
+            const prodCat = (p.category || '').toLowerCase().trim();
+            const targetCat = category.toLowerCase().trim();
+
+            if (targetCat === 'teyraa special') {
+                return prodCat === 'teyraa special' || prodCat === 'patel special';
             }
-            return p.category === category;
+            return prodCat === targetCat;
         });
 
-        console.log(`Category ${category}: ${categoryProducts.length} products found`);
+        console.log(`[${category}] Matching products:`, categoryProducts.length);
 
         if (categoryProducts.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No products available in this category</p>';
+            // Keep hardcoded products if none in Firestore for this category
+            // container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No products available in this category</p>';
             return;
         }
 
+        // If we have Firestore products, overwrite the hardcoded ones
         container.innerHTML = categoryProducts.map(product => {
-            // Safety checks for prices
             const salePrice = Number(product.salePrice) || 0;
             const originalPrice = Number(product.originalPrice) || 0;
 
@@ -48,7 +49,10 @@ function renderProducts(products) {
                             <span class="price-sale">₹${salePrice.toLocaleString('en-IN')}</span>
                             <span class="price-original">₹${originalPrice.toLocaleString('en-IN')}</span>
                         </div>
-                        <button class="btn-add-to-cart" data-id="${product.id}">Add to Cart</button>
+                        <button class="btn-add-to-cart" data-id="${product.id}" 
+                                data-name="${product.name}" 
+                                data-price="₹${salePrice.toLocaleString('en-IN')}" 
+                                data-image="${product.image}">Add to Cart</button>
                     </div>
                 </div>
             `;
