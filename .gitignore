@@ -1,0 +1,12 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Project specific
+.gemini/
+.agent/
+logs/
+*.log
+
+# Firebase keys (if any local ones were kept)
+# But here they are in JS files usually for front-end so we keep them if the user wants the site to work on Github Pages etc.

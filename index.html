@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>patel.store - Premium Fashion Store</title>
+    <meta name="description"
+        content="Shop the latest trends in fashion - Jeans, Jackets, T-Shirts, Combos and more at patel.store">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <!-- Skip to content -->
+    <a href="#MainContent" class="skip-link">Skip to content</a>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="announcement-bar">
+            <p>Free Shipping on Orders Above ₹999 | Shop Now!</p>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <div class="header-content">
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Mobile Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="#home">patel.store</a>
+                    </div>
+
+                    <!-- Desktop Navigation -->
+                    <nav class="nav-desktop">
+                        <ul>
+                            <li><a href="#big-loot-sale">Big Loot Sale</a></li>
+                            <li><a href="#combos">Combo's</a></li>
+                            <li class="dropdown">
+                                <a href="#jeans">Jeans</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#regular">Regular</a></li>
+                                    <li><a href="#formal">Formal</a></li>
+                                    <li><a href="#straight-fit">Straight fit</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#t-shirts">T-Shirts</a></li>
+                            <li><a href="#jacket">Jacket</a></li>
+                            <li><a href="#shirts">Shirts</a></li>
+                        </ul>
+                    </nav>
+
+                    <!-- Header Icons -->
+                    <div class="header-icons">
+                        <button class="icon-button search-toggle" aria-label="Search">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-button" aria-label="Account">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+                        <button class="icon-button cart-toggle" aria-label="Cart">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="cart-count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <nav class="nav-mobile" id="navMobile">
+            <div class="mobile-menu-header">
+                <h3>Menu</h3>
+                <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            </div>
+            <ul>
+                <li><a href="#big-loot-sale">Big Loot Sale</a></li>
+                <li><a href="#combos">Combo's</a></li>
+                <li>
+                    <button class="mobile-dropdown-toggle">Jeans</button>
+                    <ul class="mobile-submenu">
+                        <li><a href="#regular">Regular</a></li>
+                        <li><a href="#formal">Formal</a></li>
+                        <li><a href="#straight-fit">Straight fit</a></li>
+                    </ul>
+                </li>
+                <li><a href="#t-shirts">T-Shirts</a></li>
+                <li><a href="#jacket">Jacket</a></li>
+                <li><a href="#shirts">Shirts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="cart-close" id="cartClose">&times;</button>
+        </div>
+        <div class="cart-content">
+            <div class="cart-empty">
+                <h3>Your cart is empty</h3>
+                <p>Add some items to get started!</p>
+                <a href="#MainContent" class="btn-primary">Continue shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="MainContent">
+        <!-- Hero / Category Banner -->
+        <section class="category-banner">
+            <div class="container">
+                <h1>SHOP BY CATEGORY</h1>
+                <div class="category-grid">
+                    <a href="#patel-special" class="category-card">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&h=400&fit=crop"
+                            alt="Patel Special" class="category-image">
+                        <h3>Patel Special</h3>
+                    </a>
+                    <a href="#combos" class="category-card">
+                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=400&fit=crop"
+                            alt="Combos" class="category-image">
+                        <h3>COMBOES</h3>
+                    </a>
+                    <a href="#jacket" class="category-card">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=400&fit=crop"
+                            alt="Jacket" class="category-image">
+                        <h3>Jacket</h3>
+                    </a>
+                    <a href="#jeans" class="category-card">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=400&fit=crop"
+                            alt="Jeans" class="category-image">
+                        <h3>Jeans</h3>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patel Special Section -->
+        <section class="product-section" id="patel-special">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Patel Special</h2>
+                    <a href="#view-all" class="view-all">View all</a>
+                </div>
+                <div class="product-grid" id="patelSpecialGrid">
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop"
+                            alt="NYC Tie-Dye Street Shirt Set" class="product-image">
+                        <div class="product-info">
+                            <h3>NYC Tie-Dye Street Shirt Set</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,299</span>
+                                <span class="price-original">₹2,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=500&fit=crop"
+                            alt="Classic Stripe Co-Ord Set" class="product-image">
+                        <div class="product-info">
+                            <h3>Classic Stripe Co-Ord Set</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,499</span>
+                                <span class="price-original">₹2,799</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&h=500&fit=crop"
+                            alt="Candy Shirts / Straight Fit jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Candy Shirts / Straight Fit jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,799</span>
+                                <span class="price-original">₹3,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
+                            alt="Urban Zip Polo T-Shirt & Pant Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Urban Zip Polo T-Shirt & Pant Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,599</span>
+                                <span class="price-original">₹2,999</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop"
+                            alt="Urban Pinstripe Smart Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Urban Pinstripe Smart Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,899</span>
+                                <span class="price-original">₹3,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop&sat=-100"
+                            alt="Candy Shirts" class="product-image">
+                        <div class="product-info">
+                            <h3>Candy Shirts</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹799</span>
+                                <span class="price-original">₹1,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop"
+                            alt="Prime Zip Ribbed Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Prime Zip Ribbed Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,699</span>
+                                <span class="price-original">₹3,199</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=400&h=500&fit=crop"
+                            alt="Earth Luxe Combo – Brown & White" class="product-image">
+                        <div class="product-info">
+                            <h3>Earth Luxe Combo – Brown & White</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,999</span>
+                                <span class="price-original">₹3,799</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jeans Section -->
+        <section class="product-section" id="jeans">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Jeans</h2>
+                    <a href="#view-all" class="view-all">View all</a>
+                </div>
+                <div class="product-grid" id="jeansGrid">
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=500&fit=crop"
+                            alt="Urban Ease Plus Size Jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Urban Ease Plus Size Jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,299</span>
+                                <span class="price-original">₹2,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&h=500&fit=crop"
+                            alt="Cocoa Depth – Straight Fit Jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Cocoa Depth – Straight Fit Jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,199</span>
+                                <span class="price-original">₹2,199</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=500&fit=crop"
+                            alt="Midnight Fade – Straight Fit Jeans (Black)" class="product-image">
+                        <div class="product-info">
+                            <h3>Midnight Fade – Straight Fit Jeans (Black)</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,399</span>
+                                <span class="price-original">₹2,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1475178626620-a4d074967452?w=400&h=500&fit=crop"
+                            alt="Sky Wash – Straight Fit Jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Sky Wash – Straight Fit Jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,299</span>
+                                <span class="price-original">₹2,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=400&h=500&fit=crop"
+                            alt="Ocean Moss - Straight Fit Jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Ocean Moss - Straight Fit Jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,399</span>
+                                <span class="price-original">₹2,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1565084888279-aca607ecce0c?w=400&h=500&fit=crop"
+                            alt="Graphite Blue – Straight Fit Jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Graphite Blue – Straight Fit Jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,299</span>
+                                <span class="price-original">₹2,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jacket Section -->
+        <section class="product-section" id="jacket">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Jacket</h2>
+                    <a href="#view-all" class="view-all">View all</a>
+                </div>
+                <div class="product-grid" id="jacketGrid">
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop&sat=-100"
+                            alt="White canvas jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>White canvas jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,299</span>
+                                <span class="price-original">₹3,999</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop"
+                            alt="Indigo ink jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>Indigo ink jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,499</span>
+                                <span class="price-original">₹4,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1606765962248-7ff407b51667?w=400&h=500&fit=crop"
+                            alt="Grey rift layer jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>Grey rift layer jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,399</span>
+                                <span class="price-original">₹4,199</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop"
+                            alt="Graphite shadow jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>Graphite shadow jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,599</span>
+                                <span class="price-original">₹4,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=500&fit=crop"
+                            alt="Crimson lvory jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>Crimson lvory jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,699</span>
+                                <span class="price-original">₹4,699</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1520367745676-56196632073f?w=400&h=500&fit=crop"
+                            alt="Carbon veli jacket" class="product-image">
+                        <div class="product-info">
+                            <h3>Carbon veli jacket</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹2,799</span>
+                                <span class="price-original">₹4,899</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMBOES Section -->
+        <section class="product-section" id="combos">
+            <div class="container">
+                <div class="section-header">
+                    <h2>COMBOES</h2>
+                    <a href="#view-all" class="view-all">View all</a>
+                </div>
+                <div class="product-grid" id="comboesGrid">
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop"
+                            alt="NYC Tie-Dye Street Shirt Set" class="product-image">
+                        <div class="product-info">
+                            <h3>NYC Tie-Dye Street Shirt Set</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,299</span>
+                                <span class="price-original">₹2,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop"
+                            alt="Urban Pinstripe Smart Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Urban Pinstripe Smart Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,899</span>
+                                <span class="price-original">₹3,499</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&h=500&fit=crop"
+                            alt="Candy Shirts / Straight Fit jeans" class="product-image">
+                        <div class="product-info">
+                            <h3>Candy Shirts / Straight Fit jeans</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,799</span>
+                                <span class="price-original">₹3,299</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=400&h=500&fit=crop"
+                            alt="Prime Edge Solid Shirt & Pant Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Prime Edge Solid Shirt & Pant Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,599</span>
+                                <span class="price-original">₹2,999</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=500&fit=crop"
+                            alt="Rust Edge Dual-Pocket Shirt" class="product-image">
+                        <div class="product-info">
+                            <h3>Rust Edge Dual-Pocket Shirt</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹999</span>
+                                <span class="price-original">₹1,799</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop"
+                            alt="Midnight Marble Shirt & Black Trouser Combo" class="product-image">
+                        <div class="product-info">
+                            <h3>Midnight Marble Shirt & Black Trouser Combo</h3>
+                            <div class="product-price">
+                                <span class="price-sale">₹1,999</span>
+                                <span class="price-original">₹3,699</span>
+                            </div>
+                            <button class="btn-add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section class="reviews-section" id="reviews">
+            <div class="container">
+                <div class="section-header-center">
+                    <h2>Reviews</h2>
+                    <p class="subtitle">What our happy customers say</p>
+                </div>
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div class="review-stars">
+                            <span>⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="review-text">The flavour feels exactly like home. Nothing overpowering, nothing
+                            artificial. Just honest, steady taste that goes with everything I cook.</p>
+                        <div class="review-author">
+                            <div class="author-avatar">TK</div>
+                            <h4>Tharun Kumar</h4>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-stars">
+                            <span>⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="review-text">My whole family noticed the difference the first day. The aroma, the
+                            texture, the balance – it all just works. This has become a regular in our kitchen.</p>
+                        <div class="review-author">
+                            <div class="author-avatar">NM</div>
+                            <h4>Nithish Madishetty</h4>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-stars">
+                            <span>⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="review-text">I tried it once and ended up ordering three more jars. The quality is
+                            consistent, the ingredients taste real, and you can tell it's made with care.</p>
+                        <div class="review-author">
+                            <div class="author-avatar">SK</div>
+                            <h4>Satish Kumar</h4>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-stars">
+                            <span>⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="review-text">The flavour feels exactly like home. Nothing overpowering, nothing
+                            artificial. Just honest, steady taste that goes with everything I cook.</p>
+                        <div class="review-author">
+                            <div class="author-avatar">NM</div>
+                            <h4>Nithish Madishetty</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <div class="section-header-center">
+                    <h2>Faq's</h2>
+                </div>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How long does delivery take?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We usually deliver within 5–8 working days depending on your pin code. Once your order is
+                                shipped, you'll receive tracking details on WhatsApp/SMS. Stay chill — your drip is on
+                                the way.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Do you quality-check every product?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, every item goes through a 3-step quality check before shipping to ensure fabric,
+                                stitching, and fit meet our standards.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Can I exchange if the size doesn't fit?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>No stress — we offer easy 7-day exchange for size issues. Just make sure the product is
+                                unused, unworn, and in original condition when you request the exchange.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How can I track my order?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>After shipping, we send you a tracking link. You can check the live status anytime. If
+                                you didn't receive it, hit us up via the Contact page and we'll share it instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>patel.store</h3>
+                    <p>Your trusted destination for premium fashion and lifestyle products.</p>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#contact">Contact info</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#refund">Refund Policy</a></li>
+                        <li><a href="#shipping">Shipping Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#terms-conditions">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#facebook" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
+                        <a href="#instagram" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+                        <a href="#twitter" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 patel.store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="razorpay-config.js"></script>
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
