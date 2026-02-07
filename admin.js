@@ -94,6 +94,7 @@ auth.onAuthStateChanged((user) => {
             loginScreen.style.display = 'none';
             adminDashboard.style.display = 'flex';
             loadProducts();
+            setupOrdersListener(); // Start listening for orders real-time
             updateStats();
         } else {
             // Logged in but not an admin
@@ -556,28 +557,44 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// ===== ORDER MANAGEMENT =====
-async function getOrders() {
-    try {
-        const snapshot = await ordersCollection.orderBy('orderDate', 'desc').get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-        console.error("Error fetching orders:", error);
-        return [];
-    }
+// Real-time Orders Listener
+let ordersListener = null;
+let currentOrders = [];
+
+function setupOrdersListener() {
+    console.log('Setting up real-time orders listener...');
+
+    if (ordersListener) ordersListener();
+
+    ordersListener = ordersCollection.orderBy('orderDate', 'desc').onSnapshot((snapshot) => {
+        currentOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log('Orders updated:', currentOrders.length);
+
+        // Refresh the current view
+        const search = document.getElementById('searchOrders')?.value || '';
+        const filter = document.getElementById('filterOrders')?.value || 'all';
+        renderOrders(currentOrders, filter, search);
+        updateOrderStats(currentOrders);
+    }, (error) => {
+        console.error("Order listener error:", error);
+    });
 }
 
-async function loadOrders(filter = 'all', search = '') {
-    const orders = await getOrders();
+function loadOrders(filter = 'all', search = '') {
+    renderOrders(currentOrders, filter, search);
+}
+
+function renderOrders(orders, filter = 'all', search = '') {
     const tbody = document.getElementById('ordersTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     const filteredOrders = orders.filter(order => {
         const matchesStatus = filter === 'all' || order.status === filter;
         const matchesSearch =
-            order.orderId.toLowerCase().includes(search.toLowerCase()) ||
-            order.customer.name.toLowerCase().includes(search.toLowerCase()) ||
-            order.customer.email.toLowerCase().includes(search.toLowerCase());
+            (order.orderId && order.orderId.toLowerCase().includes(search.toLowerCase())) ||
+            (order.customer && order.customer.name.toLowerCase().includes(search.toLowerCase())) ||
+            (order.customer && order.customer.email.toLowerCase().includes(search.toLowerCase()));
         return matchesStatus && matchesSearch;
     });
 
@@ -725,14 +742,14 @@ async function viewOrderDetails(orderId) {
     });
 }
 
-async function updateOrderStats() {
-    const orders = await getOrders();
+async function updateOrderStats(ordersInput = null) {
+    const orders = ordersInput || currentOrders || [];
 
-    document.getElementById('totalOrders').textContent = orders.length;
-    document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'Pending').length;
+    if (document.getElementById('totalOrders')) document.getElementById('totalOrders').textContent = orders.length;
+    if (document.getElementById('pendingOrders')) document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'Pending').length;
 
     const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
-    document.getElementById('totalRevenue').textContent = `₹${totalRevenue.toLocaleString()}`;
+    if (document.getElementById('totalRevenue')) document.getElementById('totalRevenue').textContent = `₹${totalRevenue.toLocaleString()}`;
 }
 
 // Make functions global

@@ -353,112 +353,138 @@ function closeCheckout() {
 // Place order
 function placeOrder(e) {
     e.preventDefault();
+    console.log('🛍️ Attempting to place order...');
 
-    const total = cartItems.reduce((sum, item) => {
-        const price = parseInt(item.price.replace(/[₹,]/g, ''));
-        return sum + price;
-    }, 0);
+    try {
+        const totalAmountText = document.getElementById('checkoutTotal').textContent;
+        const total = parseInt(totalAmountText.replace(/[₹,]/g, '')) || 0;
 
-    const customerData = {
-        name: document.getElementById('customerName').value,
-        mobile: document.getElementById('customerMobile').value,
-        email: document.getElementById('customerEmail').value,
-        address: document.getElementById('customerAddress').value,
-        city: document.getElementById('customerCity').value,
-        state: document.getElementById('customerState').value,
-        pincode: document.getElementById('customerPincode').value
-    };
+        const customerData = {
+            name: document.getElementById('customerName').value,
+            mobile: document.getElementById('customerMobile').value,
+            email: document.getElementById('customerEmail').value,
+            address: document.getElementById('customerAddress').value,
+            city: document.getElementById('customerCity').value,
+            state: document.getElementById('customerState').value,
+            pincode: document.getElementById('customerPincode').value
+        };
 
-    const paymentMethod = document.getElementById('paymentMethod').value;
+        // Safety check for empty fields (redundant with HTML required but good practice)
+        for (const [key, value] of Object.entries(customerData)) {
+            if (!value || value.trim() === "") {
+                throw new Error(`Please fill in the ${key} field.`);
+            }
+        }
 
-    // If COD, process normally
-    if (paymentMethod === 'COD') {
-        processOrder({
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        if (!paymentMethod) {
+            alert("Please select a payment method.");
+            return;
+        }
+
+        const orderData = {
             orderId: 'ORD' + Date.now(),
             orderDate: new Date().toISOString(),
             customer: customerData,
-            items: cartItems,
-            paymentMethod: 'COD',
-            paymentStatus: 'Pending',
+            items: cartItems.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                image: item.image
+            })),
+            paymentMethod: paymentMethod,
+            paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
             paymentId: null,
             totalAmount: total,
             status: 'Pending'
-        });
-        return;
-    }
+        };
 
-    // If Online Payment, use Razorpay
-    const options = {
-        key: getRazorpayKey(), // Get from razorpay-config.js
-        amount: total * 100, // Razorpay expects amount in paise (₹1 = 100 paise)
-        currency: 'INR',
-        name: razorpayConfig.businessName,
-        description: `Order for ${cartItems.length} item(s)`,
-        image: razorpayConfig.logo,
-        prefill: {
-            name: customerData.name,
-            email: customerData.email,
-            contact: customerData.mobile
-        },
-        theme: {
-            color: razorpayConfig.theme.color
-        },
-        handler: function (response) {
-            // Payment successful
-            console.log('Payment successful:', response);
-
-            processOrder({
-                orderId: 'ORD' + Date.now(),
-                orderDate: new Date().toISOString(),
-                customer: customerData,
-                items: cartItems,
-                paymentMethod: 'Online Payment',
-                paymentStatus: 'Paid',
-                paymentId: response.razorpay_payment_id,
-                totalAmount: total,
-                status: 'Pending'
-            });
-        },
-        modal: {
-            ondismiss: function () {
-                // Payment cancelled
-                alert('Payment cancelled. Your order was not placed.');
-            }
+        // If COD, process normally
+        if (paymentMethod === 'COD') {
+            processOrder(orderData);
+            return;
         }
-    };
 
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function (response) {
-        // Payment failed
-        console.error('Payment failed:', response.error);
-        alert('Payment failed! Please try again.\nReason: ' + response.error.description);
-    });
+        // If Online Payment, use Razorpay
+        if (typeof Razorpay === 'undefined') {
+            alert("Payment system is currently unavailable. Please use Cash on Delivery.");
+            return;
+        }
 
-    rzp.open();
+        const options = {
+            key: getRazorpayKey(),
+            amount: total * 100,
+            currency: 'INR',
+            name: razorpayConfig.businessName,
+            description: `Order for ${cartItems.length} item(s)`,
+            image: razorpayConfig.logo,
+            prefill: {
+                name: customerData.name,
+                email: customerData.email,
+                contact: customerData.mobile
+            },
+            theme: {
+                color: razorpayConfig.theme.color
+            },
+            handler: function (response) {
+                orderData.paymentId = response.razorpay_payment_id;
+                orderData.paymentStatus = 'Paid';
+                orderData.paymentMethod = 'Online';
+                processOrder(orderData);
+            },
+            modal: {
+                ondismiss: function () {
+                    alert('Payment cancelled. Your order was not placed.');
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (response) {
+            console.error('Payment failed:', response.error);
+            alert('Payment failed! Reason: ' + response.error.description);
+        });
+
+        rzp.open();
+    } catch (error) {
+        console.error("Order Preparation Error:", error);
+        alert(error.message || "An unexpected error occurred. Please check the form and try again.");
+    }
 }
 
 // Process order (common for COD and Online Payment)
 async function processOrder(order) {
     try {
-        console.log('Processing order in Firebase...');
+        console.log('🔥 Sending order to Firebase...', order);
+
+        if (typeof ordersCollection === 'undefined') {
+            throw new Error("Order system not initialized properly. Please refresh and try again.");
+        }
 
         // Save to Firebase Firestore
         const docRef = await ordersCollection.add(order);
-        console.log('Order saved to Firestore with ID:', docRef.id);
+        console.log('✅ Order saved to Firestore with ID:', docRef.id);
 
         // Clear cart
         cartItems = [];
-        cartCount.textContent = '0';
+        if (typeof cartCount !== 'undefined') cartCount.textContent = '0';
+        localStorage.removeItem('teyraaCart'); // Cleanup if exists
 
         // Close modal
         closeCheckout();
 
         // Show success message
-        showOrderSuccess(docRef.id);
+        showOrderSuccess(order.orderId);
 
     } catch (error) {
-        console.error("Error processing order in Firebase:", error);
-        alert("Something went wrong while placing your order. Please try again or contact support.");
+        console.error("Firebase Order Error:", error);
+        let msg = "Could not place order. ";
+        if (error.code === 'permission-denied') {
+            msg += "Permission denied. Please contact support.";
+        } else {
+            msg += "Error: " + error.message;
+        }
+        alert(msg);
     }
 }
 
@@ -466,20 +492,18 @@ async function processOrder(order) {
 function showOrderSuccess(orderId) {
     const successModal = document.createElement('div');
     successModal.className = 'modal order-success-modal active';
+    successModal.style.zIndex = "10001";
     successModal.innerHTML = `
-        <div class="modal-content success-content">
-            <div class="success-icon">✓</div>
-            <h2>Order Placed Successfully!</h2>
-            <p>Your order ID: <strong>${orderId}</strong></p>
-            <p>We'll send you order updates on your email and mobile number.</p>
-            <button class="btn-primary" onclick="closeSuccessModal()">Continue Shopping</button>
+        <div class="modal-content success-content" style="text-align: center; padding: 3rem;">
+            <div class="success-icon" style="width: 80px; height: 80px; background: #4CAF50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 1.5rem;">✓</div>
+            <h2 style="margin-bottom: 1rem;">Order Confirmed!</h2>
+            <p style="font-size: 1.1rem; color: #444; margin-bottom: 0.5rem;">Your Order ID is: <strong>${orderId}</strong></p>
+            <p style="color: #666; margin-bottom: 2rem;">Thank you for shopping with teyraa.shop! You can track your order in your profile.</p>
+            <button class="btn-primary" onclick="closeSuccessModal()" style="width: 100%; padding: 1rem;">Continue Shopping</button>
         </div>
     `;
     document.body.appendChild(successModal);
-
-    setTimeout(() => {
-        successModal.remove();
-    }, 5000);
+    overlay.classList.add('active'); // Ensure overlay is active
 }
 
 // Close success modal
@@ -488,6 +512,8 @@ function closeSuccessModal() {
     if (modal) {
         modal.remove();
     }
+    if (typeof overlay !== 'undefined') overlay.classList.remove('active');
+    window.location.hash = 'home'; // Go back to top
 }
 
 // Make functions global
