@@ -8,16 +8,27 @@
     <meta name="description"
         content="Shop the latest trends in fashion - Jeans, Jackets, T-Shirts, Combos and more at teyraa.shop">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://checkout.razorpay.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet">
+    </noscript>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Firebase SDK (Deferred for performance) -->
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-    <!-- Razorpay SDK -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Razorpay SDK (Deferred) -->
+    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <meta name="theme-color" content="#0f172a">
 </head>
 
 <body>
@@ -141,23 +152,23 @@
                 <h1>SHOP BY CATEGORY</h1>
                 <div class="category-grid">
                     <a href="#teyraa-special" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&h=400&fit=crop"
-                            alt="Teyraa Special" class="category-image">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&h=800&fit=crop&auto=format&q=80"
+                            alt="Teyraa Special" class="category-image" loading="lazy">
                         <h3>Teyraa Special</h3>
                     </a>
                     <a href="#combos" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=400&fit=crop"
-                            alt="Combos" class="category-image">
+                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=800&fit=crop&auto=format&q=80"
+                            alt="Combos" class="category-image" loading="lazy">
                         <h3>COMBOES</h3>
                     </a>
                     <a href="#jacket" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=400&fit=crop"
-                            alt="Jacket" class="category-image">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop&auto=format&q=80"
+                            alt="Jacket" class="category-image" loading="lazy">
                         <h3>Jacket</h3>
                     </a>
                     <a href="#jeans" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=400&fit=crop"
-                            alt="Jeans" class="category-image">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop&auto=format&q=80"
+                            alt="Jeans" class="category-image" loading="lazy">
                         <h3>Jeans</h3>
                     </a>
                 </div>

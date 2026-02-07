@@ -76,18 +76,20 @@ html {
 }
 
 body {
-    font-family: var(--font-family);
-    font-weight: var(--body-weight);
+    font-family: var(--font-main);
     color: var(--text-primary);
-    background-color: #fff;
+    background-color: var(--bg-white);
     line-height: 1.6;
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 var(--spacing-md);
+    padding: 0 var(--space-md);
 }
 
 a {
