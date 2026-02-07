@@ -115,6 +115,17 @@
                         </svg>
                         Add Product
                     </button>
+                    <button id="addCategoryBtn" class="btn-secondary"
+                        style="background: var(--accent-color); color: white; border: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Add Category
+                    </button>
                 </div>
             </header>
 
@@ -170,10 +181,7 @@
                         </div>
                         <select id="filterCategory" class="filter-select">
                             <option value="all">All Categories</option>
-                            <option value="Teyraa Special">Teyraa Special</option>
-                            <option value="Jeans">Jeans</option>
-                            <option value="Jacket">Jacket</option>
-                            <option value="COMBOES">COMBOES</option>
+                            <!-- Dynamically populated -->
                         </select>
                     </div>
 
@@ -283,35 +291,8 @@
 
             <!-- Categories Section -->
             <section id="categoriesSection" class="content-section" style="display: none;">
-                <div class="categories-grid">
-                    <div class="category-manage-card">
-                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&h=300&fit=crop"
-                            alt="Teyraa Special">
-                        <h3>Teyraa Special</h3>
-                        <p class="category-count" id="count-teyraa">0 products</p>
-                        <button class="btn-edit-category" data-category="Teyraa Special">Edit Category</button>
-                    </div>
-                    <div class="category-manage-card">
-                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop"
-                            alt="Jeans">
-                        <h3>Jeans</h3>
-                        <p class="category-count" id="count-jeans">0 products</p>
-                        <button class="btn-edit-category" data-category="Jeans">Edit Category</button>
-                    </div>
-                    <div class="category-manage-card">
-                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop"
-                            alt="Jacket">
-                        <h3>Jacket</h3>
-                        <p class="category-count" id="count-jacket">0 products</p>
-                        <button class="btn-edit-category" data-category="Jacket">Edit Category</button>
-                    </div>
-                    <div class="category-manage-card">
-                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=400&h=300&fit=crop"
-                            alt="COMBOES">
-                        <h3>COMBOES</h3>
-                        <p class="category-count" id="count-comboes">0 products</p>
-                        <button class="btn-edit-category" data-category="COMBOES">Edit Category</button>
-                    </div>
+                <div class="categories-grid" id="categoriesGrid">
+                    <!-- Dynamically populated -->
                 </div>
             </section>
 
@@ -358,10 +339,7 @@
                         <label for="productCategory">Category *</label>
                         <select id="productCategory" required>
                             <option value="">Select Category</option>
-                            <option value="Teyraa Special">Teyraa Special</option>
-                            <option value="Jeans">Jeans</option>
-                            <option value="Jacket">Jacket</option>
-                            <option value="COMBOES">COMBOES</option>
+                            <!-- Dynamically populated -->
                         </select>
                     </div>
                 </div>
@@ -395,6 +373,35 @@
                 <div class="modal-footer">
                     <button type="button" class="btn-cancel">Cancel</button>
                     <button type="submit" class="btn-save">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Add New Category</h2>
+                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <form id="categoryForm" class="product-form">
+                <input type="hidden" id="editCategoryId">
+
+                <div class="form-group">
+                    <label for="categoryName">Category Name *</label>
+                    <input type="text" id="categoryName" placeholder="e.g., T-Shirts" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryImage">Category Image URL *</label>
+                    <input type="url" id="categoryImage" placeholder="https://images.unsplash.com/..." required>
+                    <small>Image representative of the category</small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Category</button>
                 </div>
             </form>
         </div>

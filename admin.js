@@ -199,17 +199,19 @@ navItems.forEach(item => {
         // Update page title
         document.getElementById('pageTitle').textContent = pageTitles[section];
 
-        // Hide add product button for non-product sections
+        // Hide add buttons for irrelevant sections
         const addBtn = document.getElementById('addProductBtn');
+        const addCatBtn = document.getElementById('addCategoryBtn');
         addBtn.style.display = section === 'products' ? 'flex' : 'none';
+        addCatBtn.style.display = section === 'categories' ? 'flex' : 'none';
 
-        // Update stats if on stats page
+        // Update stats or categories if needed
         if (section === 'stats') {
             updateDetailedStats();
         }
 
         if (section === 'categories') {
-            updateCategoryCounts();
+            loadCategories();
         }
     });
 });
@@ -445,20 +447,24 @@ async function updateStats() {
 
 async function updateCategoryCounts() {
     const products = await getProducts();
-    const counts = {};
+    const categoriesSnapshot = await categoriesCollection.get();
+    const categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
+    const counts = {};
     products.forEach(product => {
         counts[product.category] = (counts[product.category] || 0) + 1;
     });
 
-    document.getElementById('count-teyraa').textContent = `${counts['Teyraa Special'] || 0} products`;
-    document.getElementById('count-jeans').textContent = `${counts['Jeans'] || 0} products`;
-    document.getElementById('count-jacket').textContent = `${counts['Jacket'] || 0} products`;
-    document.getElementById('count-comboes').textContent = `${counts['COMBOES'] || 0} products`;
+    // If categories grid is visible, it will be updated by renderCategories
+    // This function can also update a general stats overview
+    if (document.getElementById('totalCategories')) {
+        document.getElementById('totalCategories').textContent = categories.length;
+    }
 }
 
-function updateDetailedStats() {
-    const products = getProducts();
+async function updateDetailedStats() {
+    const products = await getProducts();
+    if (products.length === 0) return;
 
     // Category breakdown
     const categoryStats = {};
@@ -467,40 +473,179 @@ function updateDetailedStats() {
     });
 
     const categoryStatsDiv = document.getElementById('categoryStats');
-    categoryStatsDiv.innerHTML = '';
+    if (categoryStatsDiv) {
+        categoryStatsDiv.innerHTML = '';
+        Object.entries(categoryStats).forEach(([category, count]) => {
+            const item = document.createElement('div');
+            item.className = 'stat-item';
+            item.innerHTML = `
+                <span class="stat-label">${category || 'Uncategorized'}</span>
+                <span class="stat-value">${count}</span>
+            `;
+            categoryStatsDiv.appendChild(item);
+        });
+    }
 
-    Object.entries(categoryStats).forEach(([category, count]) => {
-        const item = document.createElement('div');
-        item.className = 'stat-item';
-        item.innerHTML = `
-            <span class="stat-label">${category}</span>
-            <span class="stat-value">${count}</span>
-        `;
-        categoryStatsDiv.appendChild(item);
-    });
+    // Price statistics (filtering out invalid prices)
+    const prices = products.map(p => Number(p.salePrice)).filter(p => !isNaN(p));
+    if (prices.length > 0) {
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+        const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
 
-    // Price statistics
-    const prices = products.map(p => p.salePrice);
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
-    const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
-
-    const priceStatsDiv = document.getElementById('priceStats');
-    priceStatsDiv.innerHTML = `
-        <div class="stat-item">
-            <span class="stat-label">Minimum Price</span>
-            <span class="stat-value">₹${minPrice.toLocaleString()}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">Maximum Price</span>
-            <span class="stat-value">₹${maxPrice.toLocaleString()}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">Average Price</span>
-            <span class="stat-value">₹${avgPrice.toLocaleString()}</span>
-        </div>
-    `;
+        const priceStatsDiv = document.getElementById('priceStats');
+        if (priceStatsDiv) {
+            priceStatsDiv.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Minimum Price</span>
+                    <span class="stat-value">₹${minPrice.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Maximum Price</span>
+                    <span class="stat-value">₹${maxPrice.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Average Price</span>
+                    <span class="stat-value">₹${avgPrice.toLocaleString()}</span>
+                </div>
+            `;
+        }
+    }
 }
+
+// ===== CATEGORY MANAGEMENT =====
+const categoryModal = document.getElementById('categoryModal');
+const categoryForm = document.getElementById('categoryForm');
+const addCategoryBtn = document.getElementById('addCategoryBtn');
+const categoriesGrid = document.getElementById('categoriesGrid');
+
+addCategoryBtn.addEventListener('click', () => {
+    document.getElementById('categoryModalTitle').textContent = 'Add New Category';
+    document.getElementById('editCategoryId').value = '';
+    categoryForm.reset();
+    categoryModal.classList.add('active');
+});
+
+function closeCategoryModal() {
+    categoryModal.classList.remove('active');
+}
+
+categoryForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('editCategoryId').value;
+    const categoryData = {
+        name: document.getElementById('categoryName').value,
+        image: document.getElementById('categoryImage').value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        if (id) {
+            await categoriesCollection.doc(id).update(categoryData);
+        } else {
+            await categoriesCollection.add(categoryData);
+        }
+        showNotification(id ? 'Category updated!' : 'Category added!', 'success');
+        closeCategoryModal();
+        loadCategories();
+    } catch (error) {
+        console.error("Error saving category:", error);
+        showNotification("Failed to save category", "error");
+    }
+});
+
+async function loadCategories() {
+    try {
+        const snapshot = await categoriesCollection.orderBy('createdAt', 'desc').get();
+        const categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderCategories(categories);
+        populateCategoryDropdowns(categories);
+        updateCategoryStatus(categories);
+    } catch (error) {
+        console.error("Error loading categories:", error);
+    }
+}
+
+async function renderCategories(categories) {
+    if (!categoriesGrid) return;
+    categoriesGrid.innerHTML = '';
+
+    const products = await getProducts();
+
+    categories.forEach(category => {
+        const count = products.filter(p => p.category === category.name).length;
+        const card = document.createElement('div');
+        card.className = 'category-manage-card';
+        card.innerHTML = `
+            <img src="${category.image}" alt="${category.name}" onerror="this.src='https://via.placeholder.com/400x300?text=Category'">
+            <h3>${category.name}</h3>
+            <p class="category-count">${count} products</p>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <button class="btn-edit-category" onclick="editCategory('${category.id}', '${category.name}', '${category.image}')" style="flex: 1;">Edit</button>
+                <button class="btn-delete-category" onclick="deleteCategory('${category.id}')" style="background: #fee2e2; color: #ef4444; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        categoriesGrid.appendChild(card);
+    });
+}
+
+function editCategory(id, name, image) {
+    document.getElementById('categoryModalTitle').textContent = 'Edit Category';
+    document.getElementById('editCategoryId').value = id;
+    document.getElementById('categoryName').value = name;
+    document.getElementById('categoryImage').value = image;
+    categoryModal.classList.add('active');
+}
+
+async function deleteCategory(id) {
+    if (confirm('Are you sure you want to delete this category? Products in this category will not be deleted but will have no category.')) {
+        try {
+            await categoriesCollection.doc(id).delete();
+            showNotification('Category deleted!', 'success');
+            loadCategories();
+        } catch (error) {
+            console.error("Error deleting category:", error);
+            showNotification("Failed to delete category", "error");
+        }
+    }
+}
+
+function populateCategoryDropdowns(categories) {
+    const filterSelect = document.getElementById('filterCategory');
+    const productSelect = document.getElementById('productCategory');
+
+    if (filterSelect) {
+        const currentFilter = filterSelect.value;
+        filterSelect.innerHTML = '<option value="all">All Categories</option>';
+        categories.forEach(cat => {
+            filterSelect.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+        });
+        filterSelect.value = currentFilter;
+    }
+
+    if (productSelect) {
+        const currentVal = productSelect.value;
+        productSelect.innerHTML = '<option value="">Select Category</option>';
+        categories.forEach(cat => {
+            productSelect.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+        });
+        productSelect.value = currentVal;
+    }
+}
+
+function updateCategoryStatus(categories) {
+    if (document.getElementById('totalCategories')) {
+        document.getElementById('totalCategories').textContent = categories.length;
+    }
+}
+
+window.editCategory = editCategory;
+window.deleteCategory = deleteCategory;
+window.closeCategoryModal = closeCategoryModal;
 
 // ===== NOTIFICATION SYSTEM =====
 function showNotification(message, type = 'success') {
@@ -603,9 +748,7 @@ function renderOrders(orders, filter = 'all', search = '') {
             <tr>
                 <td colspan="11" style="text-align: center; padding: 3rem; color: #666;">
                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem;">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                     </svg>
                     <p style="font-size: 1.1rem; font-weight: 600;">No orders found</p>
                     <p style="color: #999; margin-top: 0.5rem;">Orders will appear here when customers place them</p>
@@ -805,6 +948,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    updateCategoryCounts();
+    loadCategories();
     updateOrderStats();
 });

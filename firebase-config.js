@@ -23,6 +23,7 @@ const auth = firebase.auth();
 // Collections references
 var productsCollection = db.collection('products');
 var ordersCollection = db.collection('orders');
+var categoriesCollection = db.collection('categories');
 var settingsCollection = db.collection('settings');
 
 console.log('🔥 Firebase initialized successfully for teyraa.shop!');
