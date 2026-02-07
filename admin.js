@@ -231,7 +231,11 @@ async function saveProducts(productData, id = null) {
         updateStats();
     } catch (error) {
         console.error("Error saving product:", error);
-        showNotification("Failed to save product", "error");
+        let errorMsg = "Failed to save product";
+        if (error.code === 'permission-denied') {
+            errorMsg = "Unauthorized! Please login again or check Firebase rules.";
+        }
+        showNotification(errorMsg, "error");
     }
 }
 
@@ -273,8 +277,8 @@ async function loadProducts(filter = 'all', search = '') {
             <td class="original-price">₹${product.originalPrice.toLocaleString()}</td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-edit" onclick="editProduct(${product.id})">Edit</button>
-                    <button class="btn-delete" onclick="deleteProduct(${product.id})">Delete</button>
+                    <button class="btn-edit" onclick="editProduct('${product.id}')">Edit</button>
+                    <button class="btn-delete" onclick="deleteProduct('${product.id}')">Delete</button>
                 </div>
             </td>
         `;
@@ -392,7 +396,11 @@ async function deleteProduct(id) {
             showNotification('Product deleted successfully!', 'error');
         } catch (error) {
             console.error("Error deleting product:", error);
-            showNotification("Failed to delete product", "error");
+            let errorMsg = "Failed to delete product";
+            if (error.code === 'permission-denied') {
+                errorMsg = "Unauthorized! Please login again or check Firebase rules.";
+            }
+            showNotification(errorMsg, "error");
         }
     }
 }
