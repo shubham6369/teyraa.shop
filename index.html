@@ -726,6 +726,14 @@
                 <h2 id="userModalTitle">Customer Login</h2>
                 <button class="modal-close" id="userModalClose">&times;</button>
             </div>
+            <div id="authTabs"
+                style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-soft); padding-bottom: 0.5rem;">
+                <button class="auth-tab active" id="tabEmail"
+                    style="background:none; border:none; padding: 0.5rem 1rem; cursor:pointer; font-weight:600; color: var(--accent-color); border-bottom: 2px solid var(--accent-color);">Email</button>
+                <button class="auth-tab" id="tabPhone"
+                    style="background:none; border:none; padding: 0.5rem 1rem; cursor:pointer; font-weight:600; color: var(--text-muted);">Phone</button>
+            </div>
+
             <div id="loginSection">
                 <form id="customerLoginForm">
                     <div class="form-group">
@@ -740,6 +748,32 @@
                     <p style="text-align: center; margin-top: 1rem;">Don't have an account? <a href="#"
                             id="toSignup">Sign Up</a></p>
                 </form>
+            </div>
+
+            <div id="phoneSection" style="display: none;">
+                <div id="phoneInputStep">
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" value="+91" disabled style="width: 60px; text-align: center;">
+                            <input type="tel" id="phoneNumber" placeholder="10-digit number" required style="flex: 1;">
+                        </div>
+                    </div>
+                    <div id="recaptcha-container" style="margin: 1rem 0;"></div>
+                    <button id="sendOTP" class="btn-primary" style="width: 100%;">Send OTP</button>
+                </div>
+
+                <div id="otpInputStep" style="display: none;">
+                    <div class="form-group">
+                        <label>Enter OTP</label>
+                        <input type="text" id="otpCode" placeholder="6-digit code" required
+                            style="letter-spacing: 5px; text-align: center; font-size: 1.5rem;">
+                    </div>
+                    <button id="verifyOTP" class="btn-primary" style="width: 100%;">Verify & Login</button>
+                    <button id="resendOTP"
+                        style="background:none; border:none; color: var(--accent-color); width:100%; margin-top:1rem; cursor:pointer;">Resend
+                        Code</button>
+                </div>
             </div>
             <div id="signupSection" style="display: none;">
                 <form id="customerSignupForm">

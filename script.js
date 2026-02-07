@@ -542,7 +542,31 @@ const toLogin = document.getElementById('toLogin');
 const loginSection = document.getElementById('loginSection');
 const signupSection = document.getElementById('signupSection');
 const profileSection = document.getElementById('profileSection');
+const phoneSection = document.getElementById('phoneSection');
+const authTabs = document.getElementById('authTabs');
 const userModalTitle = document.getElementById('userModalTitle');
+
+const tabEmail = document.getElementById('tabEmail');
+const tabPhone = document.getElementById('tabPhone');
+
+// Phone Auth Step Divs
+const phoneInputStep = document.getElementById('phoneInputStep');
+const otpInputStep = document.getElementById('otpInputStep');
+
+let confirmationResult = null;
+
+// Initialize Recaptcha
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'normal',
+    'callback': (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        console.log('reCAPTCHA solved');
+    },
+    'expired-callback': () => {
+        // Response expired. Ask user to solve reCAPTCHA again.
+        console.warn('reCAPTCHA expired');
+    }
+});
 
 // Toggle Modal
 if (userBtn) {
@@ -559,11 +583,36 @@ if (userModalClose) {
     });
 }
 
+// Tab Switching
+tabEmail.addEventListener('click', () => {
+    loginSection.style.display = 'block';
+    phoneSection.style.display = 'none';
+    signupSection.style.display = 'none';
+    tabEmail.style.color = 'var(--accent-color)';
+    tabEmail.style.borderBottom = '2px solid var(--accent-color)';
+    tabPhone.style.color = 'var(--text-muted)';
+    tabPhone.style.borderBottom = 'none';
+    userModalTitle.textContent = 'Customer Login';
+});
+
+tabPhone.addEventListener('click', () => {
+    loginSection.style.display = 'none';
+    phoneSection.style.display = 'block';
+    signupSection.style.display = 'none';
+    tabPhone.style.color = 'var(--accent-color)';
+    tabPhone.style.borderBottom = '2px solid var(--accent-color)';
+    tabEmail.style.color = 'var(--text-muted)';
+    tabEmail.style.borderBottom = 'none';
+    userModalTitle.textContent = 'Phone login';
+});
+
 // Switch between Login and Signup
 toSignup.addEventListener('click', (e) => {
     e.preventDefault();
     loginSection.style.display = 'none';
+    phoneSection.style.display = 'none';
     signupSection.style.display = 'block';
+    authTabs.style.display = 'none';
     userModalTitle.textContent = 'Create Account';
 });
 
@@ -571,7 +620,9 @@ toLogin.addEventListener('click', (e) => {
     e.preventDefault();
     signupSection.style.display = 'none';
     loginSection.style.display = 'block';
+    authTabs.style.display = 'flex';
     userModalTitle.textContent = 'Customer Login';
+    tabEmail.click();
 });
 
 // Auth State Listener
@@ -580,26 +631,30 @@ auth.onAuthStateChanged((user) => {
         // Customer is logged in
         loginSection.style.display = 'none';
         signupSection.style.display = 'none';
+        phoneSection.style.display = 'none';
+        authTabs.style.display = 'none';
         profileSection.style.display = 'block';
         userModalTitle.textContent = 'My Account';
 
         document.getElementById('displayUserName').textContent = user.displayName || 'Customer';
-        document.getElementById('displayUserEmail').textContent = user.email;
-        document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+        document.getElementById('displayUserEmail').textContent = user.email || user.phoneNumber;
+        document.getElementById('userAvatar').textContent = (user.displayName || user.email || user.phoneNumber || 'U').charAt(0).toUpperCase();
 
-        // Update Account Icon to show we are logged in
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
     } else {
         // Logged out
         loginSection.style.display = 'block';
         signupSection.style.display = 'none';
+        phoneSection.style.display = 'none';
+        authTabs.style.display = 'flex';
         profileSection.style.display = 'none';
         userModalTitle.textContent = 'Customer Login';
         if (userBtn) userBtn.style.color = '';
+        tabEmail.click();
     }
 });
 
-// Handle Login
+// Handle Login (Email)
 document.getElementById('customerLoginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
@@ -607,14 +662,13 @@ document.getElementById('customerLoginForm').addEventListener('submit', async (e
 
     try {
         await auth.signInWithEmailAndPassword(email, password);
-        console.log('Customer logged in successfully');
+        console.log('Customer logged in');
     } catch (error) {
-        console.error('Login error:', error);
         alert(error.message);
     }
 });
 
-// Handle Signup
+// Handle Signup (Email)
 document.getElementById('customerSignupForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('signupName').value;
@@ -624,17 +678,61 @@ document.getElementById('customerSignupForm').addEventListener('submit', async (
     try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         await userCredential.user.updateProfile({ displayName: name });
-        console.log('Customer account created');
     } catch (error) {
-        console.error('Signup error:', error);
         alert(error.message);
     }
+});
+
+// Handle Send OTP
+document.getElementById('sendOTP').addEventListener('click', async () => {
+    const number = document.getElementById('phoneNumber').value;
+    if (number.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+    }
+
+    const fullNumber = "+91" + number;
+    const appVerifier = window.recaptchaVerifier;
+
+    try {
+        confirmationResult = await auth.signInWithPhoneNumber(fullNumber, appVerifier);
+        phoneInputStep.style.display = 'none';
+        otpInputStep.style.display = 'block';
+        console.log("OTP Sent to", fullNumber);
+    } catch (error) {
+        console.error("Phone Auth Error:", error);
+        alert("Error: " + error.message);
+        // Reset recaptcha if error
+        if (window.grecaptcha) window.grecaptcha.reset();
+    }
+});
+
+// Handle Verify OTP
+document.getElementById('verifyOTP').addEventListener('click', async () => {
+    const code = document.getElementById('otpCode').value;
+    if (code.length !== 6) {
+        alert("Please enter the 6-digit code sent to your phone.");
+        return;
+    }
+
+    try {
+        await confirmationResult.confirm(code);
+        console.log("Code verified. Logged in.");
+    } catch (error) {
+        alert("Invalid OTP code. Please try again.");
+    }
+});
+
+// Resend OTP
+document.getElementById('resendOTP').addEventListener('click', () => {
+    otpInputStep.style.display = 'none';
+    phoneInputStep.style.display = 'block';
+    if (window.grecaptcha) window.grecaptcha.reset();
 });
 
 // Handle Logout
 document.getElementById('customerLogout').addEventListener('click', () => {
     auth.signOut();
-    console.log('Customer logged out');
 });
 
-console.log('🛍️ teyraa.shop E-commerce Website Loaded Successfully!');
+console.log('🛍️ teyraa.shop Loaded Successfully!');
