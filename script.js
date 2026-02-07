@@ -677,8 +677,10 @@ auth.onAuthStateChanged((user) => {
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
         if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'block';
 
-        // Load personal orders real-time
+        // Load personal data
         fetchUserOrders(user);
+        loadUserDetails(user);
+        fetchUserWishlist(user);
     } else {
         // Logged out
         if (profileSection) profileSection.style.display = 'none';
@@ -689,6 +691,11 @@ auth.onAuthStateChanged((user) => {
         if (userOrdersListener) {
             userOrdersListener();
             userOrdersListener = null;
+        }
+        // Unsubscribe from wishlist
+        if (userWishlistListener) {
+            userWishlistListener();
+            userWishlistListener = null;
         }
     }
 });
@@ -929,6 +936,144 @@ async function fetchUserOrders(user) {
         console.error("Error setting up user orders listener:", error);
     }
 }
+
+// ===== DETAILED USER PROFILE & WISHLIST =====
+let activeProfileTab = 'orders';
+let userWishlistListener = null;
+
+function switchProfileTab(tabId, btn) {
+    // Update active tab buttons
+    document.querySelectorAll('.profile-tab').forEach(t => {
+        t.classList.remove('active');
+        t.style.color = '#666';
+        t.style.borderBottom = 'none';
+    });
+    btn.classList.add('active');
+    btn.style.color = 'var(--primary-color)';
+    btn.style.borderBottom = '2px solid var(--accent-color)';
+
+    // Show selected content
+    document.querySelectorAll('.profile-tab-content').forEach(c => {
+        c.style.display = 'none';
+    });
+    document.getElementById(`tab-${tabId}`).style.display = 'block';
+
+    activeProfileTab = tabId;
+}
+
+window.switchProfileTab = switchProfileTab;
+
+// Load user details (Address, info etc)
+async function loadUserDetails(user) {
+    try {
+        const doc = await usersCollection.doc(user.uid).get();
+        if (doc.exists) {
+            const data = doc.data();
+            if (document.getElementById('profileAddress')) document.getElementById('profileAddress').value = data.address || '';
+            if (document.getElementById('profileCity')) document.getElementById('profileCity').value = data.city || '';
+            if (document.getElementById('profilePincode')) document.getElementById('profilePincode').value = data.pincode || '';
+        }
+    } catch (error) {
+        console.error("Error loading user details:", error);
+    }
+}
+
+// Handle Profile Form Submit
+const profileInfoForm = document.getElementById('profileInfoForm');
+if (profileInfoForm) {
+    profileInfoForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const profileData = {
+            address: document.getElementById('profileAddress').value,
+            city: document.getElementById('profileCity').value,
+            pincode: document.getElementById('profilePincode').value,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await usersCollection.doc(user.uid).set(profileData, { merge: true });
+            alert("Profile details saved successfully!");
+        } catch (error) {
+            console.error("Error saving profile:", error);
+            alert("Failed to save profile.");
+        }
+    });
+}
+
+// Wishlist Logic
+async function toggleWishlist(productId, name, price, image) {
+    const user = auth.currentUser;
+    if (!user) {
+        alert("Please login to add items to your wishlist.");
+        userBtn.click();
+        return;
+    }
+
+    const wishId = `${user.uid}_${productId}`;
+    const wishRef = wishlistCollection.doc(wishId);
+
+    try {
+        const doc = await wishRef.get();
+        if (doc.exists) {
+            await wishRef.delete();
+            alert("Removed from wishlist");
+        } else {
+            await wishRef.set({
+                uid: user.uid,
+                productId: productId,
+                name: name,
+                price: price,
+                image: image,
+                addedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Added to wishlist!");
+        }
+    } catch (error) {
+        console.error("Wishlist error:", error);
+    }
+}
+
+window.toggleWishlist = toggleWishlist;
+
+function fetchUserWishlist(user) {
+    const container = document.getElementById('wishlistItems');
+    if (!container) return;
+
+    if (userWishlistListener) userWishlistListener();
+
+    userWishlistListener = wishlistCollection
+        .where('uid', '==', user.uid)
+        .orderBy('addedAt', 'desc')
+        .onSnapshot((snapshot) => {
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem;">Your wishlist is empty.</p>';
+                return;
+            }
+
+            container.innerHTML = snapshot.docs.map(doc => {
+                const item = doc.data();
+                return `
+                    <div style="display: flex; gap: 1rem; align-items: center; background: #fff; padding: 0.8rem; border-radius: 12px; border: 1px solid #f1f5f9;">
+                        <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 0.9rem; margin-bottom: 2px;">${item.name}</h4>
+                            <p style="color: var(--accent-color); font-weight: 700; font-size: 0.85rem;">${item.price}</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button onclick="addToCart('${item.productId}', '${item.name}', '${item.price}', '${item.image}')" style="background: var(--primary-color); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Add to Cart</button>
+                            <button onclick="toggleWishlist('${item.productId}')" style="background: none; border: none; color: #ef4444; font-size: 0.7rem; cursor: pointer; text-decoration: underline;">Remove</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+}
+
+// Update Auth State Listener in script.js to call these new functions
+// I will do this in the next replacement chunk for the existing onAuthStateChanged logic.
 
 function getStatusColor(status) {
     switch (status) {
