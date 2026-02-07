@@ -503,4 +503,108 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// ===== CUSTOMER AUTHENTICATION LOGIC =====
+const userBtn = document.getElementById('userBtn');
+const userModal = document.getElementById('userModal');
+const userModalClose = document.getElementById('userModalClose');
+const toSignup = document.getElementById('toSignup');
+const toLogin = document.getElementById('toLogin');
+const loginSection = document.getElementById('loginSection');
+const signupSection = document.getElementById('signupSection');
+const profileSection = document.getElementById('profileSection');
+const userModalTitle = document.getElementById('userModalTitle');
+
+// Toggle Modal
+if (userBtn) {
+    userBtn.addEventListener('click', () => {
+        userModal.classList.add('active');
+        overlay.classList.add('active');
+    });
+}
+
+if (userModalClose) {
+    userModalClose.addEventListener('click', () => {
+        userModal.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+}
+
+// Switch between Login and Signup
+toSignup.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginSection.style.display = 'none';
+    signupSection.style.display = 'block';
+    userModalTitle.textContent = 'Create Account';
+});
+
+toLogin.addEventListener('click', (e) => {
+    e.preventDefault();
+    signupSection.style.display = 'none';
+    loginSection.style.display = 'block';
+    userModalTitle.textContent = 'Customer Login';
+});
+
+// Auth State Listener
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // Customer is logged in
+        loginSection.style.display = 'none';
+        signupSection.style.display = 'none';
+        profileSection.style.display = 'block';
+        userModalTitle.textContent = 'My Account';
+
+        document.getElementById('displayUserName').textContent = user.displayName || 'Customer';
+        document.getElementById('displayUserEmail').textContent = user.email;
+        document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+
+        // Update Account Icon to show we are logged in
+        if (userBtn) userBtn.style.color = 'var(--accent-color)';
+    } else {
+        // Logged out
+        loginSection.style.display = 'block';
+        signupSection.style.display = 'none';
+        profileSection.style.display = 'none';
+        userModalTitle.textContent = 'Customer Login';
+        if (userBtn) userBtn.style.color = '';
+    }
+});
+
+// Handle Login
+document.getElementById('customerLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        await auth.signInWithEmailAndPassword(email, password);
+        console.log('Customer logged in successfully');
+    } catch (error) {
+        console.error('Login error:', error);
+        alert(error.message);
+    }
+});
+
+// Handle Signup
+document.getElementById('customerSignupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await userCredential.user.updateProfile({ displayName: name });
+        console.log('Customer account created');
+    } catch (error) {
+        console.error('Signup error:', error);
+        alert(error.message);
+    }
+});
+
+// Handle Logout
+document.getElementById('customerLogout').addEventListener('click', () => {
+    auth.signOut();
+    console.log('Customer logged out');
+});
+
 console.log('🛍️ teyraa.shop E-commerce Website Loaded Successfully!');

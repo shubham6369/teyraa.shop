@@ -75,7 +75,7 @@
                                 <path d="m21 21-4.35-4.35"></path>
                             </svg>
                         </button>
-                        <button class="icon-button" aria-label="Account">
+                        <button class="icon-button" id="userBtn" aria-label="Account">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -720,6 +720,61 @@
             </div>
         </div>
     </footer>
+
+    <!-- User Login Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content user-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Customer Login</h2>
+                <button class="modal-close" id="userModalClose">&times;</button>
+            </div>
+            <div id="loginSection">
+                <form id="customerLoginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+                    <p style="text-align: center; margin-top: 1rem;">Don't have an account? <a href="#"
+                            id="toSignup">Sign Up</a></p>
+                </form>
+            </div>
+            <div id="signupSection" style="display: none;">
+                <form id="customerSignupForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" placeholder="Minimum 6 characters" required
+                            minlength="6">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Sign Up</button>
+                    <p style="text-align: center; margin-top: 1rem;">Already have an account? <a href="#"
+                            id="toLogin">Login</a></p>
+                </form>
+            </div>
+            <div id="profileSection" style="display: none;">
+                <div style="text-align: center; padding: 2rem 0;">
+                    <div id="userAvatar"
+                        style="width: 80px; height: 80px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
+                        U</div>
+                    <h3 id="displayUserName">User Name</h3>
+                    <p id="displayUserEmail" style="color: #666; margin-bottom: 1.5rem;">user@example.com</p>
+                    <button id="customerLogout" class="btn-secondary" style="width: 100%;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="firebase-config.js"></script>
     <script src="razorpay-config.js"></script>
