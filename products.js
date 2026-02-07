@@ -10,30 +10,49 @@ function renderProducts(products) {
         'COMBOES': 'comboesGrid'
     };
 
+    console.log('Rendering products:', products.length);
+
     categories.forEach(category => {
         const container = document.getElementById(containerIds[category]);
-        if (!container) return;
+        if (!container) {
+            console.warn(`Container not found for category: ${category}`);
+            return;
+        }
 
-        const categoryProducts = products.filter(p => p.category === category);
+        // Filter products for this category (also check for old category name if Teyraa Special)
+        const categoryProducts = products.filter(p => {
+            if (category === 'Teyraa Special') {
+                return p.category === 'Teyraa Special' || p.category === 'Patel Special';
+            }
+            return p.category === category;
+        });
+
+        console.log(`Category ${category}: ${categoryProducts.length} products found`);
 
         if (categoryProducts.length === 0) {
             container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No products available in this category</p>';
             return;
         }
 
-        container.innerHTML = categoryProducts.map(product => `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.name}" class="product-image">
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <div class="product-price">
-                        <span class="price-sale">₹${product.salePrice.toLocaleString()}</span>
-                        <span class="price-original">₹${product.originalPrice.toLocaleString()}</span>
+        container.innerHTML = categoryProducts.map(product => {
+            // Safety checks for prices
+            const salePrice = Number(product.salePrice) || 0;
+            const originalPrice = Number(product.originalPrice) || 0;
+
+            return `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x500?text=Image+Not+Found'">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <div class="product-price">
+                            <span class="price-sale">₹${salePrice.toLocaleString('en-IN')}</span>
+                            <span class="price-original">₹${originalPrice.toLocaleString('en-IN')}</span>
+                        </div>
+                        <button class="btn-add-to-cart" data-id="${product.id}">Add to Cart</button>
                     </div>
-                    <button class="btn-add-to-cart">Add to Cart</button>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     });
 
     // Re-attach add to cart event listeners
