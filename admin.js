@@ -789,7 +789,7 @@ function renderOrders(orders, filter = 'all', search = '') {
                 </span>
             </td>
             <td>
-                <select class="order-status-select" data-order-id="${order.orderId}" style="padding: 0.4rem; border-radius: 4px; border: 1px solid #ddd;">
+                <select class="order-status-select" data-order-id="${order.id}" style="padding: 0.4rem; border-radius: 4px; border: 1px solid #ddd;">
                     <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
                     <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
                     <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
@@ -798,7 +798,7 @@ function renderOrders(orders, filter = 'all', search = '') {
                 </select>
             </td>
             <td>
-                <button class="btn-edit" onclick="viewOrderDetails('${order.orderId}')">View</button>
+                <button class="btn-edit" onclick="viewOrderDetails('${order.id}')">View</button>
             </td>
         `;
         tbody.appendChild(row);

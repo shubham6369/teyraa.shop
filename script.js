@@ -658,6 +658,8 @@ toLogin.addEventListener('click', (e) => {
 });
 
 // Auth State Listener
+let userOrdersListener = null;
+
 auth.onAuthStateChanged((user) => {
     if (user) {
         // Customer is logged in
@@ -675,13 +677,19 @@ auth.onAuthStateChanged((user) => {
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
         if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'block';
 
-        // Load personal orders
+        // Load personal orders real-time
         fetchUserOrders(user);
     } else {
         // Logged out
         if (profileSection) profileSection.style.display = 'none';
         if (userBtn) userBtn.style.color = '';
         if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'none';
+
+        // Unsubscribe from orders if listener exists
+        if (userOrdersListener) {
+            userOrdersListener();
+            userOrdersListener = null;
+        }
     }
 });
 
@@ -880,40 +888,45 @@ async function fetchUserOrders(user) {
     const orderList = document.getElementById('orderList');
     if (!orderList) return;
 
+    // Unsubscribe from old listener if it exists
+    if (userOrdersListener) userOrdersListener();
+
     try {
-        // Find orders associated with this user's email OR phone
         const identifier = user.email || user.phoneNumber;
 
-        // We query by customer email/phone in the orders collection
-        const snapshot = await ordersCollection.get();
-        const myOrders = snapshot.docs
-            .map(doc => doc.data())
-            .filter(order => order.customer.email === identifier || order.customer.mobile.includes(identifier.replace('+91', '')))
-            .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+        // Setup real-time listener for this user's orders
+        userOrdersListener = ordersCollection.onSnapshot((snapshot) => {
+            const myOrders = snapshot.docs
+                .map(doc => doc.data())
+                .filter(order => order.customer.email === identifier || (order.customer.mobile && order.customer.mobile.includes(identifier.replace('+91', ''))))
+                .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
 
-        if (myOrders.length === 0) {
-            orderList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No orders yet. Start shopping!</p>';
-            return;
-        }
+            if (myOrders.length === 0) {
+                orderList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No orders yet. Start shopping!</p>';
+                return;
+            }
 
-        orderList.innerHTML = myOrders.map(order => `
-            <div style="background: #f8fafc; padding: 0.8rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
-                    <span style="font-weight: 700; color: var(--primary-color);">${order.orderId}</span>
-                    <span style="font-size: 0.75rem; color: #64748b;">${new Date(order.orderDate).toLocaleDateString()}</span>
+            orderList.innerHTML = myOrders.map(order => `
+                <div style="background: #f8fafc; padding: 0.8rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; margin-bottom: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                        <span style="font-weight: 700; color: var(--primary-color);">${order.orderId}</span>
+                        <span style="font-size: 0.75rem; color: #64748b;">${new Date(order.orderDate).toLocaleDateString()}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #475569;">${order.items.length} item(s) • ₹${order.totalAmount.toLocaleString()}</span>
+                        <span style="padding: 0.2rem 0.5rem; background: ${getStatusColor(order.status)}; color: white; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">
+                            ${order.status}
+                        </span>
+                    </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #475569;">${order.items.length} item(s) • ₹${order.totalAmount.toLocaleString()}</span>
-                    <span style="padding: 0.2rem 0.5rem; background: ${getStatusColor(order.status)}; color: white; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">
-                        ${order.status}
-                    </span>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
+        }, (error) => {
+            console.error("Order listener error:", error);
+            orderList.innerHTML = '<p style="color: var(--error); text-align: center; padding: 1rem;">Failed to track orders.</p>';
+        });
 
     } catch (error) {
-        console.error("Error fetching user orders:", error);
-        orderList.innerHTML = '<p style="color: var(--error); text-align: center; padding: 1rem;">Failed to load orders.</p>';
+        console.error("Error setting up user orders listener:", error);
     }
 }
 
