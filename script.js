@@ -674,6 +674,9 @@ auth.onAuthStateChanged((user) => {
 
         if (userBtn) userBtn.style.color = 'var(--accent-color)';
         if (document.getElementById('logoutHeader')) document.getElementById('logoutHeader').style.display = 'block';
+
+        // Load personal orders
+        fetchUserOrders(user);
     } else {
         // Logged out
         if (profileSection) profileSection.style.display = 'none';
@@ -771,6 +774,157 @@ if (document.getElementById('customerLogout')) {
 
 if (document.getElementById('logoutHeader')) {
     document.getElementById('logoutHeader').addEventListener('click', handleLogout);
+}
+
+// ===== SEARCH FUNCTIONALITY =====
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const productCards = document.querySelectorAll('.product-card');
+
+        productCards.forEach(card => {
+            const name = card.querySelector('h3').textContent.toLowerCase();
+            if (name.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
+
+// ===== NEWSLETTER FUNCTIONALITY =====
+const newsletterForm = document.getElementById('newsletterForm');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = newsletterForm.querySelector('input').value;
+
+        try {
+            await db.collection('newsletter').add({
+                email: email,
+                subscribedAt: new Date().toISOString()
+            });
+            alert('Thank you for subscribing! 🎁');
+            newsletterForm.reset();
+        } catch (error) {
+            console.error("Newsletter error:", error);
+            alert('Something went wrong. Please try again.');
+        }
+    });
+}
+
+// ===== QUICK VIEW FUNCTIONALITY =====
+async function openQuickView(productIdStr) {
+    const modal = document.getElementById('quickViewModal');
+    const content = document.getElementById('quickViewContent');
+    if (!modal || !content) return;
+
+    try {
+        // Find product by id in Firestore
+        const doc = await productsCollection.doc(productIdStr).get();
+        if (!doc.exists) return;
+        const product = doc.data();
+        const productId = doc.id; // Use real document ID
+
+        content.innerHTML = `
+            <div style="background: #f8fafc; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+                <img src="${product.image}" alt="${product.name}" style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            </div>
+            <div style="padding: 3rem; display: flex; flex-direction: column; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <span style="color: var(--accent-color); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">${product.category}</span>
+                </div>
+                <h2 style="font-size: 2.2rem; margin: 0.5rem 0 1.5rem; color: var(--primary-color); line-height: 1.1;">${product.name}</h2>
+                <div style="font-size: 2rem; font-weight: 800; color: var(--accent-color); margin-bottom: 2rem;">
+                    ₹${Number(product.salePrice).toLocaleString()} 
+                    <span style="font-size: 1.2rem; text-decoration: line-through; color: #94a3b8; font-weight: 400; margin-left: 1rem;">₹${Number(product.originalPrice).toLocaleString()}</span>
+                </div>
+                <div style="color: #64748b; line-height: 1.6; margin-bottom: 2.5rem;">
+                    Premium quality ${product.name} crafted for style and comfort. Perfect for any occasion. Available in multiple sizes.
+                </div>
+                <button class="btn-primary" onclick="addToCartFromQuickView('${productId}', '${product.name}', ${product.salePrice}, '${product.image}')" style="width: 100%; padding: 1.2rem; font-size: 1.1rem; border-radius: 12px;">Add to Shopping Bag</button>
+            </div>
+        `;
+
+        modal.classList.add('active');
+        overlay.classList.add('active');
+    } catch (error) {
+        console.error("Quick view error:", error);
+    }
+}
+
+function addToCartFromQuickView(id, name, price, image) {
+    addToCart(id, name, `₹${price.toLocaleString()}`, image);
+    closeQuickView();
+    setTimeout(() => {
+        cartSidebar.classList.add('active');
+        overlay.classList.add('active');
+    }, 500);
+}
+
+window.addToCartFromQuickView = addToCartFromQuickView;
+
+function closeQuickView() {
+    const modal = document.getElementById('quickViewModal');
+    if (modal) modal.classList.remove('active');
+    overlay.classList.remove('active');
+}
+
+window.openQuickView = openQuickView;
+window.closeQuickView = closeQuickView;
+
+// ===== USER ORDER HISTORY =====
+async function fetchUserOrders(user) {
+    const orderList = document.getElementById('orderList');
+    if (!orderList) return;
+
+    try {
+        // Find orders associated with this user's email OR phone
+        const identifier = user.email || user.phoneNumber;
+
+        // We query by customer email/phone in the orders collection
+        const snapshot = await ordersCollection.get();
+        const myOrders = snapshot.docs
+            .map(doc => doc.data())
+            .filter(order => order.customer.email === identifier || order.customer.mobile.includes(identifier.replace('+91', '')))
+            .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+        if (myOrders.length === 0) {
+            orderList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No orders yet. Start shopping!</p>';
+            return;
+        }
+
+        orderList.innerHTML = myOrders.map(order => `
+            <div style="background: #f8fafc; padding: 0.8rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                    <span style="font-weight: 700; color: var(--primary-color);">${order.orderId}</span>
+                    <span style="font-size: 0.75rem; color: #64748b;">${new Date(order.orderDate).toLocaleDateString()}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #475569;">${order.items.length} item(s) • ₹${order.totalAmount.toLocaleString()}</span>
+                    <span style="padding: 0.2rem 0.5rem; background: ${getStatusColor(order.status)}; color: white; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">
+                        ${order.status}
+                    </span>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error("Error fetching user orders:", error);
+        orderList.innerHTML = '<p style="color: var(--error); text-align: center; padding: 1rem;">Failed to load orders.</p>';
+    }
+}
+
+function getStatusColor(status) {
+    switch (status) {
+        case 'Delivered': return '#10b981';
+        case 'Cancelled': return '#ef4444';
+        case 'Shipped': return '#3b82f6';
+        case 'Processing': return '#f59e0b';
+        default: return '#94a3b8';
+    }
 }
 
 console.log('🛍️ teyraa.shop Loaded Successfully!');

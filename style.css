@@ -1183,6 +1183,16 @@ img {
     }
 }
 
+.product-image-container:hover .quick-view-overlay {
+    opacity: 1 !important;
+}
+
+.quick-view-overlay:hover span {
+    transform: scale(1.1);
+    background: var(--accent-color) !important;
+    color: white !important;
+}
+
 /* ===== CHECKOUT MODAL ===== */
 .checkout-modal .modal-content {
     max-width: 600px;
