@@ -1187,6 +1187,9 @@ img {
 .checkout-modal .modal-content {
     max-width: 600px;
     padding: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
 .checkout-body {
