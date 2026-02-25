@@ -420,3 +420,363 @@ footer {
         display: none;
     }
 }
+
+
+/* ═══════════════════════════════════════════
+   ANIMATION LAYER — TEYRAA PREMIUM MOTION
+═══════════════════════════════════════════ */
+
+/* Custom cursor override */
+@media (pointer: fine) {
+    body {
+        cursor: none !important;
+    }
+
+    a,
+    button {
+        cursor: none !important;
+    }
+}
+
+/* ── Keyframes ── */
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scrollPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+    50% {
+        opacity: 0.3;
+        transform: scaleY(0.5);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes clipReveal {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -600px 0;
+    }
+
+    100% {
+        background-position: 600px 0;
+    }
+}
+
+@keyframes floatY {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes goldPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 12px rgba(197, 160, 89, 0);
+    }
+}
+
+@keyframes rotateGold {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loaderFadeOut {
+    to {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+    }
+}
+
+@keyframes navSlideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ── Loader ── */
+#loader.done {
+    animation: loaderFadeOut 0.8s var(--ease-out-expo) forwards;
+}
+
+/* ── Nav entrance ── */
+nav {
+    animation: navSlideDown 1s 0.5s var(--ease-out-expo) both;
+}
+
+/* ── Hero h1 split lines ── */
+.h1-inner {
+    display: block;
+    transform: translateY(110%);
+    transition: transform 1.4s var(--ease-out-expo);
+}
+
+.hero.active .h1-inner:nth-child(1) {
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
+
+.hero.active .h1-inner {
+    transform: translateY(0);
+}
+
+/* Stagger second line */
+.h1-line:nth-child(2) .h1-inner {
+    transition-delay: 0.5s !important;
+}
+
+/* ── Scroll indicator ── */
+.hero.active #scroll-indicator {
+    opacity: 1 !important;
+}
+
+/* ── Marquee ribbon ── */
+.marquee-item {
+    display: inline-block;
+    padding: 0 3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: var(--color-bg);
+    text-transform: uppercase;
+}
+
+.marquee-sep {
+    display: inline-block;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.5rem;
+    vertical-align: middle;
+}
+
+/* ── Stats bar ── */
+.stat-item {
+    padding: 2rem;
+    position: relative;
+}
+
+.stat-item::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: var(--color-border);
+}
+
+.stat-item:last-child::after {
+    display: none;
+}
+
+/* ── Reveal with stagger ── */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger siblings */
+.collection-grid .chapter-card:nth-child(1).reveal {
+    transition-delay: 0s;
+}
+
+.collection-grid .chapter-card:nth-child(2).reveal {
+    transition-delay: 0.12s;
+}
+
+.collection-grid .chapter-card:nth-child(3).reveal {
+    transition-delay: 0.24s;
+}
+
+/* ── Story image: clip-path reveal ── */
+.story-image {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.4s var(--ease-out-expo) !important;
+}
+
+.story-image.active {
+    clip-path: inset(0 0% 0 0);
+}
+
+/* ── Chapter cards: shimmer on hover ── */
+.chapter-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(197, 160, 89, 0.12) 50%, transparent 60%);
+    background-size: 600px 100%;
+    background-position: -600px 0;
+    z-index: 5;
+    pointer-events: none;
+    transition: none;
+}
+
+.chapter-card:hover .chapter-image::before {
+    animation: shimmer 0.8s ease forwards;
+}
+
+/* ── Magnetic button ── */
+.btn-premium.magnetic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s var(--ease-out-expo), color 0.4s, box-shadow 0.4s !important;
+}
+
+.btn-premium.magnetic:hover {
+    box-shadow: 0 0 40px rgba(197, 160, 89, 0.25);
+    animation: goldPulse 2s ease infinite;
+}
+
+/* ── Story image parallax float ── */
+.story-image img {
+    transition: transform 1.6s var(--ease-out-expo), filter 0.8s !important;
+}
+
+/* ── Nav scroll state ── */
+nav.scrolled {
+    background: rgba(5, 5, 5, 0.92) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+    mix-blend-mode: normal !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    transition: all 0.5s var(--ease-out-expo);
+}
+
+/* ── Gold line decoration ── */
+.story-tag::before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--color-accent);
+    vertical-align: middle;
+    margin-right: 1rem;
+    animation: clipReveal 0.8s var(--ease-out-expo) both;
+}
+
+/* ── Testimonial cards hover lift ── */
+#testimonials .reveal {
+    transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo), box-shadow 0.4s !important;
+}
+
+#testimonials .reveal:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-accent);
+}
+
+/* ── Footer link underline animation ── */
+.footer-links a {
+    position: relative;
+    display: inline-block;
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-accent);
+    transition: width 0.4s var(--ease-out-expo);
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+/* ── Moments section image zoom ── */
+#moments img {
+    transition: transform 6s var(--ease-out-expo) !important;
+}
+
+#moments div:hover img {
+    transform: scale(1.08);
+}
+
+/* ── Background grid texture ── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(197, 160, 89, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(197, 160, 89, 0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 640px) {
+    .stat-item::after {
+        display: none;
+    }
+
+    #stats-bar .container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+}

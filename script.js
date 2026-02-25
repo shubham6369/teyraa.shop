@@ -1,40 +1,118 @@
 /**
- * TEYRAA HOROLOGY — NARRATIVE ENGINE v2
+ * TEYRAA HOROLOGY — NARRATIVE ENGINE v3
  *
- * Responsibilities:
- *  - Cinematic hero entrance animation
- *  - Scroll-reveal via IntersectionObserver
- *  - Smooth anchor scrolling
- *  - Parallax hero background
- *  - Cart sidebar (slide-in/out, live item list)
- *  - Gold cursor glow (desktop)
- *  - Toast notification system
+ * Animations:
+ *  ✦ Cinematic loader with count-up progress
+ *  ✦ Hero headline split-line entrance
+ *  ✦ Scroll-triggered reveal (IntersectionObserver)
+ *  ✦ Parallax hero video
+ *  ✦ Stat counter animation
+ *  ✦ Magnetic button tracking
+ *  ✦ Precision dual cursor (dot + ring)
+ *  ✦ Nav background on scroll
+ *  ✦ Cart sidebar (open/close/render)
+ *  ✦ Toast notification
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ╔════════════════════════════════════╗
-    // ║  1. HERO ENTRANCE                  ║
-    // ╚════════════════════════════════════╝
-    const hero = document.querySelector('.hero');
-    if (hero) setTimeout(() => hero.classList.add('active'), 120);
+
+    // ╔══════════════════════════════════════╗
+    // ║  1. CINEMATIC LOADER                 ║
+    // ╚══════════════════════════════════════╝
+    const loader = document.getElementById('loader');
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderPct = document.getElementById('loader-pct');
+    const loaderLogo = document.getElementById('loader-logo');
+
+    if (loader && loaderLogo) {
+        // Fade in logo
+        setTimeout(() => {
+            loaderLogo.style.opacity = '1';
+            loaderLogo.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Count progress bar 0 → 100
+        let pct = 0;
+        const interval = setInterval(() => {
+            pct += Math.random() * 4 + 1;
+            if (pct >= 100) {
+                pct = 100;
+                clearInterval(interval);
+                if (loaderBar) loaderBar.style.width = '100%';
+                if (loaderPct) loaderPct.textContent = '100%';
+
+                // Collapse loader after short pause
+                setTimeout(() => {
+                    loader.classList.add('done');
+                    document.body.style.overflow = 'auto';
+                    // Trigger hero
+                    const hero = document.querySelector('.hero');
+                    if (hero) hero.classList.add('active');
+                    // Show scroll indicator
+                    const si = document.getElementById('scroll-indicator');
+                    if (si) si.style.opacity = '1';
+                }, 600);
+            }
+            if (loaderBar) loaderBar.style.width = `${Math.min(pct, 100)}%`;
+            if (loaderPct) loaderPct.textContent = `${Math.floor(pct)}%`;
+        }, 40);
+    } else {
+        // No loader — animate hero immediately
+        const hero = document.querySelector('.hero');
+        if (hero) setTimeout(() => hero.classList.add('active'), 100);
+    }
+
+    // Lock scroll during load
+    document.body.style.overflow = 'hidden';
 
 
-    // ╔════════════════════════════════════╗
-    // ║  2. SCROLL REVEAL ENGINE           ║
-    // ╚════════════════════════════════════╝
+    // ╔══════════════════════════════════════╗
+    // ║  2. SCROLL REVEAL ENGINE             ║
+    // ╚══════════════════════════════════════╝
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
         });
-    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 
-    // ╔════════════════════════════════════╗
-    // ║  3. SMOOTH ANCHOR SCROLLING        ║
-    // ╚════════════════════════════════════╝
+    // ╔══════════════════════════════════════╗
+    // ║  3. STAT COUNTER ANIMATION           ║
+    // ╚══════════════════════════════════════╝
+    function animateCounter(el, target, duration = 2000) {
+        let start = 0;
+        const step = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1);
+            // Ease out
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target).toLocaleString();
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = target.toLocaleString();
+        };
+        requestAnimationFrame(step);
+    }
+
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.getAttribute('data-target'));
+                animateCounter(el, target);
+                statObserver.unobserve(el); // fire once only
+            }
+        });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('.stat-num').forEach(el => statObserver.observe(el));
+
+
+    // ╔══════════════════════════════════════╗
+    // ║  4. SMOOTH ANCHOR SCROLLING          ║
+    // ╚══════════════════════════════════════╝
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -48,32 +126,109 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // ╔════════════════════════════════════╗
-    // ║  4. PARALLAX HERO                  ║
-    // ╚════════════════════════════════════╝
+    // ╔══════════════════════════════════════╗
+    // ║  5. PARALLAX HERO VIDEO              ║
+    // ╚══════════════════════════════════════╝
     const heroVideo = document.querySelector('.hero-video-bg');
-    if (heroVideo) {
-        window.addEventListener('scroll', () => {
-            heroVideo.style.transform = `translateY(${window.pageYOffset * 0.28}px)`;
-        }, { passive: true });
-    }
+    window.addEventListener('scroll', () => {
+        if (heroVideo) {
+            heroVideo.style.transform = `translateY(${window.pageYOffset * 0.25}px)`;
+        }
+    }, { passive: true });
 
 
-    // ╔════════════════════════════════════╗
-    // ║  5. GOLD CURSOR GLOW              ║
-    // ╚════════════════════════════════════╝
-    const glow = document.getElementById('cursor-glow');
-    if (glow && window.matchMedia('(pointer:fine)').matches) {
+    // ╔══════════════════════════════════════╗
+    // ║  6. NAV SCROLL BACKGROUND            ║
+    // ╚══════════════════════════════════════╝
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+        if (!nav) return;
+        if (window.scrollY > 80) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    }, { passive: true });
+
+
+    // ╔══════════════════════════════════════╗
+    // ║  7. PRECISION DUAL CURSOR            ║
+    // ╚══════════════════════════════════════╝
+    const cursorDot = document.getElementById('cursor-glow');
+    const cursorRing = document.getElementById('cursor-glow-outer');
+    const cursorBg = document.getElementById('cursor-bg-glow');
+
+    if (cursorDot && window.matchMedia('(pointer:fine)').matches) {
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+
         document.addEventListener('mousemove', e => {
-            glow.style.left = e.clientX + 'px';
-            glow.style.top = e.clientY + 'px';
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            // Dot follows instantly
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+            // Background glow follows with lag
+            if (cursorBg) {
+                cursorBg.style.left = mouseX + 'px';
+                cursorBg.style.top = mouseY + 'px';
+            }
+        });
+
+        // Ring lags behind — smooth follow
+        function animateRing() {
+            ringX += (mouseX - ringX) * 0.12;
+            ringY += (mouseY - ringY) * 0.12;
+            if (cursorRing) {
+                cursorRing.style.left = ringX + 'px';
+                cursorRing.style.top = ringY + 'px';
+            }
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+
+        // Hover state on interactive elements
+        document.querySelectorAll('a, button, .chapter-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (cursorRing) {
+                    cursorRing.style.width = '70px';
+                    cursorRing.style.height = '70px';
+                    cursorRing.style.borderColor = 'rgba(197,160,89,0.9)';
+                }
+                if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(0.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                if (cursorRing) {
+                    cursorRing.style.width = '40px';
+                    cursorRing.style.height = '40px';
+                    cursorRing.style.borderColor = 'rgba(197,160,89,0.5)';
+                }
+                if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(1)';
+            });
         });
     }
 
 
-    // ╔════════════════════════════════════╗
-    // ║  6. CART SYSTEM                    ║
-    // ╚════════════════════════════════════╝
+    // ╔══════════════════════════════════════╗
+    // ║  8. MAGNETIC BUTTONS                 ║
+    // ╚══════════════════════════════════════╝
+    document.querySelectorAll('.magnetic').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+            btn.style.transition = 'transform 0.6s cubic-bezier(0.19,1,0.22,1)';
+        });
+    });
+
+
+    // ╔══════════════════════════════════════╗
+    // ║  9. CART SYSTEM                      ║
+    // ╚══════════════════════════════════════╝
     let cart = JSON.parse(localStorage.getItem('teyraa_cart')) || [];
 
     const sidebar = document.getElementById('cartSidebar');
@@ -105,15 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCart() {
         if (!itemsWrap) return;
+        if (countEl) countEl.textContent = cart.length;
 
-        const count = cart.length;
-        if (countEl) countEl.textContent = count;
-
-        if (count === 0) {
+        if (cart.length === 0) {
             itemsWrap.innerHTML = `
-                <div style="text-align:center; padding:4rem 0; color:var(--color-text-muted);">
-                    <p style="font-family:var(--font-heading); font-size:1.4rem; margin-bottom:1rem;">The archive is empty.</p>
-                    <a href="#collections" onclick="closeCart()" style="font-size:0.75rem; letter-spacing:2px; color:var(--color-accent); text-transform:uppercase;">Discover a Timepiece</a>
+                <div style="text-align:center;padding:5rem 0;color:var(--color-text-muted);">
+                    <div style="font-size:3rem;margin-bottom:1rem;opacity:0.2;">◷</div>
+                    <p style="font-family:var(--font-heading);font-size:1.4rem;margin-bottom:1rem;">The archive is empty.</p>
+                    <a href="#collections" style="font-size:0.7rem;letter-spacing:2px;color:var(--color-accent);text-transform:uppercase;text-decoration:none;">Discover a Timepiece</a>
                 </div>`;
             if (totalEl) totalEl.textContent = '₹0';
             return;
@@ -123,62 +277,72 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsWrap.innerHTML = cart.map((item, idx) => {
             total += Number(item.price);
             return `
-            <div style="display:flex; gap:1.2rem; margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid var(--color-border); align-items:center;">
-                <img src="${item.image}?q=60&w=150&auto=format" style="width:65px; height:65px; object-fit:cover; flex-shrink:0; filter:brightness(0.8);" onerror="this.style.display='none'">
-                <div style="flex:1; min-width:0;">
-                    <p style="font-size:0.85rem; margin-bottom:0.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</p>
-                    <span style="font-size:0.7rem; color:var(--color-accent);">₹${Number(item.price).toLocaleString('en-IN')}</span>
+            <div style="display:flex;gap:1.2rem;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--color-border);align-items:center;animation:fadeUp 0.5s ${idx * 0.08}s var(--ease-out-expo) both;">
+                <img src="${item.image}?q=60&w=150&auto=format" style="width:65px;height:65px;object-fit:cover;flex-shrink:0;filter:brightness(0.8);" onerror="this.style.display='none'">
+                <div style="flex:1;min-width:0;">
+                    <p style="font-size:0.85rem;margin-bottom:0.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</p>
+                    <span style="font-size:0.7rem;color:var(--color-accent);">₹${Number(item.price).toLocaleString('en-IN')}</span>
                 </div>
-                <button onclick="window.removeFromCart(${idx})" style="background:none; border:none; color:var(--color-text-muted); cursor:pointer; font-size:1rem; flex-shrink:0; transition:0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--color-text-muted)'">✕</button>
+                <button onclick="window.removeFromCart(${idx})" style="background:none;border:none;color:var(--color-text-muted);cursor:none;font-size:1rem;flex-shrink:0;transition:color 0.3s;padding:0.5rem;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--color-text-muted)'">✕</button>
             </div>`;
         }).join('');
 
         if (totalEl) totalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
     }
 
-    // Global add / remove exposed to products.js
     window.addToCart = (id, name, price, image, category) => {
         cart.push({ id, name, price: Number(price), image, category: category || '' });
         saveCart();
         renderCart();
         openCart();
-        showToast(`${name} added to your collection.`);
+        showToast(`${name} secured.`);
     };
 
     window.removeFromCart = (idx) => {
+        const removed = cart[idx];
         cart.splice(idx, 1);
         saveCart();
         renderCart();
+        if (removed) showToast(`${removed.name} removed.`);
     };
 
-    renderCart(); // on load
+    renderCart();
 
 
-    // ╔════════════════════════════════════╗
-    // ║  7. TOAST NOTIFICATION             ║
-    // ╚════════════════════════════════════╝
+    // ╔══════════════════════════════════════╗
+    // ║  10. TOAST NOTIFICATION              ║
+    // ╚══════════════════════════════════════╝
     function showToast(msg) {
+        // Remove existing toasts
+        document.querySelectorAll('.teyraa-toast').forEach(t => t.remove());
+
         const t = document.createElement('div');
+        t.className = 'teyraa-toast';
         t.style.cssText = `
-            position:fixed; bottom:2.5rem; left:50%; transform:translateX(-50%) translateY(20px);
-            background:#0f0f0f; color:#fff; border:1px solid var(--color-accent);
-            padding:1rem 2.5rem; border-radius:2px; font-size:0.75rem; letter-spacing:1.5px;
-            text-transform:uppercase; z-index:99999; opacity:0;
-            transition:all 0.5s cubic-bezier(0.19,1,0.22,1); white-space:nowrap;
+            position:fixed; bottom:2.5rem; left:50%; transform:translateX(-50%) translateY(30px);
+            background:rgba(15,15,15,0.95); color:#fff;
+            border:1px solid var(--color-accent);
+            padding:1rem 2.5rem; border-radius:2px;
+            font-size:0.7rem; letter-spacing:2px;
+            text-transform:uppercase; z-index:99999;
+            opacity:0; white-space:nowrap;
+            backdrop-filter:blur(16px);
+            transition:all 0.5s cubic-bezier(0.19,1,0.22,1);
         `;
         t.textContent = msg;
         document.body.appendChild(t);
+
         requestAnimationFrame(() => {
             t.style.opacity = '1';
             t.style.transform = 'translateX(-50%) translateY(0)';
         });
         setTimeout(() => {
             t.style.opacity = '0';
-            t.style.transform = 'translateX(-50%) translateY(20px)';
+            t.style.transform = 'translateX(-50%) translateY(30px)';
             setTimeout(() => t.remove(), 500);
-        }, 3500);
+        }, 3200);
     }
 
-    window.showToast = showToast; // expose for other modules
+    window.showToast = showToast;
 
 });
