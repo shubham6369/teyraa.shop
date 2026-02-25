@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEYRAA HOROLOGY | The Art of Time</title>
+    <meta name="description"
+        content="Luxury watch collective featuring heritage craftsmanship and modern precision. Time isn't measured, it's remembered.">
+
+    <!-- Design System & Icons -->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <!-- Firebase SDK (Production Only) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+
+    <!-- Precise Navigation -->
+    <nav>
+        <a href="#" class="nav-logo">Teyraa</a>
+        <div class="nav-links">
+            <a href="#heritage">Heritage</a>
+            <a href="#collections">Collections</a>
+            <a href="#moments">Moments</a>
+            <a href="#makers">Makers</a>
+            <a href="admin.html">Access</a>
+        </div>
+        <div class="nav-actions">
+            <a href="#" class="nav-cart" style="color: white; font-size: 1.2rem;">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cartCount"
+                    style="font-size: 0.6rem; vertical-align: top; background: var(--color-accent); padding: 2px 6px; border-radius: 10px; margin-left: -8px;">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- CHAPTER 1: The Awakening (Hero) -->
+    <header class="hero" id="home">
+        <video class="hero-video-bg" autoplay loop muted playsinline>
+            <source
+                src="https://cdn.pixabay.com/vimeo/302830833/watch-19777.mp4?width=1280&hash=8c304245543c75908e08d6c703e33c87db5f5b5c"
+                type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1><span>Time Isn't Measured.</span> <span>It's Remembered.</span></h1>
+            <p class="hero-subtext">A collection of precision-engineered legacies, designed for the moments that define
+                who you are.</p>
+            <a href="#collections" class="btn-premium">Discover Your Time</a>
+        </div>
+    </header>
+
+    <!-- CHAPTER 2: The Lineage (Brand Story) -->
+    <section id="heritage" class="story-section">
+        <div class="container">
+            <div class="story-grid">
+                <div class="story-image reveal">
+                    <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1200&auto=format&fit=crop"
+                        alt="The Craftsmanship">
+                </div>
+                <div class="story-content reveal">
+                    <span class="story-tag">Our Heritage</span>
+                    <h2 class="story-title">Forged in the Silence of the Swiss Alps</h2>
+                    <p class="story-text">For three generations, Teyraa has been synonymous with the quiet pursuit of
+                        mechanical perfection. Every oscillator, every bridge, and every hand-polished escapement is a
+                        tribute to the pioneers who navigated by the stars.</p>
+                    <a href="#moments" class="btn-premium">The Legend Continues</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 3: The Volumes (Collections) -->
+    <section id="collections" style="background: var(--color-surface);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 6rem;" class="reveal">
+                <span class="story-tag">Curated Chapters</span>
+                <h2 class="story-title">Explore the Volumes</h2>
+            </div>
+
+            <div class="collection-grid">
+                <!-- Chapter: Heritage -->
+                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Heritage', this)">
+                    <div class="chapter-image">
+                        <img src="https://images.unsplash.com/photo-1508685096489-7as5c7f139a1?q=80&w=800&auto=format&fit=crop"
+                            alt="Heritage Series">
+                    </div>
+                    <div class="chapter-info">
+                        <h3>Legacy Series</h3>
+                        <span>Heritage & Gold</span>
+                    </div>
+                </a>
+
+                <!-- Chapter: Modern -->
+                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Chronograph', this)">
+                    <div class="chapter-image">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
+                            alt="Modern Precision">
+                    </div>
+                    <div class="chapter-info">
+                        <h3>Modern Precision</h3>
+                        <span>Steel & Silver</span>
+                    </div>
+                </a>
+
+                <!-- Chapter: Sports -->
+                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Complication', this)">
+                    <div class="chapter-image">
+                        <img src="https://images.unsplash.com/photo-1548171916-042bdc6b5ad7?q=80&w=800&auto=format&fit=crop"
+                            alt="Sports Chronos">
+                    </div>
+                    <div class="chapter-info">
+                        <h3>Grand Complications</h3>
+                        <span>Aerospace Titanium</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 4: The Archive (Interaction Point) -->
+    <section id="collection-grid" style="padding-top: 5rem;">
+        <div class="container">
+            <div id="allProductsGrid" class="collection-grid">
+                <!-- Products dynamically loaded from Firestore -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 5: The Moments (Lifestyle) -->
+    <section id="moments" style="background: var(--color-bg); padding: 0;">
+        <div class="container" style="max-width: 100%; padding: 0;">
+            <div style="display: flex; height: 80vh;">
+                <div class="reveal" style="flex: 1; position: relative; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1517502474097-f9b30659dadb?q=80&w=1200&auto=format&fit=crop"
+                        style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6);">
+                    <div style="position: absolute; bottom: 3rem; left: 3rem; max-width: 300px;">
+                        <span class="story-tag">Morning Ritual</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 2rem;">The Precision of the First Light.
+                        </h3>
+                    </div>
+                </div>
+                <div class="reveal"
+                    style="flex: 1; position: relative; overflow: hidden; border-left: 1px solid var(--color-border);">
+                    <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?q=80&w=1200&auto=format&fit=crop"
+                        style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6);">
+                    <div style="position: absolute; bottom: 3rem; left: 3rem; max-width: 300px;">
+                        <span class="story-tag">Evening Legacy</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 2rem;">A Toast to the Seconds that Last
+                            Forever.</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 6: The Masterpiece (Makers) -->
+    <section id="makers" style="background: black;">
+        <div class="container">
+            <div class="story-grid">
+                <div class="story-content reveal">
+                    <span class="story-tag">The Hands Behind Time</span>
+                    <h2 class="story-title">"Precision is a Promise We Keep to the Future."</h2>
+                    <p class="story-text">— Marc-Aurèle, Master Watchmaker at Teyraa. With forty years of lineage in
+                        horology, our makers treat every component as a masterpiece in its own right.</p>
+                </div>
+                <div class="story-image reveal">
+                    <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1200&auto=format&fit=crop"
+                        alt="The Mastermaker">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER 7: The Legacy (Testimonials) -->
+    <section id="testimonials" style="background: var(--color-surface);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 8rem;" class="reveal">
+                <span class="story-tag">Bespoke Relations</span>
+                <h2 class="story-title">Voices of the Legacy</h2>
+            </div>
+
+            <div class="collection-grid">
+                <div class="reveal"
+                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
+                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"Teyraa isn't
+                        just a watch; it's the heartbeat of my most precious family traditions. It witnessed my wedding
+                        and now stays with my son."</p>
+                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Arthur P.,
+                        London</span>
+                </div>
+                <div class="reveal"
+                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
+                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"The precision
+                        is breathtaking, but the soul is what captures you. It feels like wearing history on your
+                        wrist."</p>
+                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Elena V.,
+                        Milan</span>
+                </div>
+                <div class="reveal"
+                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
+                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"From the board
+                        room to the base camp, my Chronograph Zero has never missed a second of the adventure."</p>
+                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Julian K.,
+                        Zurich</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer: The Legacy -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Teyraa</h2>
+                    <p style="color: var(--color-text-muted); max-width: 300px;">Crafting horological legacies since
+                        1924. Every second is an invitation to greatness.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="#">The Heritage</a></li>
+                        <li><a href="#">The Modernist</a></li>
+                        <li><a href="#">The Chrono</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Boutique</h4>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">The Archive</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Prescence</h4>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="margin-top: 6rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--color-text-muted); font-size: 0.75rem;">
+                <p>&copy; 2026 TEYRAA HOROLOGY. All Rights Reserved. Engineered for Eternity.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
