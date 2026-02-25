@@ -52,6 +52,7 @@
                         <ul>
                             <li><a href="#heritage">Heritage</a></li>
                             <li><a href="#chronographs">Chronographs</a></li>
+                            <li><a href="#collection">Collection</a></li>
                             <li class="dropdown">
                                 <a href="#complications">Complications</a>
                                 <ul class="dropdown-menu">
@@ -246,15 +247,63 @@
             </div>
         </section>
 
-        <!-- Minimalist Section -->
-        <section class="product-section" id="minimalist">
+        <!-- Master Collection with Filters -->
+        <section class="product-section" id="collection"
+            style="background: var(--bg-white); border-top: 1px solid var(--glass-border);">
             <div class="container">
-                <div class="section-header">
-                    <h2>Minimalist Mastery</h2>
-                    <a href="#view-all" class="view-all">Explore All</a>
+                <div class="section-header-center" style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="font-family: var(--font-heading); font-size: 3rem; color: white;">The Master Collection
+                    </h2>
+                    <p style="color: var(--text-secondary); max-width: 600px; margin: 1rem auto;">Refine your search for
+                        the perfect companion to your legacy.</p>
                 </div>
-                <div class="product-grid" id="minimalistGrid">
-                    <!-- Products injected via Firestore -->
+
+                <!-- Filter Bar -->
+                <div class="filter-bar"
+                    style="background: var(--secondary-color); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--glass-border); margin-bottom: 3rem; display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: center;">
+                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
+                        <label
+                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Price
+                            Range</label>
+                        <select id="priceFilter" class="filter-select"
+                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
+                            <option value="all">All Prices</option>
+                            <option value="0-50000">Below ₹50,000</option>
+                            <option value="50000-150000">₹50,000 - ₹1,50,000</option>
+                            <option value="150000-500000">₹1,50,000 - ₹5,00,000</option>
+                            <option value="500000-above">Above ₹5,00,000</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
+                        <label
+                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Category</label>
+                        <select id="categoryFilter" class="filter-select"
+                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
+                            <option value="all">All Categories</option>
+                            <option value="Heritage">Heritage</option>
+                            <option value="Chronograph">Chronograph</option>
+                            <option value="Complication">Complication</option>
+                            <option value="Minimalist">Minimalist</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
+                        <label
+                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Expert
+                            Rating</label>
+                        <select id="ratingFilter" class="filter-select"
+                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
+                            <option value="all">All Ratings</option>
+                            <option value="5">5 Stars</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="3">3+ Stars</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="product-grid" id="allProductsGrid">
+                    <!-- Dynamic filtered products will appear here -->
                 </div>
             </div>
         </section>

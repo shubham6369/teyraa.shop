@@ -712,6 +712,65 @@ img {
     opacity: 1;
 }
 
+/* Filter Bar Enhancements */
+.filter-bar {
+    transition: var(--transition-normal);
+    box-shadow: var(--glass-shadow);
+}
+
+.filter-select:hover {
+    border-color: var(--accent-light) !important;
+    background: #111 !important;
+}
+
+.filter-select:focus {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+}
+
+/* Star Rating Animation */
+.product-rating {
+    letter-spacing: 2px;
+}
+
+.product-rating span {
+    transition: var(--transition-fast);
+}
+
+.product-rating:hover span {
+    transform: scale(1.1);
+}
+
+/* Global Grid Styling */
+#allProductsGrid {
+    padding-top: 2rem;
+}
+
+/* Staggered Reveal for Dynamic Products */
+#allProductsGrid .product-card {
+    animation: fadeInUp 0.8s var(--ease-out) backwards;
+}
+
+#allProductsGrid .product-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+#allProductsGrid .product-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+#allProductsGrid .product-card:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+#allProductsGrid .product-card:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+#allProductsGrid .product-card:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
 .product-card:nth-child(1) {
     animation-delay: 0.1s;
 }

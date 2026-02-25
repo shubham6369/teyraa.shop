@@ -328,6 +328,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
         salePrice: parseInt(document.getElementById('productSalePrice').value),
         originalPrice: parseInt(document.getElementById('productOriginalPrice').value),
         image: document.getElementById('productImage').value,
+        rating: parseInt(document.getElementById('productRating').value) || 5,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
@@ -352,6 +353,7 @@ async function editProduct(id) {
         document.getElementById('productSalePrice').value = product.salePrice;
         document.getElementById('productOriginalPrice').value = product.originalPrice;
         document.getElementById('productImage').value = product.image;
+        document.getElementById('productRating').value = product.rating || 5;
 
         // Show preview
         const previewImg = document.getElementById('previewImg');
