@@ -174,78 +174,33 @@
             </div>
         </section>
 
-        <!-- Category Banner -->
-        <section class="category-banner" style="background: var(--bg-white); padding-top: var(--space-3xl);">
-            <div class="container">
-                <div class="section-header-center" style="text-align: center; margin-bottom: var(--space-2xl);">
-                    <h2 style="font-family: var(--font-heading); font-size: 3rem; color: white;">Curated Collections
-                    </h2>
-                    <p style="color: var(--text-secondary); max-width: 600px; margin: 1rem auto; font-size: 1.1rem;">
-                        Discover the perfect harmony of mechanical mastery and aesthetic perfection.</p>
-                </div>
-                <div class="category-grid">
-                    <a href="#heritage" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=800&auto=format&fit=crop"
-                            alt="Heritage Collection" class="category-image" loading="lazy">
-                        <h3>Heritage</h3>
-                    </a>
-                    <a href="#chronographs" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
-                            alt="Chronographs" class="category-image" loading="lazy">
-                        <h3>Chronographs</h3>
-                    </a>
-                    <a href="#complications" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1619134778706-7015533a6150?q=80&w=800&auto=format&fit=crop"
-                            alt="Grand Complications" class="category-image" loading="lazy">
-                        <h3>Complications</h3>
-                    </a>
-                    <a href="#minimalist" class="category-card">
-                        <img src="https://images.unsplash.com/photo-1509048191080-d2984bad6ad5?q=80&w=800&auto=format&fit=crop"
-                            alt="Minimalist Collection" class="category-image" loading="lazy">
-                        <h3>Minimalist</h3>
-                    </a>
-                </div>
+        <!-- THE TEYRAA CHRONICLES: Storytelling Section -->
+        <section id="chronicles"
+            style="background: var(--bg-white); overflow: hidden; position: relative; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+            <div id="legendaryChronicles" style="width: 100%; height: 100%; position: relative;">
+                <!-- Legendary stories injected here -->
+            </div>
+
+            <!-- Navigation Dots -->
+            <div id="storyDots"
+                style="position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; gap: 1.5rem; z-index: 10;">
+                <!-- Dots injected here -->
+            </div>
+
+            <!-- See All Redirection -->
+            <div style="position: absolute; right: 3rem; bottom: 3rem; z-index: 10;">
+                <a href="#collection" class="btn-secondary"
+                    style="border: 1px solid var(--accent-color); color: var(--accent-color); background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; border-radius: 50px; transition: 0.4s;">
+                    Discover Full Collection
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7 7 7-7 7" />
+                    </svg>
+                </a>
             </div>
         </section>
 
-        <!-- Heritage Section -->
-        <section class="product-section" id="heritage">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Heritage Collection</h2>
-                    <a href="#view-all" class="view-all">Explore All</a>
-                </div>
-                <div class="product-grid" id="heritageGrid">
-                    <!-- Products injected via Firestore -->
-                </div>
-            </div>
-        </section>
+        <!-- The rest of the sections are now secondary to the Master Collection or removed to focus on storytelling -->
 
-        <!-- Chronographs Section -->
-        <section class="product-section" id="chronographs">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Master Chronographs</h2>
-                    <a href="#view-all" class="view-all">Explore All</a>
-                </div>
-                <div class="product-grid" id="chronographGrid">
-                    <!-- Products injected via Firestore -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Complications Section -->
-        <section class="product-section" id="complications">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Grand Complications</h2>
-                    <a href="#view-all" class="view-all">Explore All</a>
-                </div>
-                <div class="product-grid" id="complicationGrid">
-                    <!-- Products injected via Firestore -->
-                </div>
-            </div>
-        </section>
 
         <!-- Master Collection with Filters -->
         <section class="product-section" id="collection"
@@ -258,48 +213,59 @@
                         the perfect companion to your legacy.</p>
                 </div>
 
-                <!-- Filter Bar -->
-                <div class="filter-bar"
-                    style="background: var(--secondary-color); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--glass-border); margin-bottom: 3rem; display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: center;">
-                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
-                        <label
-                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Price
-                            Range</label>
-                        <select id="priceFilter" class="filter-select"
-                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
-                            <option value="all">All Prices</option>
-                            <option value="0-50000">Below ₹50,000</option>
-                            <option value="50000-150000">₹50,000 - ₹1,50,000</option>
-                            <option value="150000-500000">₹1,50,000 - ₹5,00,000</option>
-                            <option value="500000-above">Above ₹5,00,000</option>
-                        </select>
+                <!-- Dot-based Category Switcher -->
+                <div class="category-dots-nav"
+                    style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 4rem; overflow-x: auto; padding: 1rem; scrollbar-width: none;">
+                    <div class="cat-pill active" onclick="filterByDot('all', this)"
+                        style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">All
+                            Pieces</span>
+                        <div class="cat-dot"
+                            style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-color); transition: 0.3s; box-shadow: 0 0 10px var(--accent-color);">
+                        </div>
                     </div>
+                    <div class="cat-pill" onclick="filterByDot('Heritage', this)"
+                        style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; opacity: 0.4; transition: 0.3s;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">Heritage</span>
+                        <div class="cat-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white;">
+                        </div>
+                    </div>
+                    <div class="cat-pill" onclick="filterByDot('Chronograph', this)"
+                        style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; opacity: 0.4; transition: 0.3s;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">Chronograph</span>
+                        <div class="cat-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white;">
+                        </div>
+                    </div>
+                    <div class="cat-pill" onclick="filterByDot('Complication', this)"
+                        style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; opacity: 0.4; transition: 0.3s;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">Complications</span>
+                        <div class="cat-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white;">
+                        </div>
+                    </div>
+                    <div class="cat-pill" onclick="filterByDot('Minimalist', this)"
+                        style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; opacity: 0.4; transition: 0.3s;">
+                        <span
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">Minimalist</span>
+                        <div class="cat-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white;">
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
-                        <label
-                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Category</label>
-                        <select id="categoryFilter" class="filter-select"
-                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
-                            <option value="all">All Categories</option>
-                            <option value="Heritage">Heritage</option>
-                            <option value="Chronograph">Chronograph</option>
-                            <option value="Complication">Complication</option>
-                            <option value="Minimalist">Minimalist</option>
-                        </select>
-                    </div>
-
-                    <div class="filter-group" style="display: flex; align-items: center; gap: 1rem;">
-                        <label
-                            style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Expert
-                            Rating</label>
-                        <select id="ratingFilter" class="filter-select"
-                            style="background: #000; color: white; border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 4px; outline: none; cursor: pointer;">
-                            <option value="all">All Ratings</option>
-                            <option value="5">5 Stars</option>
-                            <option value="4">4+ Stars</option>
-                            <option value="3">3+ Stars</option>
-                        </select>
-                    </div>
+                <!-- Filter Bar (Hidden but functional for sorting/price if needed, or simplified) -->
+                <div class="filter-bar" style="display: none;">
+                    <select id="priceFilter">
+                        <option value="all"></option>
+                    </select>
+                    <select id="categoryFilter">
+                        <option value="all"></option>
+                    </select>
+                    <select id="ratingFilter">
+                        <option value="all"></option>
+                    </select>
                 </div>
 
                 <div class="product-grid" id="allProductsGrid">

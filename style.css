@@ -1567,3 +1567,230 @@ img {
 .btn-secondary:hover {
     background: #e5e7eb;
 }
+
+/* ===== THE TEYRAA CHRONICLES: STORYTELLING STYLES ===== */
+#chronicles {
+    background: var(--bg-white);
+    overflow: hidden;
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.story-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s var(--ease-out), transform 1.5s var(--ease-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    visibility: hidden;
+    transform: scale(1.05);
+}
+
+.story-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+    transform: scale(1);
+}
+
+.story-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.story-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.4) contrast(1.1);
+}
+
+.story-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+}
+
+.story-content-container {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+    padding: 4rem;
+    color: white;
+    margin-right: auto;
+    margin-left: 10%;
+}
+
+.story-category {
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.8s 0.3s var(--ease-out);
+}
+
+.story-slide.active .story-category {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 1s 0.5s var(--ease-out);
+}
+
+.story-slide.active .story-title {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-divider {
+    width: 100px;
+    height: 2px;
+    background: var(--accent-color);
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: 1s 0.7s var(--ease-out);
+}
+
+.story-slide.active .story-divider {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.story-text {
+    font-size: 1.25rem;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4.5rem;
+    font-weight: 300;
+    max-width: 650px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.8s 0.9s var(--ease-out);
+}
+
+.story-slide.active .story-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-footer {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.8s 1.1s var(--ease-out);
+}
+
+.story-slide.active .story-footer {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-price {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    font-weight: 400;
+}
+
+.story-dot {
+    width: 45px;
+    height: 2px;
+    background: rgba(212, 175, 55, 0.2);
+    cursor: pointer;
+    transition: 0.6s var(--ease-out);
+    position: relative;
+}
+
+.story-dot::after {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 32px;
+}
+
+.story-dot.active {
+    background: var(--accent-color);
+    width: 90px;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Category Dots Navigation */
+.cat-pill {
+    transition: all 0.4s var(--ease-out);
+}
+
+.cat-pill:hover {
+    opacity: 1 !important;
+    transform: translateY(-5px);
+}
+
+@media (max-width: 992px) {
+    .story-content-container {
+        margin-left: 5%;
+        padding: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #chronicles {
+        min-height: 100vh;
+    }
+
+    .story-content-container {
+        padding: 2.5rem;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .story-divider {
+        margin: 0 auto 2.5rem;
+    }
+
+    .story-footer {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .story-text {
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .story-overlay {
+        background: rgba(0, 0, 0, 0.7);
+    }
+}

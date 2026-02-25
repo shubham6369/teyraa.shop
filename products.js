@@ -41,7 +41,7 @@ function createProductCard(product) {
     `;
 }
 
-// Function to render products by category
+// Function to render products (Consolidated for storytelling focus)
 function renderProducts(products) {
     const watchCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
     // Globally filter all products to ONLY include watches
@@ -49,34 +49,8 @@ function renderProducts(products) {
 
     allProductsGlobal = onlyWatches;
 
-    const containerIds = {
-        'Heritage': 'heritageGrid',
-        'Chronograph': 'chronographGrid',
-        'Complication': 'complicationGrid',
-        'Minimalist': 'minimalistGrid'
-    };
-
-    watchCategories.forEach(category => {
-        const container = document.getElementById(containerIds[category]);
-        if (!container) return;
-
-        // Strict category filtering
-        const categoryProducts = onlyWatches.filter(p => (p.category || '').trim() === category);
-
-        if (categoryProducts.length === 0) {
-            container.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); margin-top: 1rem;">
-                    <p style="color: var(--accent-light); font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem;">Collection Coming Soon</p>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Our master watchmakers are currently curating this specific range.</p>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = categoryProducts.map(createProductCard).join('');
-    });
-
-    renderAllProducts(onlyWatches); // Render only watches in the master collection
+    // We no longer render separate grids for categories in the simplified storytelling layout
+    renderAllProducts(onlyWatches); // Render all watches in the master collection
 
     if (typeof window.attachCartListeners === 'function') {
         window.attachCartListeners();
@@ -140,6 +114,35 @@ function applyFilters() {
     }
 }
 
+window.filterByDot = function (category, element) {
+    // Update UI
+    const pills = document.querySelectorAll('.cat-pill');
+    pills.forEach(p => {
+        p.style.opacity = '0.4';
+        p.classList.remove('active');
+        const dot = p.querySelector('.cat-dot');
+        const span = p.querySelector('span');
+        if (dot) dot.style.background = 'white';
+        if (dot) dot.style.boxShadow = 'none';
+        if (span) span.style.color = 'white';
+    });
+
+    element.style.opacity = '1';
+    element.classList.add('active');
+    const activeDot = element.querySelector('.cat-dot');
+    const activeSpan = element.querySelector('span');
+    if (activeDot) activeDot.style.background = 'var(--accent-color)';
+    if (activeDot) activeDot.style.boxShadow = '0 0 10px var(--accent-color)';
+    if (activeSpan) activeSpan.style.color = 'var(--accent-color)';
+
+    // Update Filter
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.value = category;
+        applyFilters();
+    }
+};
+
 // Attach filter listeners
 document.addEventListener('change', (e) => {
     if (e.target.classList.contains('filter-select')) {
@@ -147,29 +150,115 @@ document.addEventListener('change', (e) => {
     }
 });
 
-// Global listener for Real-time Updates from Firestore
-let productsListener = null;
-
-function setupProductsListener() {
-    if (productsListener) productsListener();
-
-    productsListener = productsCollection.onSnapshot((snapshot) => {
-        const products = [];
-        snapshot.forEach((doc) => {
-            products.push({ id: doc.id, ...doc.data() });
-        });
-        renderProducts(products);
-    }, (error) => {
-        console.error("Error listening to products:", error);
-    });
-}
-
 // Function to seed sample watches if Firestore is empty
 async function seedSampleWatches() {
     const snapshot = await productsCollection.get();
     if (snapshot.empty) {
         console.log('🏛️ TEYRAA HOROLOGY - Initializing Master Inventory (100 Pieces)...');
 
+        // 1. THE 10 LEGENDARY PILLARS (Storytelling watches)
+        const legendaryPillars = [
+            {
+                name: "Elysian Tourbillon Zero",
+                category: "Complication",
+                salePrice: 1250000,
+                originalPrice: 1500000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1619134778706-7015533a6150",
+                story: "The Elysian Zero is not merely a timepiece; it is a defiance of gravity. Our master horologists spent three years perfecting the rotating carriage, ensuring that every second is a dance of light and mechanical grace. Born in the quiet valleys of the Swiss Alps, it represents the absolute pinnacle of our heritage."
+            },
+            {
+                name: "Heritage Sovereign Gold",
+                category: "Heritage",
+                salePrice: 850000,
+                originalPrice: 950000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa",
+                story: "Crafted from a single block of 18k rose gold, the Sovereign is a tribute to the monarchs of old. Its dial features a hand-guilloché pattern that takes 40 hours to complete. Wearing the Sovereign is a statement of quiet power and an embrace of legacy that transcends generations."
+            },
+            {
+                name: "Zenith Moonphase Nocturne",
+                category: "Complication",
+                salePrice: 650000,
+                originalPrice: 720000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+                story: "The Nocturne tracks the lunar cycle with an accuracy of one day every 122 years. Its deep aventurine dial mimics the star-studded midnight sky, making every glance at your wrist a journey through the cosmos. It's designed for those who find inspiration in the silence of the night."
+            },
+            {
+                name: "Obsidian Skeleton X",
+                category: "Minimalist",
+                salePrice: 420000,
+                originalPrice: 480000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ad5",
+                story: "Transparency is the ultimate form of complexity. The Obsidian Skeleton X strips away the non-essential, revealing the beating heart of the movement. Its DLC-coated case provides a stealthy, modern aesthetic while honoring the centuries-old tradition of open-worked movements."
+            },
+            {
+                name: "Aero Chrono Pilot Edition",
+                category: "Chronograph",
+                salePrice: 285000,
+                originalPrice: 310000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7",
+                story: "Inspired by the pioneers of aviation, the Aero Chrono is built for precision under pressure. Its anti-magnetic movement and high-contrast dial ensure readability in the most demanding environments. It is a companion for the adventurous soul navigating the horizons of possibility."
+            },
+            {
+                name: "Imperial Majesty Platinum",
+                category: "Heritage",
+                salePrice: 1850000,
+                originalPrice: 2100000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1508685096489-7as5c7f139a1",
+                story: "Platinum is the rarest of all metals, and the Imperial Majesty is the rarest of all watches. With a bespoke movement developed exclusively for this reference, it is the ultimate expression of horological exclusivity. Each piece is individually numbered and hand-finished by a single master watchmaker."
+            },
+            {
+                name: "Majestic Pulse Chrono",
+                category: "Chronograph",
+                salePrice: 550000,
+                originalPrice: 600000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d",
+                story: "The Majestic Pulse captures the very rhythm of life. Featuring a high-frequency escapement, it measures intervals with surgical precision. The bold design and tactile pushers make it as much a tool of performance as it is a work of art."
+            },
+            {
+                name: "Regal Heritage 1920",
+                category: "Heritage",
+                salePrice: 320000,
+                originalPrice: 350000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7",
+                story: "A direct descendant of our very first archive sketches, the 1920 Edition bridges the gap between history and the present. Its vintage-inspired aesthetics—including heat-blued hands and a cream porcelain dial—evoke an era of unmatched elegance and discovery."
+            },
+            {
+                name: "Stellar Complication Nebula",
+                category: "Complication",
+                salePrice: 980000,
+                originalPrice: 1100000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3",
+                story: "The Nebula features a world-time complication that allows you to track 24 time zones simultaneously. The center dial is a hand-painted enamel map of the stars, reminding the wearer that time is constant, no matter where on Earth you stand."
+            },
+            {
+                name: "Vantage Master Minimalist",
+                category: "Minimalist",
+                salePrice: 185000,
+                originalPrice: 210000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7",
+                story: "True luxury is found in the absence of clutter. The Vantage Master features an ultra-thin profile that disappears under a shirt cuff, yet commands attention with its flawless finish and perfectly proportioned indices. It is the purest expression of TEYRAA's design philosophy."
+            }
+        ];
+
+        for (const watch of legendaryPillars) {
+            await productsCollection.add({
+                ...watch,
+                isLegendary: true,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        // 2. FILL THE REST (90 more pieces)
         const watchPrefixes = ['Elysian', 'Zenith', 'Regal', 'Obsidian', 'Aurora', 'Majestic', 'Stellar', 'Imperial', 'Sovereign', 'Noble', 'Classic', 'Heritage', 'Eternal', 'Timeless', 'Summit', 'Peak', 'Ocean', 'Aero', 'Chrono', 'Luxe', 'Elite', 'Titan', 'Atlas', 'Nova'];
         const watchSuffixes = ['Chronograph', 'Moonphase', 'Tourbillon', 'Skeleton', 'Automatic', 'Master', 'Edition', 'Series', 'Legacy', 'Vantage', 'Spectra', 'Phantom', 'Gale', 'Tide', 'Precision', 'Unity', 'Essence', 'Nova', 'Pulse'];
         const watchCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
@@ -186,7 +275,7 @@ async function seedSampleWatches() {
             'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7'
         ];
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 90; i++) {
             const prefix = watchPrefixes[Math.floor(Math.random() * watchPrefixes.length)];
             const suffix = watchSuffixes[Math.floor(Math.random() * watchSuffixes.length)];
             const category = watchCategories[Math.floor(Math.random() * watchCategories.length)];
@@ -203,11 +292,87 @@ async function seedSampleWatches() {
                 originalPrice: orgPrice,
                 image: image,
                 rating: rating,
+                isLegendary: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
         console.log('✅ Master Inventory Seeded.');
     }
+}
+
+// Function to render storytelling section
+function renderLegendaryStories(products) {
+    const container = document.getElementById('legendaryChronicles');
+    const dotsContainer = document.getElementById('storyDots');
+    if (!container) return;
+
+    const legendaries = products.filter(p => p.isLegendary).slice(0, 10);
+
+    if (legendaries.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.innerHTML = legendaries.map((watch, index) => `
+        <div class="story-slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+            <div class="story-image-container">
+                <img src="${watch.image}?q=80&w=1200&auto=format&fit=crop" alt="${watch.name}" class="story-image">
+                <div class="story-overlay"></div>
+            </div>
+            <div class="story-content-container">
+                <span class="story-category">${watch.category}</span>
+                <h2 class="story-title">${watch.name}</h2>
+                <div class="story-divider"></div>
+                <p class="story-text">${watch.story || "A masterpiece of horological engineering, blending centuries of tradition with the uncompromising precision of modernity."}</p>
+                <div class="story-footer">
+                    <div class="story-price">₹${watch.salePrice.toLocaleString()}</div>
+                    <button class="btn-primary" onclick="addToCart('${watch.id}', '${watch.name}', ${watch.salePrice}, '${watch.image}')">
+                        Secure This Reference
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    if (dotsContainer) {
+        dotsContainer.innerHTML = legendaries.map((_, i) => `
+            <div class="story-dot ${i === 0 ? 'active' : ''}" onclick="goToStory(${i})"></div>
+        `).join('');
+    }
+}
+
+let currentStoryIndex = 0;
+window.goToStory = function (index) {
+    const slides = document.querySelectorAll('.story-slide');
+    const dots = document.querySelectorAll('.story-dot');
+
+    if (!slides.length) return;
+
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+    currentStoryIndex = index;
+};
+
+// Global listener for Real-time Updates from Firestore
+let productsListener = null;
+
+function setupProductsListener() {
+    if (productsListener) productsListener();
+
+    productsListener = productsCollection.onSnapshot((snapshot) => {
+        const products = [];
+        snapshot.forEach((doc) => {
+            products.push({ id: doc.id, ...doc.data() });
+        });
+        allProductsGlobal = products;
+        renderProducts(products);
+        renderLegendaryStories(products);
+    }, (error) => {
+        console.error("Error listening to products:", error);
+    });
 }
 
 // Initial Load
@@ -233,4 +398,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setupProductsListener();
 });
-
