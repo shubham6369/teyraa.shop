@@ -84,7 +84,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    mix-blend-mode: difference;
+    /* mix-blend-mode removed — was causing text to become invisible on navy bg */
 }
 
 .nav-logo {
@@ -186,12 +186,13 @@ section {
 
 .hero-subtext {
     font-size: 1.1rem;
-    color: var(--color-silver);
-    max-width: 500px;
+    color: var(--color-accent-light);
+    max-width: 520px;
     margin: 0 auto 3rem;
     letter-spacing: 1px;
     opacity: 0;
     transition: opacity 1s 0.5s;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
 .hero.active .hero-subtext {
@@ -434,17 +435,8 @@ footer {
    ANIMATION LAYER — TEYRAA PREMIUM MOTION
 ═══════════════════════════════════════════ */
 
-/* Custom cursor override */
-@media (pointer: fine) {
-    body {
-        cursor: none !important;
-    }
-
-    a,
-    button {
-        cursor: none !important;
-    }
-}
+/* Custom cursor — DISABLED (using default browser cursor) */
+/* @media (pointer: fine) { body { cursor: none !important; } } */
 
 /* ── Keyframes ── */
 @keyframes marqueeScroll {
@@ -764,7 +756,7 @@ nav.scrolled {
     transform: scale(1.08);
 }
 
-/* ── Deep navy grid texture ── */
+/* ── Deep navy grid texture (behind all content) ── */
 body::before {
     content: '';
     position: fixed;
@@ -774,7 +766,17 @@ body::before {
         linear-gradient(90deg, rgba(148, 168, 192, 0.03) 1px, transparent 1px);
     background-size: 80px 80px;
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
+}
+
+/* Ensure all sections sit above the grid */
+nav,
+header,
+section,
+footer,
+div[id] {
+    position: relative;
+    z-index: 1;
 }
 
 /* ── Mobile adjustments ── */

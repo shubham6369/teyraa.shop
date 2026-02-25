@@ -152,61 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ╔══════════════════════════════════════╗
-    // ║  7. PRECISION DUAL CURSOR            ║
+    // ║  7. CUSTOM CURSOR — DISABLED         ║
+    // ║  (standard browser cursor in use)    ║
     // ╚══════════════════════════════════════╝
-    const cursorDot = document.getElementById('cursor-glow');
-    const cursorRing = document.getElementById('cursor-glow-outer');
-    const cursorBg = document.getElementById('cursor-bg-glow');
-
-    if (cursorDot && window.matchMedia('(pointer:fine)').matches) {
-        let mouseX = 0, mouseY = 0;
-        let ringX = 0, ringY = 0;
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            // Dot follows instantly
-            cursorDot.style.left = mouseX + 'px';
-            cursorDot.style.top = mouseY + 'px';
-            // Background glow follows with lag
-            if (cursorBg) {
-                cursorBg.style.left = mouseX + 'px';
-                cursorBg.style.top = mouseY + 'px';
-            }
-        });
-
-        // Ring lags behind — smooth follow
-        function animateRing() {
-            ringX += (mouseX - ringX) * 0.12;
-            ringY += (mouseY - ringY) * 0.12;
-            if (cursorRing) {
-                cursorRing.style.left = ringX + 'px';
-                cursorRing.style.top = ringY + 'px';
-            }
-            requestAnimationFrame(animateRing);
-        }
-        animateRing();
-
-        // Hover state on interactive elements
-        document.querySelectorAll('a, button, .chapter-card').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                if (cursorRing) {
-                    cursorRing.style.width = '70px';
-                    cursorRing.style.height = '70px';
-                    cursorRing.style.borderColor = 'rgba(59,114,168,0.9)';
-                }
-                if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(0.5)';
-            });
-            el.addEventListener('mouseleave', () => {
-                if (cursorRing) {
-                    cursorRing.style.width = '40px';
-                    cursorRing.style.height = '40px';
-                    cursorRing.style.borderColor = 'rgba(59,114,168,0.6)';
-                }
-                if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(1)';
-            });
-        });
-    }
+    // Cursor tracking removed — using default OS pointer.
 
 
     // ╔══════════════════════════════════════╗
