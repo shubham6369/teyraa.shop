@@ -1,38 +1,38 @@
 /* 
   TEYRAA HOROLOGY - PREMIUM DESIGN SYSTEM
-  Theme: MIDNIGHT SILVER
-  Concept: "Corporate Luxury / Modern Precision"
-  Palette: Deep Navy + Platinum Silver + Cobalt
+  Theme: ROSE MAISON
+  Concept: "Feminine Haute Couture / Editorial Luxury"
+  Palette: Dark Charcoal + Blush Rose + Champagne
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Jost:wght@300;400;500;600&display=swap');
 
 :root {
-    /* --- Midnight Silver Palette --- */
-    --color-bg: #070B14;
-    /* Midnight Navy */
-    --color-surface: #0D1220;
-    /* Deep Ink */
-    --color-surface-2: #111827;
-    /* Elevated Ink */
-    --color-accent: #94A8C0;
-    /* Platinum Silver */
-    --color-accent-light: #C8D8E8;
-    /* Glacial Silver */
-    --color-accent-blue: #3B72A8;
-    /* Corporate Cobalt */
-    --color-silver: #7A8FA6;
-    /* Muted Steel */
-    --color-text: #EEF2F7;
-    /* Glacial White */
-    --color-text-muted: #6B7A8D;
-    /* Slate Mist */
-    --color-border: rgba(148, 168, 192, 0.12);
-    --color-border-hover: rgba(148, 168, 192, 0.35);
+    /* --- Rose Maison Palette --- */
+    --color-bg: #130E10;
+    /* Velvet Charcoal */
+    --color-surface: #1C1418;
+    /* Dark Mauve Charcoal */
+    --color-surface-2: #241A1E;
+    /* Elevated Charcoal */
+    --color-accent: #C9849A;
+    /* Blush Rose */
+    --color-accent-light: #E8C4D0;
+    /* Champagne Blush */
+    --color-accent-deep: #8B4D62;
+    /* Deep Rose */
+    --color-silver: #A8919A;
+    /* Dusty Mauve */
+    --color-text: #FAF0F4;
+    /* Warm Ivory */
+    --color-text-muted: #8A737A;
+    /* Muted Mauve */
+    --color-border: rgba(201, 132, 154, 0.14);
+    --color-border-hover: rgba(201, 132, 154, 0.38);
 
-    /* --- Typography (Cormorant for headings — more editorial) --- */
-    --font-heading: 'Cormorant Garamond', serif;
-    --font-body: 'Inter', sans-serif;
+    /* --- Typography (DM Serif Display — editorial fashion feel) --- */
+    --font-heading: 'DM Serif Display', serif;
+    --font-body: 'Jost', sans-serif;
 
     /* --- Motion --- */
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -507,15 +507,15 @@ footer {
     }
 }
 
-@keyframes silverPulse {
+@keyframes rosePulse {
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(148, 168, 192, 0.45);
+        box-shadow: 0 0 0 0 rgba(201, 132, 154, 0.5);
     }
 
     50% {
-        box-shadow: 0 0 0 16px rgba(148, 168, 192, 0);
+        box-shadow: 0 0 0 18px rgba(201, 132, 154, 0);
     }
 }
 
@@ -663,7 +663,7 @@ nav {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, rgba(148, 168, 192, 0.14) 50%, transparent 60%);
+    background: linear-gradient(105deg, transparent 40%, rgba(201, 132, 154, 0.15) 50%, transparent 60%);
     background-size: 600px 100%;
     background-position: -600px 0;
     z-index: 5;
@@ -684,8 +684,8 @@ nav {
 }
 
 .btn-premium.magnetic:hover {
-    box-shadow: 0 0 40px rgba(59, 114, 168, 0.35);
-    animation: silverPulse 2s ease infinite;
+    box-shadow: 0 0 50px rgba(201, 132, 154, 0.35);
+    animation: rosePulse 2s ease infinite;
 }
 
 /* ── Story image parallax float ── */
@@ -695,7 +695,7 @@ nav {
 
 /* ── Nav scroll state ── */
 nav.scrolled {
-    background: rgba(7, 11, 20, 0.94) !important;
+    background: rgba(19, 14, 16, 0.95) !important;
     backdrop-filter: blur(24px) saturate(1.4);
     border-bottom: 1px solid var(--color-border);
     mix-blend-mode: normal !important;
@@ -756,14 +756,14 @@ nav.scrolled {
     transform: scale(1.08);
 }
 
-/* ── Deep navy grid texture (behind all content) ── */
+/* ── Rose Maison grid texture (behind all content) ── */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-        linear-gradient(rgba(148, 168, 192, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 168, 192, 0.03) 1px, transparent 1px);
+        linear-gradient(rgba(201, 132, 154, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 132, 154, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
     pointer-events: none;
     z-index: -1;
