@@ -1,29 +1,37 @@
 /* 
   TEYRAA HOROLOGY - PREMIUM DESIGN SYSTEM
-  Concept: "The Architecture of Time"
-  Design Style: Minimalist Luxury / Cinematic Storytelling
+  Theme: MIDNIGHT SILVER
+  Concept: "Corporate Luxury / Modern Precision"
+  Palette: Deep Navy + Platinum Silver + Cobalt
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
 :root {
-    /* --- Core Palette --- */
-    --color-bg: #050505;
-    /* Deep Space Black */
-    --color-surface: #0f0f0f;
-    /* Polished Onyx */
-    --color-accent: #C5A059;
-    /* Heritage Gold */
-    --color-accent-light: #E5C78B;
-    --color-silver: #A8A29E;
-    /* Precision Silver */
-    --color-text: #F8FAF7;
-    /* Bone White */
-    --color-text-muted: #888888;
-    --color-border: rgba(197, 160, 89, 0.15);
+    /* --- Midnight Silver Palette --- */
+    --color-bg: #070B14;
+    /* Midnight Navy */
+    --color-surface: #0D1220;
+    /* Deep Ink */
+    --color-surface-2: #111827;
+    /* Elevated Ink */
+    --color-accent: #94A8C0;
+    /* Platinum Silver */
+    --color-accent-light: #C8D8E8;
+    /* Glacial Silver */
+    --color-accent-blue: #3B72A8;
+    /* Corporate Cobalt */
+    --color-silver: #7A8FA6;
+    /* Muted Steel */
+    --color-text: #EEF2F7;
+    /* Glacial White */
+    --color-text-muted: #6B7A8D;
+    /* Slate Mist */
+    --color-border: rgba(148, 168, 192, 0.12);
+    --color-border-hover: rgba(148, 168, 192, 0.35);
 
-    /* --- Typography --- */
-    --font-heading: 'Playfair Display', serif;
+    /* --- Typography (Cormorant for headings — more editorial) --- */
+    --font-heading: 'Cormorant Garamond', serif;
     --font-body: 'Inter', sans-serif;
 
     /* --- Motion --- */
@@ -507,15 +515,15 @@ footer {
     }
 }
 
-@keyframes goldPulse {
+@keyframes silverPulse {
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+        box-shadow: 0 0 0 0 rgba(148, 168, 192, 0.45);
     }
 
     50% {
-        box-shadow: 0 0 0 12px rgba(197, 160, 89, 0);
+        box-shadow: 0 0 0 16px rgba(148, 168, 192, 0);
     }
 }
 
@@ -658,12 +666,12 @@ nav {
     clip-path: inset(0 0% 0 0);
 }
 
-/* ── Chapter cards: shimmer on hover ── */
+/* ── Chapter cards: silver shimmer on hover ── */
 .chapter-image::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, rgba(197, 160, 89, 0.12) 50%, transparent 60%);
+    background: linear-gradient(105deg, transparent 40%, rgba(148, 168, 192, 0.14) 50%, transparent 60%);
     background-size: 600px 100%;
     background-position: -600px 0;
     z-index: 5;
@@ -684,8 +692,8 @@ nav {
 }
 
 .btn-premium.magnetic:hover {
-    box-shadow: 0 0 40px rgba(197, 160, 89, 0.25);
-    animation: goldPulse 2s ease infinite;
+    box-shadow: 0 0 40px rgba(59, 114, 168, 0.35);
+    animation: silverPulse 2s ease infinite;
 }
 
 /* ── Story image parallax float ── */
@@ -695,8 +703,8 @@ nav {
 
 /* ── Nav scroll state ── */
 nav.scrolled {
-    background: rgba(5, 5, 5, 0.92) !important;
-    backdrop-filter: blur(20px);
+    background: rgba(7, 11, 20, 0.94) !important;
+    backdrop-filter: blur(24px) saturate(1.4);
     border-bottom: 1px solid var(--color-border);
     mix-blend-mode: normal !important;
     padding-top: 1rem !important;
@@ -756,14 +764,14 @@ nav.scrolled {
     transform: scale(1.08);
 }
 
-/* ── Background grid texture ── */
+/* ── Deep navy grid texture ── */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-        linear-gradient(rgba(197, 160, 89, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(197, 160, 89, 0.015) 1px, transparent 1px);
+        linear-gradient(rgba(148, 168, 192, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 168, 192, 0.03) 1px, transparent 1px);
     background-size: 80px 80px;
     pointer-events: none;
     z-index: 0;

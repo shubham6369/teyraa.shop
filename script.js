@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cursorRing) {
                     cursorRing.style.width = '70px';
                     cursorRing.style.height = '70px';
-                    cursorRing.style.borderColor = 'rgba(197,160,89,0.9)';
+                    cursorRing.style.borderColor = 'rgba(59,114,168,0.9)';
                 }
                 if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(0.5)';
             });
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cursorRing) {
                     cursorRing.style.width = '40px';
                     cursorRing.style.height = '40px';
-                    cursorRing.style.borderColor = 'rgba(197,160,89,0.5)';
+                    cursorRing.style.borderColor = 'rgba(59,114,168,0.6)';
                 }
                 if (cursorDot) cursorDot.style.transform = 'translate(-50%,-50%) scale(1)';
             });
