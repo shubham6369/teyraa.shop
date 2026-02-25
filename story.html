@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story | TEYRAA HOROLOGY</title>
+    <meta name="description"
+        content="From the mountains of Switzerland to the wrists of the world — the story of TEYRAA HOROLOGY. A century of precision, craftsmanship, and legacy.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Brand Story: Timeline Layout ── */
+        .story-page-hero {
+            height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 8rem var(--gutter);
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-page-hero img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35;
+        }
+
+        .story-page-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .story-page-hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 7vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+
+        .story-page-hero-content p {
+            font-size: 1.2rem;
+            color: var(--color-silver);
+            max-width: 500px;
+        }
+
+        /* ── Timeline ── */
+        .timeline {
+            padding: 10rem var(--gutter);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 0;
+            min-height: 400px;
+            margin-bottom: 0;
+        }
+
+        .timeline-item:nth-child(even) .tl-content {
+            order: 3;
+            text-align: left;
+        }
+
+        .timeline-item:nth-child(even) .tl-visual {
+            order: 1;
+        }
+
+        .timeline-item:nth-child(even) .tl-spine {
+            order: 2;
+        }
+
+        .tl-spine {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .tl-spine-line {
+            flex: 1;
+            width: 1px;
+            background: var(--color-border);
+        }
+
+        .tl-spine-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 3px solid var(--color-bg);
+            outline: 1px solid var(--color-accent);
+            flex-shrink: 0;
+            margin: 1rem 0;
+        }
+
+        .tl-content {
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: right;
+        }
+
+        .tl-year {
+            font-family: var(--font-heading);
+            font-size: 5rem;
+            color: var(--color-accent);
+            opacity: 0.15;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .tl-heading {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tl-text {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .tl-visual {
+            overflow: hidden;
+            background: var(--color-surface);
+        }
+
+        .tl-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.5) brightness(0.8);
+            transition: transform 0.8s var(--ease-out-expo), filter 0.8s;
+        }
+
+        .tl-visual:hover img {
+            transform: scale(1.04);
+            filter: grayscale(0) brightness(0.9);
+        }
+
+        /* ── Vision Section ── */
+        .vision-section {
+            background: var(--color-accent);
+            padding: 10rem var(--gutter);
+            text-align: center;
+        }
+
+        .vision-section h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--color-bg);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.2;
+        }
+
+        .vision-section p {
+            color: rgba(0, 0, 0, 0.6);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+
+            .tl-spine {
+                display: none;
+            }
+
+            .tl-visual {
+                min-height: 300px;
+            }
+
+            .tl-content {
+                text-align: left !important;
+                padding: 2.5rem 0;
+            }
+
+            .timeline-item:nth-child(even) .tl-visual {
+                order: 0;
+            }
+
+            .timeline-item:nth-child(even) .tl-content {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-logo">Teyraa</a>
+        <div class="nav-links">
+            <a href="index.html#collections">Collections</a>
+            <a href="story.html" style="color: var(--color-accent);">Our Story</a>
+            <a href="index.html#moments">Moments</a>
+            <a href="index.html#makers">Makers</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="story-page-hero">
+        <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1600&auto=format&fit=crop"
+            alt="The TEYRAA Story">
+        <div class="story-page-hero-content">
+            <span class="story-tag" style="display:block; margin-bottom:2rem;">Est. 1924</span>
+            <h1>A Century of Chasing Perfection</h1>
+            <p>Three generations. One obsession. The relentless pursuit of the perfect second.</p>
+        </div>
+    </header>
+
+    <!-- Timeline -->
+    <div style="background: var(--color-bg);">
+        <div class="timeline">
+
+            <!-- 1924 -->
+            <div class="timeline-item">
+                <div class="tl-content reveal">
+                    <div class="tl-year">1924</div>
+                    <h3 class="tl-heading">The First Movement</h3>
+                    <p class="tl-text">In the quiet hamlet of Le Sentier, Henri-Louis Teyraa assembled the family's
+                        first in-house movement by candlelight. Fourteen components, hand-filed, hand-fitted — and
+                        accurate to within five seconds a day. A miracle for its time.</p>
+                </div>
+                <div class="tl-spine">
+                    <div class="tl-spine-line"></div>
+                    <div class="tl-spine-dot"></div>
+                    <div class="tl-spine-line"></div>
+                </div>
+                <div class="tl-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?q=80&w=900&auto=format&fit=crop"
+                        alt="1924 Founding">
+                </div>
+            </div>
+
+            <!-- 1961 -->
+            <div class="timeline-item">
+                <div class="tl-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1509048191080-d2984bad6ad5?q=80&w=900&auto=format&fit=crop"
+                        alt="1961 Chronograph">
+                </div>
+                <div class="tl-spine">
+                    <div class="tl-spine-line"></div>
+                    <div class="tl-spine-dot"></div>
+                    <div class="tl-spine-line"></div>
+                </div>
+                <div class="tl-content reveal">
+                    <div class="tl-year">1961</div>
+                    <h3 class="tl-heading">The Chronograph Revolution</h3>
+                    <p class="tl-text">André Teyraa, Henri's son, unveiled the Calibre 61 — the world's first
+                        column-wheel chronograph with a lateral clutch housed in a case thinner than 10mm. Worn by jet
+                        pilots and race champions alike, it rewrote what precision meant.</p>
+                </div>
+            </div>
+
+            <!-- 1985 -->
+            <div class="timeline-item">
+                <div class="tl-content reveal">
+                    <div class="tl-year">1985</div>
+                    <h3 class="tl-heading">The Age of Complications</h3>
+                    <p class="tl-text">The Grande Complication Perpétuel — a moonphase, perpetual calendar, and
+                        tourbillon in a single case — was presented at Baselworld. It took a team of seven watchmakers
+                        four years to complete. Only 25 were ever made.</p>
+                </div>
+                <div class="tl-spine">
+                    <div class="tl-spine-line"></div>
+                    <div class="tl-spine-dot"></div>
+                    <div class="tl-spine-line"></div>
+                </div>
+                <div class="tl-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1619134778706-7015533a6150?q=80&w=900&auto=format&fit=crop"
+                        alt="1985 Complications">
+                </div>
+            </div>
+
+            <!-- 2012 -->
+            <div class="timeline-item">
+                <div class="tl-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=900&auto=format&fit=crop"
+                        alt="2012 Modern Era">
+                </div>
+                <div class="tl-spine">
+                    <div class="tl-spine-line"></div>
+                    <div class="tl-spine-dot"></div>
+                    <div class="tl-spine-line"></div>
+                </div>
+                <div class="tl-content reveal">
+                    <div class="tl-year">2012</div>
+                    <h3 class="tl-heading">The Digital Renaissance</h3>
+                    <p class="tl-text">The third generation, led by Isabelle Teyraa, digitized the archive and opened
+                        the first Teyraa Maison in Mumbai — bringing Swiss legacy to the world's most time-conscious
+                        culture. The collection expanded to 48 references across four pillars.</p>
+                </div>
+            </div>
+
+            <!-- Today -->
+            <div class="timeline-item">
+                <div class="tl-content reveal">
+                    <div class="tl-year">Now</div>
+                    <h3 class="tl-heading">Your Chapter Begins</h3>
+                    <p class="tl-text">Today, Teyraa crafts fewer than 3,000 pieces per year. Each one individually
+                        regulated, tested, and documented. Each one waiting to begin a new chapter in a new story —
+                        yours.</p>
+                </div>
+                <div class="tl-spine">
+                    <div class="tl-spine-line"></div>
+                    <div class="tl-spine-dot"></div>
+                    <div class="tl-spine-line"></div>
+                </div>
+                <div class="tl-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=900&auto=format&fit=crop"
+                        alt="Today">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Vision -->
+    <section class="vision-section">
+        <h2>"We do not make watches. We author the instruments through which life is remembered."</h2>
+        <p>— Isabelle Teyraa-Moreau, Creative Director & Third-Generation Watchmaker</p>
+        <a href="index.html#collections" class="btn-premium"
+            style="border-color: var(--color-bg); color: var(--color-bg);">Discover the Collection</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Teyraa</h2>
+                    <p style="color: var(--color-text-muted); max-width: 300px;">Crafting horological legacies since
+                        1924. Every second is an invitation to greatness.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Boutique</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#collections">Collections</a></li>
+                        <li><a href="story.html">Our Story</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="#">Service & Repairs</a></li>
+                        <li><a href="#">Authenticity</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--color-text-muted); font-size: 0.75rem;">
+                <p>&copy; 2026 TEYRAA HOROLOGY. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll reveal for the story page
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>

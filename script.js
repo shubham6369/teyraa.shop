@@ -1,106 +1,184 @@
 /**
- * TEYRAA HOROLOGY - NARRATIVE ENGINE
- * Handles: Scroll Animations, Parallax, Cart UX, and Page Transitions
+ * TEYRAA HOROLOGY — NARRATIVE ENGINE v2
+ *
+ * Responsibilities:
+ *  - Cinematic hero entrance animation
+ *  - Scroll-reveal via IntersectionObserver
+ *  - Smooth anchor scrolling
+ *  - Parallax hero background
+ *  - Cart sidebar (slide-in/out, live item list)
+ *  - Gold cursor glow (desktop)
+ *  - Toast notification system
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. INITIALIZE HERO ANIMATION
+
+    // ╔════════════════════════════════════╗
+    // ║  1. HERO ENTRANCE                  ║
+    // ╚════════════════════════════════════╝
     const hero = document.querySelector('.hero');
-    setTimeout(() => {
-        hero.classList.add('active');
-    }, 100);
+    if (hero) setTimeout(() => hero.classList.add('active'), 120);
 
-    // 2. SCROLL REVEAL ENGINE
-    const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -100px 0px'
-    };
 
+    // ╔════════════════════════════════════╗
+    // ║  2. SCROLL REVEAL ENGINE           ║
+    // ╚════════════════════════════════════╝
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                // Optional: stop observing once revealed for performance
-                // revealObserver.unobserve(entry.target);
-            }
+            if (entry.isIntersecting) entry.target.classList.add('active');
         });
-    }, observerOptions);
+    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
 
-    const revealElements = document.querySelectorAll('.reveal');
-    revealElements.forEach(el => revealObserver.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // 3. SMOOTH NAVIGATION ANCHORS
+
+    // ╔════════════════════════════════════╗
+    // ║  3. SMOOTH ANCHOR SCROLLING        ║
+    // ╚════════════════════════════════════╝
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
-                window.scrollTo({
-                    top: target.offsetTop,
-                    behavior: 'smooth'
-                });
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
 
-    // 4. PARALLAX EFFECTS (Subtle)
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const heroVideo = document.querySelector('.hero-video-bg');
-        if (heroVideo) {
-            heroVideo.style.transform = `translateY(${scrolled * 0.3}px)`;
-        }
-    });
 
-    // 5. CART STATE MANAGEMENT (Minimalist Implementation)
+    // ╔════════════════════════════════════╗
+    // ║  4. PARALLAX HERO                  ║
+    // ╚════════════════════════════════════╝
+    const heroVideo = document.querySelector('.hero-video-bg');
+    if (heroVideo) {
+        window.addEventListener('scroll', () => {
+            heroVideo.style.transform = `translateY(${window.pageYOffset * 0.28}px)`;
+        }, { passive: true });
+    }
+
+
+    // ╔════════════════════════════════════╗
+    // ║  5. GOLD CURSOR GLOW              ║
+    // ╚════════════════════════════════════╝
+    const glow = document.getElementById('cursor-glow');
+    if (glow && window.matchMedia('(pointer:fine)').matches) {
+        document.addEventListener('mousemove', e => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+    }
+
+
+    // ╔════════════════════════════════════╗
+    // ║  6. CART SYSTEM                    ║
+    // ╚════════════════════════════════════╝
     let cart = JSON.parse(localStorage.getItem('teyraa_cart')) || [];
-    updateCartUI();
 
-    window.addToCart = (id, name, price, image) => {
-        const item = { id, name, price: Number(price), image };
-        cart.push(item);
-        localStorage.setItem('teyraa_cart', JSON.stringify(cart));
-        updateCartUI();
-        showNotification(`${name} secured in your collection.`, 'success');
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+    const toggle = document.getElementById('cartToggle');
+    const closeBtn = document.getElementById('cartClose');
+    const itemsWrap = document.getElementById('cartItemsContainer');
+    const countEl = document.getElementById('cartCount');
+    const totalEl = document.getElementById('cartTotal');
+
+    function openCart() {
+        if (!sidebar) return;
+        sidebar.style.right = '0';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'all';
+    }
+    function closeCart() {
+        if (!sidebar) return;
+        sidebar.style.right = '-500px';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+    }
+
+    if (toggle) toggle.addEventListener('click', e => { e.preventDefault(); openCart(); });
+    if (closeBtn) closeBtn.addEventListener('click', closeCart);
+    if (overlay) overlay.addEventListener('click', closeCart);
+
+    function saveCart() { localStorage.setItem('teyraa_cart', JSON.stringify(cart)); }
+
+    function renderCart() {
+        if (!itemsWrap) return;
+
+        const count = cart.length;
+        if (countEl) countEl.textContent = count;
+
+        if (count === 0) {
+            itemsWrap.innerHTML = `
+                <div style="text-align:center; padding:4rem 0; color:var(--color-text-muted);">
+                    <p style="font-family:var(--font-heading); font-size:1.4rem; margin-bottom:1rem;">The archive is empty.</p>
+                    <a href="#collections" onclick="closeCart()" style="font-size:0.75rem; letter-spacing:2px; color:var(--color-accent); text-transform:uppercase;">Discover a Timepiece</a>
+                </div>`;
+            if (totalEl) totalEl.textContent = '₹0';
+            return;
+        }
+
+        let total = 0;
+        itemsWrap.innerHTML = cart.map((item, idx) => {
+            total += Number(item.price);
+            return `
+            <div style="display:flex; gap:1.2rem; margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid var(--color-border); align-items:center;">
+                <img src="${item.image}?q=60&w=150&auto=format" style="width:65px; height:65px; object-fit:cover; flex-shrink:0; filter:brightness(0.8);" onerror="this.style.display='none'">
+                <div style="flex:1; min-width:0;">
+                    <p style="font-size:0.85rem; margin-bottom:0.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</p>
+                    <span style="font-size:0.7rem; color:var(--color-accent);">₹${Number(item.price).toLocaleString('en-IN')}</span>
+                </div>
+                <button onclick="window.removeFromCart(${idx})" style="background:none; border:none; color:var(--color-text-muted); cursor:pointer; font-size:1rem; flex-shrink:0; transition:0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--color-text-muted)'">✕</button>
+            </div>`;
+        }).join('');
+
+        if (totalEl) totalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    }
+
+    // Global add / remove exposed to products.js
+    window.addToCart = (id, name, price, image, category) => {
+        cart.push({ id, name, price: Number(price), image, category: category || '' });
+        saveCart();
+        renderCart();
+        openCart();
+        showToast(`${name} added to your collection.`);
     };
 
-    function updateCartUI() {
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) cartCount.innerText = cart.length;
-    }
+    window.removeFromCart = (idx) => {
+        cart.splice(idx, 1);
+        saveCart();
+        renderCart();
+    };
 
-    // 6. DYNAMIC UI FEEDBACK
-    function showNotification(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: ${type === 'success' ? '#0f0f0f' : '#7f1d1d'};
-            color: white;
-            padding: 1rem 2rem;
-            border: 1px solid var(--color-accent);
-            border-radius: 4px;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            z-index: 10000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s var(--ease-out-expo);
+    renderCart(); // on load
+
+
+    // ╔════════════════════════════════════╗
+    // ║  7. TOAST NOTIFICATION             ║
+    // ╚════════════════════════════════════╝
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.style.cssText = `
+            position:fixed; bottom:2.5rem; left:50%; transform:translateX(-50%) translateY(20px);
+            background:#0f0f0f; color:#fff; border:1px solid var(--color-accent);
+            padding:1rem 2.5rem; border-radius:2px; font-size:0.75rem; letter-spacing:1.5px;
+            text-transform:uppercase; z-index:99999; opacity:0;
+            transition:all 0.5s cubic-bezier(0.19,1,0.22,1); white-space:nowrap;
         `;
-        toast.innerText = message;
-        document.body.appendChild(toast);
-
+        t.textContent = msg;
+        document.body.appendChild(t);
+        requestAnimationFrame(() => {
+            t.style.opacity = '1';
+            t.style.transform = 'translateX(-50%) translateY(0)';
+        });
         setTimeout(() => {
-            toast.style.transform = 'translateY(0)';
-            toast.style.opacity = '1';
-        }, 100);
-
-        setTimeout(() => {
-            toast.style.transform = 'translateY(100px)';
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 500);
-        }, 4000);
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(-50%) translateY(20px)';
+            setTimeout(() => t.remove(), 500);
+        }, 3500);
     }
+
+    window.showToast = showToast; // expose for other modules
+
 });
