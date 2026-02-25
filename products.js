@@ -64,7 +64,12 @@ function renderProducts(products) {
         const categoryProducts = onlyWatches.filter(p => (p.category || '').trim() === category);
 
         if (categoryProducts.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No timepieces currently available in this collection.</p>';
+            container.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); margin-top: 1rem;">
+                    <p style="color: var(--accent-light); font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem;">Collection Coming Soon</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Our master watchmakers are currently curating this specific range.</p>
+                </div>
+            `;
             return;
         }
 
@@ -83,7 +88,12 @@ function renderAllProducts(products) {
     if (!container) return;
 
     if (products.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 5rem 0;">No luxury pieces match your current filters.</p>';
+        container.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 6rem 2rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg);">
+                <p style="color: var(--accent-light); font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem;">Inventory Under Review</p>
+                <p style="color: var(--text-muted); font-size: 1rem;">No luxury pieces match your current filters. Please adjust your selection.</p>
+            </div>
+        `;
         return;
     }
 
@@ -154,10 +164,51 @@ function setupProductsListener() {
     });
 }
 
+// Function to seed sample watches if Firestore is empty
+async function seedSampleWatches() {
+    const snapshot = await productsCollection.get();
+    if (snapshot.empty) {
+        console.log('🏛️ TEYRAA HOROLOGY - Seeding Masterpieces...');
+        const samples = [
+            {
+                name: "Heritage Grand Master",
+                category: "Heritage",
+                salePrice: 245000,
+                originalPrice: 280000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
+            },
+            {
+                name: "Chronograph Velocity",
+                category: "Chronograph",
+                salePrice: 185000,
+                originalPrice: 210000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=800&auto=format&fit=crop"
+            },
+            {
+                name: "Moonphase Complication",
+                category: "Complication",
+                salePrice: 420000,
+                originalPrice: 480000,
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1619134778706-7015533a6150?q=80&w=800&auto=format&fit=crop"
+            }
+        ];
+        for (const watch of samples) {
+            await productsCollection.add({
+                ...watch,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+    }
+}
+
 // Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('TEYRAA HOROLOGY - Initializing Collections...');
 
+    // Migration and Seed
     const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || '[]');
     if (localProducts.length > 0) {
         const snapshot = await productsCollection.get();
@@ -169,6 +220,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.removeItem('teyraaProducts');
             localStorage.removeItem('patelProducts');
         }
+    } else {
+        // Only seed if no local migration happened
+        await seedSampleWatches();
     }
 
     setupProductsListener();
