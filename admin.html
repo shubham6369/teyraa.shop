@@ -37,7 +37,11 @@
                     <input type="password" id="password" placeholder="Enter password" required>
                 </div>
                 <button type="submit" class="btn-login">Login</button>
-
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="#" id="forgotPassword"
+                        style="color: var(--accent-gold); text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; transition: 0.3s;">Forgot
+                        Password?</a>
+                </div>
             </form>
         </div>
     </div>
@@ -81,6 +85,12 @@
                         <path d="M8 17v-3"></path>
                     </svg>
                     Statistics
+                </a>
+                <a href="#" class="nav-item" data-section="security">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Security
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -326,6 +336,39 @@
                                 <!-- Will be populated by JS -->
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Security Section -->
+            <section id="securitySection" class="content-section" style="display: none;">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="adminCount">1</h3>
+                            <p>Authorized Admins</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="products-container" style="max-width: 600px; margin-top: 2rem;">
+                    <div class="modal-header" style="border: none; padding-left: 0;">
+                        <h2>Manage Administrators</h2>
+                    </div>
+                    <form id="addAdminForm" class="product-form" style="padding: 0;">
+                        <div class="form-group">
+                            <label>New Admin Email</label>
+                            <div style="display: flex; gap: 1rem;">
+                                <input type="email" id="newAdminEmail" placeholder="colleague@teyraa.shop" required
+                                    style="flex: 1;">
+                                <button type="submit" class="btn-save" style="padding: 0 2rem;">Authorize</button>
+                            </div>
+                            <small style="color: var(--text-dim); margin-top: 1rem; display: block;">Authorized emails
+                                will be able to login once they create an account in Firebase.</small>
+                        </div>
+                    </form>
+
+                    <div class="admin-list" id="adminList" style="margin-top: 3rem;">
+                        <!-- Populate with JS -->
                     </div>
                 </div>
             </section>

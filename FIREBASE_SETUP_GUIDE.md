@@ -134,12 +134,17 @@ service cloud.firestore {
     
     // Orders - only authenticated users can read/write
     match /orders/{orderId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
     
+    // Admins - only existing admins can read/write
+    match /admins/{adminId} {
+      allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
     // Settings - only authenticated users can read/write
     match /settings/{settingId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
   }
 }

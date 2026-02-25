@@ -50,28 +50,42 @@ const loginForm = document.getElementById('loginForm');
 const loginScreen = document.getElementById('loginScreen');
 const adminDashboard = document.getElementById('adminDashboard');
 
-// Authorized Admin Emails (Add your email here)
-const ADMIN_EMAILS = ['shubham67257@gmail.com', 'teyraa.shop@gmail.com', 'admin@teyraa.shop']; // ⚠️ ADD YOUR ADMIN EMAIL HERE
+// Security Check: Verify admin against Firestore 'admins' collection
+async function isAuthorizedAdmin(email) {
+    try {
+        const adminDoc = await db.collection('admins').doc(email).get();
+        if (adminDoc.exists) return true;
+
+        // Fallback for first-time setup: If collection is empty, allow primary admin and seed the DB
+        const snapshot = await db.collection('admins').get();
+        if (snapshot.empty && (email === 'admin@teyraa.shop' || email === 'shubham67257@gmail.com')) {
+            await db.collection('admins').doc(email).set({ role: 'super-admin', addedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error("Authorization check failed:", error);
+        return false;
+    }
+}
 
 // Check if user is already logged in
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
     if (user) {
-        // Check if the logged-in user's email is an authorized admin
-        if (ADMIN_EMAILS.includes(user.email)) {
+        const authorized = await isAuthorizedAdmin(user.email);
+        if (authorized) {
             console.log('Admin authorized:', user.email);
             loginScreen.style.display = 'none';
             adminDashboard.style.display = 'flex';
             loadProducts();
-            setupOrdersListener(); // Start listening for orders real-time
+            setupOrdersListener();
             updateStats();
         } else {
-            // Logged in but not an admin
-            console.warn('Unauthorized access attempt by:', user.email);
-            auth.signOut(); // Force logout
-            showLoginError('Unauthorized! Only admin accounts can access this panel.');
+            console.warn('Unauthorized access attempt:', user.email);
+            auth.signOut();
+            showLoginError('Unauthorized! Access restricted to verified administrators.');
         }
     } else {
-        // User is signed out
         loginScreen.style.display = 'flex';
         adminDashboard.style.display = 'none';
     }
@@ -117,6 +131,28 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
+// Forgot Password Logic
+const forgotPasswordLink = document.getElementById('forgotPassword');
+if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('username').value;
+
+        if (!email) {
+            showLoginError('Please enter your email address first to reset your password.');
+            return;
+        }
+
+        try {
+            await auth.sendPasswordResetEmail(email);
+            showNotification(`Password reset email sent to ${email}. Please check your inbox.`, "success");
+        } catch (error) {
+            console.error('Password reset error:', error);
+            showLoginError('Failed to send reset email. Verify your email address is correct.');
+        }
+    });
+}
+
 // Logout functionality
 function logout() {
     auth.signOut().then(() => {
@@ -141,45 +177,58 @@ const sections = {
     'products': document.getElementById('productsSection'),
     'orders': document.getElementById('ordersSection'),
     'categories': document.getElementById('categoriesSection'),
-    'stats': document.getElementById('statsSection')
+    'stats': document.getElementById('statsSection'),
+    'security': document.getElementById('securitySection')
 };
 
 const pageTitles = {
     'products': 'Product Management',
     'orders': 'Order Management',
     'categories': 'Category Management',
-    'stats': 'Statistics Overview'
+    'stats': 'Statistics Overview',
+    'security': 'Security Management'
 };
 
 navItems.forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
-        const section = item.dataset.section;
+        const sectionId = item.getAttribute('data-section');
 
         // Update active nav
         navItems.forEach(nav => nav.classList.remove('active'));
         item.classList.add('active');
 
+        // Update page title
+        const titles = {
+            'products': 'Product Management',
+            'orders': 'Order Management',
+            'categories': 'Category Management',
+            'stats': 'Store Statistics',
+            'security': 'Security Management'
+        };
+        document.getElementById('pageTitle').textContent = titles[sectionId];
+
         // Show selected section
         Object.values(sections).forEach(sec => sec.style.display = 'none');
-        sections[section].style.display = 'block';
-
-        // Update page title
-        document.getElementById('pageTitle').textContent = pageTitles[section];
+        sections[sectionId].style.display = 'block';
 
         // Hide add buttons for irrelevant sections
         const addBtn = document.getElementById('addProductBtn');
         const addCatBtn = document.getElementById('addCategoryBtn');
-        addBtn.style.display = section === 'products' ? 'flex' : 'none';
-        addCatBtn.style.display = section === 'categories' ? 'flex' : 'none';
+        addBtn.style.display = sectionId === 'products' ? 'flex' : 'none';
+        addCatBtn.style.display = sectionId === 'categories' ? 'flex' : 'none';
 
-        // Update stats or categories if needed
-        if (section === 'stats') {
+        // Update stats or categories or security if needed
+        if (sectionId === 'stats') {
             updateDetailedStats();
         }
 
-        if (section === 'categories') {
+        if (sectionId === 'categories') {
             loadCategories();
+        }
+
+        if (sectionId === 'security') {
+            loadAdmins();
         }
     });
 });
@@ -998,3 +1047,78 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadCategories();
     updateOrderStats();
 });
+
+// ===== SECURITY & ADMIN MANAGEMENT =====
+async function loadAdmins() {
+    const adminList = document.getElementById('adminList');
+    const adminCount = document.getElementById('adminCount');
+    if (!adminList) return;
+
+    adminList.innerHTML = '<p style="color: var(--text-dim);">Loading operators...</p>';
+
+    try {
+        const snapshot = await db.collection('admins').orderBy('addedAt', 'desc').get();
+        adminList.innerHTML = '';
+        adminCount.textContent = snapshot.size;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const email = doc.id;
+            const isSelf = auth.currentUser.email === email;
+
+            const div = document.createElement('div');
+            div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.02); margin-bottom: 0.5rem; border-radius: var(--radius-sm);';
+            div.innerHTML = `
+                <div>
+                    <p style="color: white; font-weight: 500; font-size: 0.9rem;">${email} ${isSelf ? '<span style="color: var(--accent-gold); font-size: 0.7rem; margin-left: 0.5rem; border: 1px solid var(--accent-gold); padding: 2px 6px; border-radius: 4px;">YOU</span>' : ''}</p>
+                    <small style="color: var(--text-dim); text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1px;">Added: ${data.addedAt ? new Date(data.addedAt.seconds * 1000).toLocaleDateString() : 'Original'}</small>
+                </div>
+                ${!isSelf ? `<button onclick="removeAdmin('${email}')" class="btn-delete" style="padding: 0.5rem 1rem; font-size: 0.7rem;">Revoke Access</button>` : ''}
+            `;
+            adminList.appendChild(div);
+        });
+    } catch (error) {
+        console.error("Error loading admins:", error);
+        adminList.innerHTML = '<p style="color: #ff4d4d; padding: 1rem;">Failed to load administrators. Check permissions.</p>';
+    }
+}
+
+const addAdminForm = document.getElementById('addAdminForm');
+if (addAdminForm) {
+    addAdminForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newAdminEmail').value.trim().toLowerCase();
+
+        if (!email) return;
+
+        try {
+            await db.collection('admins').doc(email).set({
+                role: 'admin',
+                addedBy: auth.currentUser.email,
+                addedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            showNotification(`${email} successfully authorized!`, "success");
+            document.getElementById('newAdminEmail').value = '';
+            loadAdmins();
+        } catch (error) {
+            console.error("Error adding admin:", error);
+            showNotification("Optimization failed. Only super-admins can authorize new staff.", "error");
+        }
+    });
+}
+
+async function removeAdmin(email) {
+    if (!confirm(`Are you sure you want to revoke access for ${email}? This action is immediate.`)) return;
+
+    try {
+        await db.collection('admins').doc(email).delete();
+        showNotification(`Access revoked for ${email}`, "warning");
+        loadAdmins();
+    } catch (error) {
+        console.error("Error removing admin:", error);
+        showNotification("Failed to revoke access.", "error");
+    }
+}
+
+window.removeAdmin = removeAdmin;
+window.loadAdmins = loadAdmins;
