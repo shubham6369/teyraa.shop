@@ -899,6 +899,25 @@ if (filterOrderStatus) {
     });
 }
 
+// Cleanup legacy clothing products
+async function cleanupLegacyProducts() {
+    console.log('🏛️ TEYRAA HOROLOGY - Checking for legacy inventory...');
+    const watchCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
+    const products = await getProducts();
+
+    const legacyProducts = products.filter(p => !watchCategories.includes(p.category));
+
+    if (legacyProducts.length > 0) {
+        console.warn(`🧹 Purging ${legacyProducts.length} legacy items...`);
+        for (const product of legacyProducts) {
+            await productsCollection.doc(product.id).delete();
+            console.log(`- Removed: ${product.name} (${product.category})`);
+        }
+        showNotification(`Purged ${legacyProducts.length} legacy clothing items.`, "warning");
+        loadProducts();
+    }
+}
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Admin Panel Loaded');
@@ -917,6 +936,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadProducts();
         }
     }
+
+    // Always check for legacy products on admin load to keep DB clean
+    cleanupLegacyProducts();
 
     loadCategories();
     updateOrderStats();

@@ -43,8 +43,12 @@ function createProductCard(product) {
 
 // Function to render products by category
 function renderProducts(products) {
-    allProductsGlobal = products;
-    const categories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
+    const watchCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
+    // Globally filter all products to ONLY include watches
+    const onlyWatches = products.filter(p => watchCategories.includes((p.category || '').trim()));
+
+    allProductsGlobal = onlyWatches;
+
     const containerIds = {
         'Heritage': 'heritageGrid',
         'Chronograph': 'chronographGrid',
@@ -52,17 +56,22 @@ function renderProducts(products) {
         'Minimalist': 'minimalistGrid'
     };
 
-    categories.forEach(category => {
+    watchCategories.forEach(category => {
         const container = document.getElementById(containerIds[category]);
         if (!container) return;
 
-        const categoryProducts = products.filter(p => (p.category || '').toLowerCase().trim() === category.toLowerCase().trim());
-        if (categoryProducts.length === 0) return;
+        // Strict category filtering
+        const categoryProducts = onlyWatches.filter(p => (p.category || '').trim() === category);
+
+        if (categoryProducts.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No timepieces currently available in this collection.</p>';
+            return;
+        }
 
         container.innerHTML = categoryProducts.map(createProductCard).join('');
     });
 
-    renderAllProducts(products); // Also render the master collection
+    renderAllProducts(onlyWatches); // Render only watches in the master collection
 
     if (typeof window.attachCartListeners === 'function') {
         window.attachCartListeners();
@@ -84,10 +93,15 @@ function renderAllProducts(products) {
 // Filter Logic
 function applyFilters() {
     const priceRange = document.getElementById('priceFilter').value;
-    const category = document.getElementById('categoryFilter').value;
-    const rating = document.getElementById('ratingFilter').value;
+    const categoryFilterValue = document.getElementById('categoryFilter').value;
+    const ratingFilterValue = document.getElementById('ratingFilter').value;
 
-    let filtered = [...allProductsGlobal];
+    const allowedCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
+
+    let filtered = allProductsGlobal.filter(p => {
+        const cat = (p.category || '').trim();
+        return allowedCategories.includes(cat);
+    });
 
     // Filter by Price
     if (priceRange !== 'all') {
@@ -99,13 +113,13 @@ function applyFilters() {
     }
 
     // Filter by Category
-    if (category !== 'all') {
-        filtered = filtered.filter(p => p.category === category);
+    if (categoryFilterValue !== 'all') {
+        filtered = filtered.filter(p => p.category === categoryFilterValue);
     }
 
     // Filter by Rating
-    if (rating !== 'all') {
-        filtered = filtered.filter(p => (p.rating || 5) >= Number(rating));
+    if (ratingFilterValue !== 'all') {
+        filtered = filtered.filter(p => (p.rating || 5) >= Number(ratingFilterValue));
     }
 
     renderAllProducts(filtered);
