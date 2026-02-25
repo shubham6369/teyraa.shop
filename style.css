@@ -1,38 +1,38 @@
 /* 
   TEYRAA HOROLOGY - PREMIUM DESIGN SYSTEM
-  Theme: EMERALD MAISON
-  Concept: "Vivid Luxury / Grand Atelier"
-  Palette: Forest Black + Champagne Gold + Vivid Emerald
+  Theme: ARCTIC BLUEPRINT
+  Concept: "Futuristic Precision / Ice & Electric"
+  Palette: Midnight Navy + Electric Blue + Ice White
 */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap');
 
 :root {
-    /* --- Emerald Maison Palette --- */
-    --color-bg: #050D08;
-    /* Forest Black */
-    --color-surface: #091410;
-    /* Deep Emerald Void */
-    --color-surface-2: #0F1E17;
-    /* Elevated Forest */
-    --color-accent: #D4AF6E;
-    /* Champagne Gold */
-    --color-accent-light: #F0D9A8;
-    /* Bright Champagne */
-    --color-accent-green: #2FBC7A;
-    /* Vivid Emerald */
-    --color-silver: #7AAF91;
-    /* Sage Mist */
-    --color-text: #F5F7F2;
-    /* Ivory White */
-    --color-text-muted: #7A9484;
-    /* Forest Mist */
-    --color-border: rgba(212, 175, 110, 0.15);
-    --color-border-hover: rgba(212, 175, 110, 0.4);
+    /* --- Arctic Blueprint Palette --- */
+    --color-bg: #030912;
+    /* Absolute Midnight */
+    --color-surface: #070F1E;
+    /* Deep Blueprint */
+    --color-surface-2: #0C1829;
+    /* Elevated Blueprint */
+    --color-accent: #2D8EFF;
+    /* Electric Blue */
+    --color-accent-light: #9ED8FF;
+    /* Ice Blue */
+    --color-accent-cyan: #00D4FF;
+    /* Vivid Cyan */
+    --color-silver: #5A8FAB;
+    /* Steel Ice */
+    --color-text: #E8F4FD;
+    /* Ice White */
+    --color-text-muted: #4A7A9B;
+    /* Arctic Mist */
+    --color-border: rgba(45, 142, 255, 0.15);
+    --color-border-hover: rgba(45, 142, 255, 0.45);
 
-    /* --- Typography --- */
-    --font-heading: 'DM Serif Display', serif;
-    --font-body: 'Outfit', sans-serif;
+    /* --- Typography (Syne — geometric futuristic) --- */
+    --font-heading: 'Syne', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
 
     /* --- Motion --- */
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -537,15 +537,15 @@ footer {
     }
 }
 
-@keyframes goldPulse {
+@keyframes electricPulse {
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(212, 175, 110, 0.5);
+        box-shadow: 0 0 0 0 rgba(45, 142, 255, 0.55);
     }
 
     50% {
-        box-shadow: 0 0 0 18px rgba(212, 175, 110, 0);
+        box-shadow: 0 0 0 20px rgba(45, 142, 255, 0);
     }
 }
 
@@ -679,7 +679,7 @@ nav {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, transparent 40%, rgba(212, 175, 110, 0.16) 50%, transparent 60%);
+    background: linear-gradient(105deg, transparent 40%, rgba(0, 212, 255, 0.18) 50%, transparent 60%);
     background-size: 600px 100%;
     background-position: -600px 0;
     z-index: 5;
@@ -700,8 +700,8 @@ nav {
 }
 
 .btn-premium.magnetic:hover {
-    box-shadow: 0 0 50px rgba(212, 175, 110, 0.4);
-    animation: goldPulse 2s ease infinite;
+    box-shadow: 0 0 50px rgba(45, 142, 255, 0.5), 0 0 100px rgba(0, 212, 255, 0.2);
+    animation: electricPulse 2s ease infinite;
 }
 
 /* ── Story image parallax float ── */
@@ -711,13 +711,14 @@ nav {
 
 /* ── Nav scroll state ── */
 nav.scrolled {
-    background: rgba(5, 13, 8, 0.96) !important;
-    backdrop-filter: blur(24px) saturate(1.6);
-    border-bottom: 1px solid var(--color-border);
+    background: rgba(3, 9, 18, 0.97) !important;
+    backdrop-filter: blur(28px) saturate(1.8);
+    border-bottom: 1px solid rgba(45, 142, 255, 0.2);
     mix-blend-mode: normal !important;
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
     transition: all 0.5s var(--ease-out-expo);
+    box-shadow: 0 1px 40px rgba(45, 142, 255, 0.08);
 }
 
 /* ── Gold line decoration ── */
@@ -739,7 +740,7 @@ nav.scrolled {
 
 #testimonials .reveal:hover {
     transform: translateY(-8px) !important;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-accent);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--color-accent), 0 0 30px rgba(45, 142, 255, 0.15);
 }
 
 /* ── Footer link underline animation ── */
@@ -772,15 +773,15 @@ nav.scrolled {
     transform: scale(1.08);
 }
 
-/* ── Emerald Maison grid texture ── */
+/* ── Arctic Blueprint grid texture ── */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-        linear-gradient(rgba(212, 175, 110, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(47, 188, 122, 0.03) 1px, transparent 1px);
-    background-size: 80px 80px;
+        linear-gradient(rgba(45, 142, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
     pointer-events: none;
     z-index: -1;
 }

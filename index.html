@@ -22,18 +22,18 @@
 
     <!-- ═══ CINEMATIC LOADER ═══ -->
     <div id="loader"
-        style="position:fixed;inset:0;background:#050D08;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        style="position:fixed;inset:0;background:#030912;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div id="loader-logo"
-            style="font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,5vw,3.2rem);letter-spacing:12px;text-transform:uppercase;color:#F5F7F2;opacity:0;transform:translateY(20px);transition:all 1.2s cubic-bezier(0.19,1,0.22,1);">
+            style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,5vw,3.2rem);letter-spacing:16px;text-transform:uppercase;color:#E8F4FD;opacity:0;transform:translateY(20px);transition:all 1.2s cubic-bezier(0.19,1,0.22,1);font-weight:700;">
             Teyraa</div>
         <div
-            style="margin-top:2rem;width:240px;height:1px;background:rgba(212,175,110,0.1);position:relative;overflow:hidden;">
+            style="margin-top:2rem;width:260px;height:1px;background:rgba(45,142,255,0.1);position:relative;overflow:hidden;">
             <div id="loader-bar"
-                style="position:absolute;top:0;left:0;height:100%;width:0%;background:linear-gradient(90deg,#2FBC7A,#D4AF6E,#F0D9A8);transition:width 0.05s linear;">
+                style="position:absolute;top:0;left:0;height:100%;width:0%;background:linear-gradient(90deg,#2D8EFF,#00D4FF,#9ED8FF);transition:width 0.05s linear;box-shadow:0 0 12px rgba(0,212,255,0.6);">
             </div>
         </div>
         <div id="loader-pct"
-            style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:5px;color:#7A9484;font-family:'Outfit',sans-serif;">
+            style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:6px;color:#4A7A9B;font-family:'Space Grotesk',sans-serif;">
             0%</div>
     </div>
 
@@ -107,50 +107,50 @@
         <div id="scroll-indicator"
             style="position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.8rem;">
             <span
-                style="font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:rgba(212,175,110,0.65);">Scroll</span>
+                style="font-size:0.6rem;letter-spacing:5px;text-transform:uppercase;color:rgba(0,212,255,0.6);font-family:'Space Grotesk',sans-serif;">Scroll</span>
             <div
-                style="width:1px;height:60px;background:linear-gradient(to bottom,rgba(47,188,122,0.9),rgba(212,175,110,0.6),transparent);animation:scrollPulse 2s ease-in-out infinite;">
+                style="width:1px;height:60px;background:linear-gradient(to bottom,rgba(0,212,255,1),rgba(45,142,255,0.7),transparent);animation:scrollPulse 2s ease-in-out infinite;box-shadow:0 0 8px rgba(0,212,255,0.4);">
             </div>
         </div>
     </header>
 
     <!-- MARQUEE RIBBON -->
     <div id="marquee-section"
-        style="background:linear-gradient(90deg,#091410,#0F1E17,#091410);border-top:1px solid rgba(212,175,110,0.12);border-bottom:1px solid rgba(212,175,110,0.12);padding:1.3rem 0;overflow:hidden;white-space:nowrap;">
-        <div class="marquee-track" style="display:inline-flex;gap:0;animation:marqueeScroll 22s linear infinite;">
-            <span class="marquee-item" style="color:#D4AF6E;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">HERITAGE</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">CRAFTSMANSHIP</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">LEGACY</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">EXCELLENCE</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">TIMELESS</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">HERITAGE</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">CRAFTSMANSHIP</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">LEGACY</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">EXCELLENCE</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
-            <span class="marquee-item" style="color:#D4AF6E;">TIMELESS</span><span class="marquee-sep"
-                style="color:rgba(47,188,122,0.7);">✦</span>
+        style="background:linear-gradient(90deg,#070F1E,#0C1829,#070F1E);border-top:1px solid rgba(45,142,255,0.15);border-bottom:1px solid rgba(45,142,255,0.15);padding:1.2rem 0;overflow:hidden;white-space:nowrap;">
+        <div class="marquee-track" style="display:inline-flex;gap:0;animation:marqueeScroll 20s linear infinite;">
+            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">HERITAGE</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">ENGINEERING</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">INNOVATION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">TIMELESS</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">HERITAGE</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">ENGINEERING</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">INNOVATION</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
+            <span class="marquee-item" style="color:#9ED8FF;">TIMELESS</span><span class="marquee-sep"
+                style="color:rgba(0,212,255,0.8);">&#9670;</span>
         </div>
     </div>
 
     <!-- STATS BAR -->
     <div id="stats-bar"
         style="background:var(--color-surface);border-bottom:1px solid var(--color-border);position:relative;overflow:hidden;">
-        <!-- Emerald-to-gold accent line at top -->
+        <!-- Electric blue accent line at top -->
         <div
-            style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#2FBC7A,#D4AF6E,#F0D9A8,#D4AF6E,#2FBC7A,transparent);">
+            style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#2D8EFF,#00D4FF,#9ED8FF,#00D4FF,#2D8EFF,transparent);box-shadow:0 0 20px rgba(0,212,255,0.3);">
         </div>
         <div class="container"
             style="display:grid;grid-template-columns:repeat(4,1fr);text-align:center;padding:5rem var(--gutter);">
