@@ -75,16 +75,13 @@ body {
 
 /* --- Navigation --- */
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: static;
     width: 100%;
     padding: 2rem var(--gutter);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 1000;
-    /* mix-blend-mode removed — was causing text to become invisible on navy bg */
+    background: var(--color-bg);
 }
 
 .nav-logo {
@@ -144,7 +141,7 @@ section {
 
 /* --- Hero Section --- */
 .hero {
-    height: 100vh;
+    height: calc(100vh - 80px);
     padding: 0;
     display: flex;
     align-items: center;
