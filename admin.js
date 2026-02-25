@@ -6,67 +6,35 @@ function initializeDefaultProducts() {
         const defaultProducts = [
             {
                 id: 1,
-                name: 'NYC Tie-Dye Street Shirt Set',
-                category: 'Teyraa Special',
-                salePrice: 1299,
-                originalPrice: 2499,
-                image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop'
+                name: 'Heritage Chronograph',
+                category: 'Heritage',
+                salePrice: 125000,
+                originalPrice: 150000,
+                image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=800'
             },
             {
                 id: 2,
-                name: 'Classic Stripe Co-Ord Set',
-                category: 'Teyraa Special',
-                salePrice: 1499,
-                originalPrice: 2799,
-                image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=500&fit=crop'
+                name: 'Skyline Moonphase',
+                category: 'Complication',
+                salePrice: 245000,
+                originalPrice: 310000,
+                image: 'https://images.unsplash.com/photo-1619134778706-7015533a6150?q=80&w=800'
             },
             {
                 id: 3,
-                name: 'Candy Shirts / Straight Fit jeans',
-                category: 'Teyraa Special',
-                salePrice: 1799,
-                originalPrice: 3299,
-                image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&h=500&fit=crop'
+                name: 'Precision Master-II',
+                category: 'Chronograph',
+                salePrice: 185000,
+                originalPrice: 220000,
+                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800'
             },
             {
                 id: 4,
-                name: 'Urban Ease Plus Size Jeans',
-                category: 'Jeans',
-                salePrice: 1299,
-                originalPrice: 2299,
-                image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=500&fit=crop'
-            },
-            {
-                id: 5,
-                name: 'Cocoa Depth – Straight Fit Jeans',
-                category: 'Jeans',
-                salePrice: 1199,
-                originalPrice: 2199,
-                image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&h=500&fit=crop'
-            },
-            {
-                id: 6,
-                name: 'White canvas jacket',
-                category: 'Jacket',
-                salePrice: 2299,
-                originalPrice: 3999,
-                image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=500&fit=crop&sat=-100'
-            },
-            {
-                id: 7,
-                name: 'Indigo ink jacket',
-                category: 'Jacket',
-                salePrice: 2499,
-                originalPrice: 4299,
-                image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop'
-            },
-            {
-                id: 8,
-                name: 'Urban Pinstripe Smart Combo',
-                category: 'COMBOES',
-                salePrice: 1899,
-                originalPrice: 3499,
-                image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop'
+                name: 'Pure Minimalism Silk',
+                category: 'Minimalist',
+                salePrice: 75000,
+                originalPrice: 95000,
+                image: 'https://images.unsplash.com/photo-1509048191080-d2984bad6ad5?q=80&w=800'
             }
         ];
 

@@ -2,12 +2,12 @@
 
 // Function to render products by category
 function renderProducts(products) {
-    const categories = ['Teyraa Special', 'Jeans', 'Jacket', 'COMBOES'];
+    const categories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
     const containerIds = {
-        'Teyraa Special': 'teyraaSpecialGrid',
-        'Jeans': 'jeansGrid',
-        'Jacket': 'jacketGrid',
-        'COMBOES': 'comboesGrid'
+        'Heritage': 'teyraaSpecialGrid',
+        'Chronograph': 'jeansGrid',
+        'Complication': 'jacketGrid',
+        'Minimalist': 'comboesGrid'
     };
 
     console.log('Total products from Firestore:', products.length);
@@ -21,8 +21,8 @@ function renderProducts(products) {
             const prodCat = (p.category || '').toLowerCase().trim();
             const targetCat = category.toLowerCase().trim();
 
-            if (targetCat === 'teyraa special') {
-                return prodCat === 'teyraa special' || prodCat === 'patel special';
+            if (targetCat === 'heritage') {
+                return prodCat === 'heritage' || prodCat === 'teyraa special';
             }
             return prodCat === targetCat;
         });

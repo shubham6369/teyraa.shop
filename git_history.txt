@@ -1,0 +1,20 @@
+2f94e10 Added visible logout button in header for logged-in users
+45379c4 Added dedicated Login Landing Page with Email and Phone OTP
+077e6db Enabled scrollable checkout modal
+f82fa37 Improved product rendering with case-insensitivity and debugging logs
+f4a1444 Extremely compact checkout modal for better fit
+692574f Reduced checkout modal height for better usability
+f5d37a7 Reduced checkout modal width by 25%
+20caf1c Optimized website performance for PageSpeed and SEO
+61000a9 Added shubham67257@gmail.com to admin list
+c5c402a Restricted Admin Panel access to authorized emails
+466f8f4 Implemented Phone Number OTP login
+2919739 Enhanced Firestore security rules
+3d72847 Added premium animations, colour grading, and design system
+f76d305 Implemented Customer Login/Signup system
+3bb2935 Fixed product visibility and improved rendering robustness
+22a10e4 Fixed Edit/Delete button bug and improved error reporting
+d1b7766 Removed old login hint from admin panel
+da1f5a8 Re-verification push
+8db8ac4 Complete rebranding to teyraa.shop
+09d18c5 Rebranded from patel.store to teyraa.shop

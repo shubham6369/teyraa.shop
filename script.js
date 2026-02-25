@@ -178,9 +178,9 @@ function updateCartDisplay() {
     if (cartItems.length === 0) {
         cartContent.innerHTML = `
             <div class="cart-empty">
-                <h3>Your cart is empty</h3>
-                <p>Add some items to get started!</p>
-                <a href="#MainContent" class="btn-primary">Continue shopping</a>
+                <h3>Your selection is empty</h3>
+                <p>Begin your journey with an exceptional timepiece.</p>
+                <a href="#MainContent" class="btn-primary" onclick="closeMobileMenu()">View Collection</a>
             </div>
         `;
     } else {
