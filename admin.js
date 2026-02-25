@@ -918,6 +918,61 @@ async function cleanupLegacyProducts() {
     }
 }
 
+// ===== SEEDING 100 LUXURY WATCHES =====
+async function seed100Watches() {
+    if (!confirm('Are you sure you want to add 100 luxury watches to the database? This will significantly expand your inventory.')) return;
+
+    showNotification("Initializing Master Inventory...", "warning");
+
+    const watchPrefixes = ['Elysian', 'Zenith', 'Regal', 'Obsidian', 'Aurora', 'Majestic', 'Stellar', 'Imperial', 'Sovereign', 'Noble', 'Classic', 'Heritage', 'Eternal', 'Timeless', 'Summit', 'Peak', 'Ocean', 'Aero', 'Chrono', 'Luxe', 'Elite', 'Titan', 'Atlas', 'Nova'];
+    const watchSuffixes = ['Chronograph', 'Moonphase', 'Tourbillon', 'Skeleton', 'Automatic', 'Master', 'Edition', 'Series', 'Legacy', 'Vantage', 'Spectra', 'Phantom', 'Gale', 'Tide', 'Precision', 'Unity', 'Essence', 'Nova', 'Pulse'];
+    const watchCategories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
+    const watchImages = [
+        'https://images.unsplash.com/photo-1547996160-81dfa63595aa',
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
+        'https://images.unsplash.com/photo-1509048191080-d2984bad6ad5',
+        'https://images.unsplash.com/photo-1619134778706-7015533a6150',
+        'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7',
+        'https://images.unsplash.com/photo-1524805444758-089113d48a6d',
+        'https://images.unsplash.com/photo-1539533018447-63fcce2678e3',
+        'https://images.unsplash.com/photo-1548171916-042bdc6b5ad7',
+        'https://images.unsplash.com/photo-1508685096489-7as5c7f139a1',
+        'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7'
+    ];
+
+    let count = 0;
+    for (let i = 0; i < 100; i++) {
+        const prefix = watchPrefixes[Math.floor(Math.random() * watchPrefixes.length)];
+        const suffix = watchSuffixes[Math.floor(Math.random() * watchSuffixes.length)];
+        const category = watchCategories[Math.floor(Math.random() * watchCategories.length)];
+        const image = `${watchImages[Math.floor(Math.random() * watchImages.length)]}?q=80&w=800&auto=format&fit=crop`;
+
+        const salePrice = Math.floor(Math.random() * (1200000 - 45000 + 1)) + 45000;
+        const orgPrice = salePrice + Math.floor(Math.random() * 50000) + 10000;
+        const rating = Math.random() > 0.3 ? 5 : 4;
+
+        const productData = {
+            name: `${prefix} ${suffix} ${i + 1}`,
+            category: category,
+            salePrice: salePrice,
+            originalPrice: orgPrice,
+            image: image,
+            rating: rating,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await productsCollection.add(productData);
+        count++;
+        if (count % 20 === 0) console.log(`Seeded ${count} watches...`);
+    }
+
+    showNotification(`Successfully seeded 100 luxury timepieces!`, "success");
+    loadProducts();
+}
+
+// Attach to window for the hidden action
+window.seed100Watches = seed100Watches;
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Admin Panel Loaded');
