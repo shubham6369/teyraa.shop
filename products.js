@@ -4,10 +4,10 @@
 function renderProducts(products) {
     const categories = ['Heritage', 'Chronograph', 'Complication', 'Minimalist'];
     const containerIds = {
-        'Heritage': 'teyraaSpecialGrid',
-        'Chronograph': 'jeansGrid',
-        'Complication': 'jacketGrid',
-        'Minimalist': 'comboesGrid'
+        'Heritage': 'heritageGrid',
+        'Chronograph': 'chronographGrid',
+        'Complication': 'complicationGrid',
+        'Minimalist': 'minimalistGrid'
     };
 
     console.log('Total products from Firestore:', products.length);
@@ -21,21 +21,18 @@ function renderProducts(products) {
             const prodCat = (p.category || '').toLowerCase().trim();
             const targetCat = category.toLowerCase().trim();
 
-            if (targetCat === 'heritage') {
-                return prodCat === 'heritage' || prodCat === 'teyraa special';
-            }
+            // Heritage can include legacy 'teyraa special' if needed, 
+            // but for a clean state we prefer direct matching.
             return prodCat === targetCat;
         });
 
         console.log(`[${category}] Matching products:`, categoryProducts.length);
 
         if (categoryProducts.length === 0) {
-            // Keep hardcoded products if none in Firestore for this category
-            // container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No products available in this category</p>';
             return;
         }
 
-        // If we have Firestore products, overwrite the hardcoded ones
+        // Overwrite the loading/placeholder state
         container.innerHTML = categoryProducts.map(product => {
             const salePrice = Number(product.salePrice) || 0;
             const originalPrice = Number(product.originalPrice) || 0;
@@ -83,7 +80,6 @@ let productsListener = null;
 function setupProductsListener() {
     console.log('Setting up real-time product listener...');
 
-    // Unsubscribe if exists
     if (productsListener) productsListener();
 
     productsListener = productsCollection.onSnapshot((snapshot) => {
@@ -101,25 +97,23 @@ function setupProductsListener() {
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('teyraa.shop - Initializing Firebase Products...');
+    console.log('TEYRAA HOROLOGY - Initializing Products...');
 
-    // Check if we need to migrate from localStorage (only once)
-    const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || localStorage.getItem('patelProducts') || '[]');
+    // Migration logic (keeping it safe but cleaning up keys)
+    const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || '[]');
     if (localProducts.length > 0) {
         const snapshot = await productsCollection.get();
         if (snapshot.empty) {
-            console.log("Migrating localStorage products to Firestore...");
+            console.log("Migrating products to Firestore...");
             for (const product of localProducts) {
                 const { id, ...rest } = product;
                 await productsCollection.add(rest);
             }
-            // Clear localStorage migration flags
             localStorage.removeItem('teyraaProducts');
-            localStorage.removeItem('patelProducts');
+            localStorage.removeItem('patelProducts'); // Cleanup dead keys
         }
     }
 
-    // Start real-time listener
     setupProductsListener();
 });
 

@@ -1085,4 +1085,4 @@ function getStatusColor(status) {
     }
 }
 
-console.log('🛍️ teyraa.shop Loaded Successfully!');
+console.log('🏛️ TEYRAA HOROLOGY - Timeless Excellence Loaded.');

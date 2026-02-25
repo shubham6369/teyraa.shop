@@ -904,7 +904,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Migration check: If Firestore is empty but localStorage has products, sync them
     const firestoreProducts = await getProducts();
     if (firestoreProducts.length === 0) {
-        const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || localStorage.getItem('patelProducts') || '[]');
+        const localProducts = JSON.parse(localStorage.getItem('teyraaProducts') || '[]');
         if (localProducts.length > 0) {
             console.log("Syncing localStorage products to Firestore...");
             for (const product of localProducts) {
