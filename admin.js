@@ -57,14 +57,39 @@ async function isAuthorizedAdmin(email) {
         if (adminDoc.exists) return true;
 
         // Fallback for first-time setup: If collection is empty, allow primary admin and seed the DB
-        const snapshot = await db.collection('admins').get();
-        if (snapshot.empty && (email === 'admin@teyraa.shop' || email === 'shubham67257@gmail.com')) {
-            await db.collection('admins').doc(email).set({ role: 'super-admin', addedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            return true;
+        const allowedAdmins = ['admin@teyraa.shop', 'shubham67257@gmail.com', 'shubham6369@gmail.com'];
+
+        if (allowedAdmins.includes(email)) {
+            try {
+                const snapshot = await db.collection('admins').get();
+                if (snapshot.empty) {
+                    await db.collection('admins').doc(email).set({
+                        role: 'super-admin',
+                        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    return true;
+                }
+            } catch (seedError) {
+                // If we get a permission denied here, it means the Firestore rules are blocking
+                // even the first time setup.
+                console.error("Could not seed initial admin due to Firestore Rules.", seedError);
+                if (seedError.code === 'permission-denied') {
+                    showLoginError('Firestore Rules Error: You need to update your Firestore security rules to allow the first admin. Check FIREBASE_SETUP_GUIDE.md.');
+                    return false;
+                }
+            }
         }
         return false;
     } catch (error) {
         console.error("Authorization check failed:", error);
+        if (error.code === 'permission-denied') {
+            const allowedAdmins = ['admin@teyraa.shop', 'shubham67257@gmail.com', 'shubham6369@gmail.com'];
+            if (allowedAdmins.includes(email)) {
+                showLoginError('First-time setup blocked by Firestore rules. Please update rules to allow initial admin login.');
+            } else {
+                showLoginError('Unauthorized! Access restricted to verified administrators.');
+            }
+        }
         return false;
     }
 }

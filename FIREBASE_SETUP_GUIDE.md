@@ -137,9 +137,12 @@ service cloud.firestore {
       allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
     
-    // Admins - only existing admins can read/write
+    // Admins - only existing admins can read/write, PLUS the initial super admins
     match /admins/{adminId} {
-      allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow read, write: if exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+                         request.auth.token.email == 'admin@teyraa.shop' ||
+                         request.auth.token.email == 'shubham67257@gmail.com' ||
+                         request.auth.token.email == 'shubham6369@gmail.com';
     }
 
     // Settings - only authenticated users can read/write

@@ -1,23 +1,42 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Products: Publicly readable, only Admins/Staff can edit
+    // Products: Publicly readable, only Admins can edit
     match /products/{productId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null && 
+        (exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+         request.auth.token.email == 'admin@teyraa.shop' ||
+         request.auth.token.email == 'shubham67257@gmail.com' ||
+         request.auth.token.email == 'shubham6369@gmail.com');
     }
     
-    // Orders: 
-    // 1. Customers can ONLY write (create) their own orders
-    // 2. Admins can read/write all orders
+    // Orders: Anyone can create, only Admins can read
     match /orders/{orderId} {
-      allow create: if true; // Allow guests to place orders
-      allow read, update, delete: if request.auth != null;
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && 
+        (exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+         request.auth.token.email == 'admin@teyraa.shop' ||
+         request.auth.token.email == 'shubham67257@gmail.com' ||
+         request.auth.token.email == 'shubham6369@gmail.com');
     }
     
-    // Users/Settings: Strictly restricted to authenticated users
+    // Settings: Admin only
     match /settings/{settingId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if request.auth != null && 
+        (exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+         request.auth.token.email == 'admin@teyraa.shop' ||
+         request.auth.token.email == 'shubham67257@gmail.com' ||
+         request.auth.token.email == 'shubham6369@gmail.com');
+    }
+    
+    // Admins: Bootstrap logic for set up
+    match /admins/{adminId} {
+      allow read, write: if request.auth != null && 
+        (exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+         request.auth.token.email == 'admin@teyraa.shop' ||
+         request.auth.token.email == 'shubham67257@gmail.com' ||
+         request.auth.token.email == 'shubham6369@gmail.com');
     }
 
     // Default deny for anything else
