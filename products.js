@@ -18,7 +18,7 @@ function createMasterpieceCard(product) {
             <div class="chapter-image">
                 <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x500?text=The+Lost+Reference'">
                 <div style="position: absolute; bottom: 1rem; left: 1rem; z-index: 10;">
-                    <button onclick="addToCart('${product.id}', '${product.name}', ${salePrice}, '${product.image}')" 
+                    <button onclick="addToCart('${product.id}', '${product.name}', ${salePrice}, '${product.image}', '${product.category}')" 
                             style="background: white; color: black; border: none; padding: 0.6rem 1rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 2px;">
                         Secure
                     </button>
