@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEYRAA HOROLOGY | The Art of Time</title>
+    <title>Buy Watches for Men, Women & Kids Online | TEYRAA</title>
     <meta name="description"
-        content="Luxury watch collective featuring heritage craftsmanship and modern precision. Time isn't measured, it's remembered.">
+        content="Explore the best collection of luxury and bestseller watches online at TEYRAA. Choose from a wide range of premium timepieces.">
 
     <!-- Design System & Icons -->
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase SDK (Production Only) -->
+    <!-- Firebase SDK (Compatibility Mode for existing script) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -20,379 +20,143 @@
 
 <body>
 
-    <!-- ═══ CINEMATIC LOADER ═══ -->
-    <div id="loader"
-        style="position:fixed;inset:0;background:#030912;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div id="loader-logo"
-            style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,5vw,3.2rem);letter-spacing:16px;text-transform:uppercase;color:#E8F4FD;opacity:0;transform:translateY(20px);transition:all 1.2s cubic-bezier(0.19,1,0.22,1);font-weight:700;">
-            Teyraa</div>
-        <div
-            style="margin-top:2rem;width:260px;height:1px;background:rgba(45,142,255,0.1);position:relative;overflow:hidden;">
-            <div id="loader-bar"
-                style="position:absolute;top:0;left:0;height:100%;width:0%;background:linear-gradient(90deg,#2D8EFF,#00D4FF,#9ED8FF);transition:width 0.05s linear;box-shadow:0 0 12px rgba(0,212,255,0.6);">
-            </div>
-        </div>
-        <div id="loader-pct"
-            style="margin-top:1.5rem;font-size:0.65rem;letter-spacing:6px;color:#4A7A9B;font-family:'Space Grotesk',sans-serif;">
-            0%</div>
+    <div class="top-bar">
+        Free Shipping Across India | 100% Original Products | Easy Returns
     </div>
 
-    <!-- Precise Navigation -->
-    <nav>
-        <a href="#" class="nav-logo">Teyraa</a>
-        <div class="nav-links">
-            <a href="#heritage">Heritage</a>
-            <a href="#collections">Collections</a>
-            <a href="story.html">Our Story</a>
-            <a href="#makers">Makers</a>
-        </div>
-        <div class="nav-actions" style="display:flex; gap:1.5rem; align-items:center;">
-            <a href="#" id="cartToggle" style="color:white; font-size:1.1rem; position:relative; text-decoration:none;">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span id="cartCount"
-                    style="font-size:0.55rem; position:absolute; top:-8px; right:-12px; background:var(--color-accent); color:#000; padding:2px 6px; border-radius:10px; font-weight:700;">0</span>
-            </a>
-        </div>
-    </nav>
+    <header>
+        <div class="main-header">
+            <a href="index.html" class="logo">Teyraa</a>
 
-    <!-- Cart Sidebar -->
-    <div id="cartSidebar"
-        style="position:fixed; top:0; right:-500px; width:460px; max-width:95vw; height:100vh; background:var(--color-surface); border-left:1px solid var(--color-border); z-index:9999; transition:right 0.6s cubic-bezier(0.19,1,0.22,1); display:flex; flex-direction:column; padding:3rem; box-sizing:border-box;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3rem;">
-            <h2 style="font-family:var(--font-heading); font-weight:400; font-size:1.8rem;">Your Collection</h2>
-            <button id="cartClose"
-                style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; opacity:0.6; transition:0.3s;"
-                onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">✕</button>
-        </div>
-        <div id="cartItemsContainer" style="flex:1; overflow-y:auto; scrollbar-width:thin;"></div>
-        <div style="border-top:1px solid var(--color-border); padding-top:2rem; margin-top:2rem;">
-            <div
-                style="display:flex; justify-content:space-between; margin-bottom:2rem; font-size:1.1rem; font-weight:600;">
-                <span>Total Investment</span>
-                <span id="cartTotal" style="color:var(--color-accent); font-family:var(--font-heading);">₹0</span>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for products, brands and more">
             </div>
-            <a href="checkout.html" class="btn-premium"
-                style="display:block; text-align:center; text-decoration:none;">⟶ &nbsp;Proceed to Checkout</a>
-        </div>
-    </div>
-    <div id="cartOverlay"
-        style="position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9998; opacity:0; pointer-events:none; transition:opacity 0.4s; backdrop-filter:blur(4px);">
-    </div>
 
-    <!-- CHAPTER 1: The Awakening (Hero) -->
-    <header class="hero" id="home">
-        <video class="hero-video-bg" autoplay loop muted playsinline>
-            <source
-                src="https://cdn.pixabay.com/vimeo/302830833/watch-19777.mp4?width=1280&hash=8c304245543c75908e08d6c703e33c87db5f5b5c"
-                type="video/mp4">
-        </video>
-        <div class="hero-content">
-            <h1 id="hero-headline">
-                <span class="h1-line" style="display:block;">
-                    <em class="h1-inner"
-                        style="display:block;font-style:italic;animation:heroLineIn 1.4s 0.2s cubic-bezier(0.19,1,0.22,1) both;">Time
-                        Isn't Measured.</em>
-                </span>
-                <span class="h1-line" style="display:block;">
-                    <em class="h1-inner"
-                        style="display:block;font-style:normal;animation:heroLineIn 1.4s 0.45s cubic-bezier(0.19,1,0.22,1) both;">It's
-                        Remembered.</em>
-                </span>
-            </h1>
-            <p class="hero-subtext">A collection of precision-engineered legacies, designed for the moments that define
-                who you are.</p>
-            <a href="#collections" class="btn-premium magnetic">Discover Your Time</a>
-        </div>
-        <!-- Scroll indicator -->
-        <div id="scroll-indicator"
-            style="position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.8rem;">
-            <span
-                style="font-size:0.6rem;letter-spacing:5px;text-transform:uppercase;color:rgba(0,212,255,0.6);font-family:'Space Grotesk',sans-serif;">Scroll</span>
-            <div
-                style="width:1px;height:60px;background:linear-gradient(to bottom,rgba(0,212,255,1),rgba(45,142,255,0.7),transparent);animation:scrollPulse 2s ease-in-out infinite;box-shadow:0 0 8px rgba(0,212,255,0.4);">
+            <div class="utility-icons">
+                <a href="login.html">
+                    <i class="far fa-user"></i>
+                    <span>Account</span>
+                </a>
+                <a href="#">
+                    <i class="far fa-heart"></i>
+                    <span>Wishlist</span>
+                </a>
+                <a href="#" id="cartToggle">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Cart (<span id="cartCount">0</span>)</span>
+                </a>
             </div>
         </div>
+
+        <nav class="nav-menu">
+            <a href="#">Men</a>
+            <a href="#">Women</a>
+            <a href="#">Kids</a>
+            <a href="#">Smart Watches</a>
+            <a href="#">Luxury</a>
+            <a href="#">Bestsellers</a>
+        </nav>
     </header>
 
-    <!-- MARQUEE RIBBON -->
-    <div id="marquee-section"
-        style="background:linear-gradient(90deg,#070F1E,#0C1829,#070F1E);border-top:1px solid rgba(45,142,255,0.15);border-bottom:1px solid rgba(45,142,255,0.15);padding:1.2rem 0;overflow:hidden;white-space:nowrap;">
-        <div class="marquee-track" style="display:inline-flex;gap:0;animation:marqueeScroll 20s linear infinite;">
-            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">HERITAGE</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">ENGINEERING</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">INNOVATION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">TIMELESS</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">HERITAGE</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">ENGINEERING</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">PRECISION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">INNOVATION</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-            <span class="marquee-item" style="color:#9ED8FF;">TIMELESS</span><span class="marquee-sep"
-                style="color:rgba(0,212,255,0.8);">&#9670;</span>
-        </div>
-    </div>
+    <main class="main-wrapper">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <h2>Filters</h2>
 
-    <!-- STATS BAR -->
-    <div id="stats-bar"
-        style="background:var(--color-surface);border-bottom:1px solid var(--color-border);position:relative;overflow:hidden;">
-        <!-- Electric blue accent line at top -->
-        <div
-            style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#2D8EFF,#00D4FF,#9ED8FF,#00D4FF,#2D8EFF,transparent);box-shadow:0 0 20px rgba(0,212,255,0.3);">
-        </div>
-        <div class="container"
-            style="display:grid;grid-template-columns:repeat(4,1fr);text-align:center;padding:5rem var(--gutter);">
-            <div class="stat-item reveal">
-                <div class="stat-num" data-target="100"
-                    style="font-family:var(--font-heading);font-size:clamp(3rem,6vw,5rem);color:var(--color-accent);">0
-                </div>
-                <div
-                    style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);margin-top:0.5rem;">
-                    Years of Heritage</div>
-            </div>
-            <div class="stat-item reveal">
-                <div class="stat-num" data-target="3000"
-                    style="font-family:var(--font-heading);font-size:clamp(3rem,6vw,5rem);color:var(--color-accent);">0
-                </div>
-                <div
-                    style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);margin-top:0.5rem;">
-                    Pieces Per Year</div>
-            </div>
-            <div class="stat-item reveal">
-                <div class="stat-num" data-target="48"
-                    style="font-family:var(--font-heading);font-size:clamp(3rem,6vw,5rem);color:var(--color-accent);">0
-                </div>
-                <div
-                    style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);margin-top:0.5rem;">
-                    References</div>
-            </div>
-            <div class="stat-item reveal">
-                <div class="stat-num" data-target="62"
-                    style="font-family:var(--font-heading);font-size:clamp(3rem,6vw,5rem);color:var(--color-accent);">0
-                </div>
-                <div
-                    style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--color-text-muted);margin-top:0.5rem;">
-                    Countries</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CHAPTER 2: The Lineage (Brand Story) -->
-    <section id="heritage" class="story-section">
-        <div class="container">
-            <div class="story-grid">
-                <div class="story-image reveal">
-                    <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1200&auto=format&fit=crop"
-                        alt="The Craftsmanship">
-                </div>
-                <div class="story-content reveal">
-                    <span class="story-tag">Our Heritage</span>
-                    <h2 class="story-title">Forged in the Silence of the Swiss Alps</h2>
-                    <p class="story-text">For three generations, Teyraa has been synonymous with the quiet pursuit of
-                        mechanical perfection. Every oscillator, every bridge, and every hand-polished escapement is a
-                        tribute to the pioneers who navigated by the stars.</p>
-                    <a href="#moments" class="btn-premium">The Legend Continues</a>
+            <div class="filter-section">
+                <h3>Category</h3>
+                <div class="filter-options">
+                    <label class="filter-item">
+                        <input type="checkbox" onclick="filterByDot('Heritage', this)"> Heritage
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" onclick="filterByDot('Chronograph', this)"> Chronograph
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" onclick="filterByDot('Complication', this)"> Complication
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" onclick="filterByDot('Minimalist', this)"> Minimalist
+                    </label>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- CHAPTER 3: The Volumes (Collections) -->
-    <section id="collections" style="background: var(--color-surface);">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 6rem;" class="reveal">
-                <span class="story-tag">Curated Chapters</span>
-                <h2 class="story-title">Explore the Volumes</h2>
-            </div>
-
-            <div class="collection-grid">
-                <!-- Chapter: Heritage -->
-                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Heritage', this)">
-                    <div class="chapter-image">
-                        <img src="https://images.unsplash.com/photo-1508685096489-7as5c7f139a1?q=80&w=800&auto=format&fit=crop"
-                            alt="Heritage Series">
-                    </div>
-                    <div class="chapter-info">
-                        <h3>Legacy Series</h3>
-                        <span>Heritage & Gold</span>
-                    </div>
-                </a>
-
-                <!-- Chapter: Modern -->
-                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Chronograph', this)">
-                    <div class="chapter-image">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
-                            alt="Modern Precision">
-                    </div>
-                    <div class="chapter-info">
-                        <h3>Modern Precision</h3>
-                        <span>Steel & Silver</span>
-                    </div>
-                </a>
-
-                <!-- Chapter: Sports -->
-                <a href="#collection-grid" class="chapter-card reveal" onclick="filterByDot('Complication', this)">
-                    <div class="chapter-image">
-                        <img src="https://images.unsplash.com/photo-1548171916-042bdc6b5ad7?q=80&w=800&auto=format&fit=crop"
-                            alt="Sports Chronos">
-                    </div>
-                    <div class="chapter-info">
-                        <h3>Grand Complications</h3>
-                        <span>Aerospace Titanium</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- CHAPTER 4: The Archive (Interaction Point) -->
-    <section id="collection-grid" style="padding-top: 5rem;">
-        <div class="container">
-            <div id="allProductsGrid" class="collection-grid">
-                <!-- Products dynamically loaded from Firestore -->
-            </div>
-        </div>
-    </section>
-
-    <!-- CHAPTER 5: The Moments (Lifestyle) -->
-    <section id="moments" style="background: var(--color-bg); padding: 0;">
-        <div class="container" style="max-width: 100%; padding: 0;">
-            <div style="display: flex; height: 80vh;">
-                <div class="reveal" style="flex: 1; position: relative; overflow: hidden;">
-                    <img src="https://images.unsplash.com/photo-1517502474097-f9b30659dadb?q=80&w=1200&auto=format&fit=crop"
-                        style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6);">
-                    <div style="position: absolute; bottom: 3rem; left: 3rem; max-width: 300px;">
-                        <span class="story-tag">Morning Ritual</span>
-                        <h3 style="font-family: var(--font-heading); font-size: 2rem;">The Precision of the First Light.
-                        </h3>
-                    </div>
-                </div>
-                <div class="reveal"
-                    style="flex: 1; position: relative; overflow: hidden; border-left: 1px solid var(--color-border);">
-                    <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?q=80&w=1200&auto=format&fit=crop"
-                        style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6);">
-                    <div style="position: absolute; bottom: 3rem; left: 3rem; max-width: 300px;">
-                        <span class="story-tag">Evening Legacy</span>
-                        <h3 style="font-family: var(--font-heading); font-size: 2rem;">A Toast to the Seconds that Last
-                            Forever.</h3>
-                    </div>
+            <div class="filter-section">
+                <h3>Price</h3>
+                <div class="filter-options">
+                    <label class="filter-item"><input type="checkbox"> Below ₹50,000</label>
+                    <label class="filter-item"><input type="checkbox"> ₹50,000 - ₹2,00,000</label>
+                    <label class="filter-item"><input type="checkbox"> ₹2,00,000 - ₹5,00,000</label>
+                    <label class="filter-item"><input type="checkbox"> Above ₹5,00,000</label>
                 </div>
             </div>
-        </div>
-    </section>
+        </aside>
 
-    <!-- CHAPTER 6: The Masterpiece (Makers) -->
-    <section id="makers" style="background: black;">
-        <div class="container">
-            <div class="story-grid">
-                <div class="story-content reveal">
-                    <span class="story-tag">The Hands Behind Time</span>
-                    <h2 class="story-title">"Precision is a Promise We Keep to the Future."</h2>
-                    <p class="story-text">— Marc-Aurèle, Master Watchmaker at Teyraa. With forty years of lineage in
-                        horology, our makers treat every component as a masterpiece in its own right.</p>
+        <!-- Product Listing Area -->
+        <section class="content-area">
+            <div class="grid-controls">
+                <div class="product-count">
+                    Showing <span id="displayedCount">0</span> masterpieces
                 </div>
-                <div class="story-image reveal">
-                    <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1200&auto=format&fit=crop"
-                        alt="The Mastermaker">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CHAPTER 7: The Legacy (Testimonials) -->
-    <section id="testimonials" style="background: var(--color-surface);">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 8rem;" class="reveal">
-                <span class="story-tag">Bespoke Relations</span>
-                <h2 class="story-title">Voices of the Legacy</h2>
+                <select class="sort-dropdown">
+                    <option value="bestseller">Best Sellers</option>
+                    <option value="new">New Arrivals</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
             </div>
 
-            <div class="collection-grid">
-                <div class="reveal"
-                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
-                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"Teyraa isn't
-                        just a watch; it's the heartbeat of my most precious family traditions. It witnessed my wedding
-                        and now stays with my son."</p>
-                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Arthur P.,
-                        London</span>
-                </div>
-                <div class="reveal"
-                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
-                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"The precision
-                        is breathtaking, but the soul is what captures you. It feels like wearing history on your
-                        wrist."</p>
-                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Elena V.,
-                        Milan</span>
-                </div>
-                <div class="reveal"
-                    style="background: rgba(255,255,255,0.02); padding: 3rem; border: 1px solid var(--color-border);">
-                    <p style="font-style: italic; margin-bottom: 2rem; color: var(--color-text-muted);">"From the board
-                        room to the base camp, my Chronograph Zero has never missed a second of the adventure."</p>
-                    <span style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">— Julian K.,
-                        Zurich</span>
-                </div>
+            <div id="allProductsGrid" class="product-grid">
+                <!-- Products dynamically loaded -->
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Footer: The Legacy -->
     <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <h2>Teyraa</h2>
-                    <p style="color: var(--color-text-muted); max-width: 300px;">Crafting horological legacies since
-                        1924. Every second is an invitation to greatness.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Collections</h4>
-                    <ul>
-                        <li><a href="#">The Heritage</a></li>
-                        <li><a href="#">The Modernist</a></li>
-                        <li><a href="#">The Chrono</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Boutique</h4>
-                    <ul>
-                        <li><a href="#">Our Story</a></li>
-                        <li><a href="#">The Archive</a></li>
-                        <li><a href="#">Concierge</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Prescence</h4>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                    </div>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Payment Options</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Encircle Program</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><a href="#">Store Locator</a></li>
+                    <li><a href="#">Customer Service</a></li>
+                    <li><a href="#">Help & Contact</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>About TEYRAA</h4>
+                <ul>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Makers</a></li>
+                    <li><a href="#">Innovation</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div style="display: flex; gap: 15px; margin-top: 10px;">
+                    <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
-            <div
-                style="margin-top: 6rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--color-text-muted); font-size: 0.75rem;">
-                <p>&copy; 2026 TEYRAA HOROLOGY. All Rights Reserved. Engineered for Eternity.</p>
-            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 TEYRAA HOROLOGY. All Rights Reserved. Designed for Eternity.
         </div>
     </footer>
 
-    <!-- Gold Cursor Glow -->
-    <!-- Custom cursor DISABLED -->
-    <!-- cursor-glow-outer, cursor-glow, cursor-bg-glow removed -->
-
-    <!-- Core Scripts -->
+    <!-- Firebase Config & Core Logic -->
     <script src="firebase-config.js"></script>
     <script src="products.js"></script>
     <script src="script.js"></script>

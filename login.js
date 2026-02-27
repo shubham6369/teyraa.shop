@@ -1,142 +1,57 @@
-// ===== LOGIN PAGE LOGIC =====
+/**
+ * TEYRAA - Auth Logic
+ */
 
-const loginTitle = document.getElementById('loginTitle');
-const loginSubtitle = document.getElementById('loginSubtitle');
-const tabEmail = document.getElementById('tabEmail');
-const tabPhone = document.getElementById('tabPhone');
-const emailSection = document.getElementById('emailSection');
-const phoneSection = document.getElementById('phoneSection');
-const emailLoginForm = document.getElementById('emailLoginForm');
-const signupForm = document.getElementById('signupForm');
-const toSignup = document.getElementById('toSignup');
-const toLogin = document.getElementById('toLogin');
+document.addEventListener('DOMContentLoaded', () => {
+    const authForm = document.getElementById('emailLoginForm');
+    const toggleBtn = document.getElementById('toggleAuth');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const nameGroup = document.getElementById('nameGroup');
+    const authBtn = document.getElementById('authBtn');
+    const switchText = document.getElementById('switchText');
 
-const phoneInputStep = document.getElementById('phoneInputStep');
-const otpInputStep = document.getElementById('otpInputStep');
+    let isLogin = true;
 
-let confirmationResult = null;
+    toggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        isLogin = !isLogin;
 
-// Initialize Recaptcha
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-    'size': 'normal',
-    'callback': (response) => {
-        console.log('reCAPTCHA solved');
-    }
-});
+        if (isLogin) {
+            authTitle.textContent = 'Welcome Back';
+            authSubtitle.textContent = 'Please enter your details to sign in.';
+            authBtn.textContent = 'Sign In';
+            switchText.textContent = "Don't have an account?";
+            toggleBtn.textContent = 'Create One';
+            nameGroup.style.display = 'none';
+        } else {
+            authTitle.textContent = 'Join the Legacy';
+            authSubtitle.textContent = 'Create an account to start your collection.';
+            authBtn.textContent = 'Create Account';
+            switchText.textContent = "Already have an account?";
+            toggleBtn.textContent = 'Sign In';
+            nameGroup.style.display = 'block';
+        }
+    });
 
-// Tab Switching
-tabEmail.addEventListener('click', () => {
-    tabEmail.classList.add('active');
-    tabPhone.classList.remove('active');
-    emailSection.style.display = 'block';
-    phoneSection.style.display = 'none';
-    loginTitle.textContent = 'Welcome Back';
-    loginSubtitle.textContent = 'Login to your account';
-});
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-tabPhone.addEventListener('click', () => {
-    tabPhone.classList.add('active');
-    tabEmail.classList.remove('active');
-    phoneSection.style.display = 'block';
-    emailSection.style.display = 'none';
-    loginTitle.textContent = 'Mobile Login';
-    loginSubtitle.textContent = 'Instant OTP verification';
-});
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
 
-// Switch between Email Login and Signup
-toSignup.addEventListener('click', (e) => {
-    e.preventDefault();
-    emailLoginForm.style.display = 'none';
-    signupForm.style.display = 'flex';
-    loginTitle.textContent = 'Create Account';
-    loginSubtitle.textContent = 'Join teyraa.shop family';
-});
-
-toLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    signupForm.style.display = 'none';
-    emailLoginForm.style.display = 'flex';
-    loginTitle.textContent = 'Welcome Back';
-    loginSubtitle.textContent = 'Login to your account';
-});
-
-// Handle Email Login
-emailLoginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        await auth.signInWithEmailAndPassword(email, password);
-        window.location.href = 'index.html';
-    } catch (error) {
-        alert(error.message);
-    }
-});
-
-// Handle Signup
-signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-
-    try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        await userCredential.user.updateProfile({ displayName: name });
-        window.location.href = 'index.html';
-    } catch (error) {
-        alert(error.message);
-    }
-});
-
-// Handle Send OTP
-document.getElementById('sendOTP').addEventListener('click', async () => {
-    const number = document.getElementById('phoneNumber').value;
-    if (number.length !== 10) {
-        alert("Please enter a valid 10-digit mobile number.");
-        return;
-    }
-
-    const fullNumber = "+91" + number;
-    const appVerifier = window.recaptchaVerifier;
-
-    try {
-        confirmationResult = await auth.signInWithPhoneNumber(fullNumber, appVerifier);
-        phoneInputStep.style.display = 'none';
-        otpInputStep.style.display = 'flex';
-    } catch (error) {
-        alert("Error: " + error.message);
-        if (window.grecaptcha) window.grecaptcha.reset();
-    }
-});
-
-// Handle Verify OTP
-document.getElementById('verifyOTP').addEventListener('click', async () => {
-    const code = document.getElementById('otpCode').value;
-    if (code.length !== 6) {
-        alert("Please enter the 6-digit code.");
-        return;
-    }
-
-    try {
-        await confirmationResult.confirm(code);
-        window.location.href = 'index.html';
-    } catch (error) {
-        alert("Invalid OTP code.");
-    }
-});
-
-// Resend OTP
-document.getElementById('resendOTP').addEventListener('click', () => {
-    otpInputStep.style.display = 'none';
-    phoneInputStep.style.display = 'flex';
-    if (window.grecaptcha) window.grecaptcha.reset();
-});
-
-// Check if already logged in
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        window.location.href = 'index.html';
-    }
+        try {
+            if (isLogin) {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                window.location.href = 'index.html';
+            } else {
+                const name = document.getElementById('signupName').value;
+                const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                await userCredential.user.updateProfile({ displayName: name });
+                window.location.href = 'index.html';
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    });
 });

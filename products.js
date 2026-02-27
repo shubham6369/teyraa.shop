@@ -8,28 +8,39 @@ let allProductsArchive = [];
 // --- CLOUD ARCHIVE CONNECTORS ---
 
 /**
- * Renders a single masterpiece card with storytelling focus
+ * Renders a single timepiece card in a clean, Titan-inspired layout
  */
 function createMasterpieceCard(product) {
     const salePrice = Number(product.salePrice) || 0;
+    const originalPrice = Number(product.originalPrice) || (salePrice * 1.2);
+    const discount = Math.round(((originalPrice - salePrice) / originalPrice) * 100);
 
     return `
-        <div class="chapter-card reveal">
-            <div class="chapter-image">
-                <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x500?text=The+Lost+Reference'">
-                <div style="position: absolute; bottom: 1rem; left: 1rem; z-index: 10;">
-                    <button onclick="addToCart('${product.id}', '${product.name}', ${salePrice}, '${product.image}', '${product.category}')" 
-                            style="background: white; color: black; border: none; padding: 0.6rem 1rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 2px;">
-                        Secure
-                    </button>
-                </div>
+        <div class="product-card" onclick="window.location.href='#'">
+            <div class="badge">BEST SELLER</div>
+            <div class="product-image-wrapper">
+                <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400?text=The+Lost+Piece'">
             </div>
-            <div class="chapter-info">
-                <h3>${product.name}</h3>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.65rem; opacity: 0.6;">${product.category}</span>
-                    <span style="font-weight: 600; font-variant-numeric: tabular-nums;">₹${salePrice.toLocaleString('en-IN')}</span>
+            <div class="product-info">
+                <div class="product-brand">TEYRAA | ${product.category}</div>
+                <h3 class="product-name">${product.name}</h3>
+                <div class="price-container">
+                    <span class="sale-price">₹${salePrice.toLocaleString('en-IN')}</span>
+                    <span class="original-price">₹${Math.round(originalPrice).toLocaleString('en-IN')}</span>
+                    <span class="discount">${discount}% OFF</span>
                 </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span class="count">(4.5)</span>
+                </div>
+                <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name}', ${salePrice}, '${product.image}', '${product.category}')" 
+                        style="margin-top: 15px; width: 100%; padding: 10px; background: var(--titan-black); color: white; border: none; font-size: 12px; font-weight: 600; text-transform: uppercase; cursor: pointer; border-radius: 4px;">
+                    Add to Cart
+                </button>
             </div>
         </div>
     `;
@@ -40,37 +51,54 @@ function createMasterpieceCard(product) {
  */
 function distributeMasterpieces(products) {
     const container = document.getElementById('allProductsGrid');
+    const countEl = document.getElementById('displayedCount');
+
     if (!container) return;
 
+    if (countEl) countEl.textContent = products.length;
+
     if (products.length === 0) {
-        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted); padding: 4rem;">The archive is currently silent. Re-aligning chronometers...</p>`;
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--titan-gray-text); padding: 4rem;">No pieces found in this collection. Try another filter.</p>`;
         return;
     }
 
     container.innerHTML = products.map(createMasterpieceCard).join('');
-
-    // Trigger reveals for newly added cards
-    setTimeout(() => {
-        const newReveals = container.querySelectorAll('.reveal');
-        newReveals.forEach(el => el.classList.add('active'));
-    }, 100);
 }
 
 /**
  * Utility: Filter by category dots or links
  */
+/**
+ * Utility: Filter by category dots or links
+ */
+let activeFilters = new Set();
 window.filterByDot = function (category, element) {
+    if (element && element.type === 'checkbox') {
+        if (element.checked) {
+            activeFilters.add(category);
+        } else {
+            activeFilters.delete(category);
+        }
+    } else {
+        // Legacy support for single links
+        activeFilters.clear();
+        if (category !== 'all') activeFilters.add(category);
+    }
+
     let filtered;
-    if (category === 'all') {
+    if (activeFilters.size === 0) {
         filtered = allProductsArchive;
     } else {
-        filtered = allProductsArchive.filter(p => (p.category || '').trim() === category);
+        filtered = allProductsArchive.filter(p => activeFilters.has(p.category || ''));
     }
+
     distributeMasterpieces(filtered);
 
     // Smooth scroll to display findings
-    const grid = document.getElementById('collection-grid');
-    if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+    const grid = document.getElementById('allProductsGrid');
+    if (grid && window.scrollY > grid.offsetTop) {
+        grid.scrollIntoView({ behavior: 'smooth' });
+    }
 };
 
 /**
