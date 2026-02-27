@@ -130,53 +130,94 @@ async function seedBoutique() {
         console.log('🏛️ TEYRAA HOROLOGY - Initializing Boutique Inventory...');
 
         const masterpieceSchema = [
+            // --- HERITAGE CATEGORY ---
             {
-                name: "Grand Royal Chronogram",
+                name: "Heritage Royal Oak",
+                category: "Heritage",
+                salePrice: 185000,
+                originalPrice: 210000,
+                image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa",
+                story: "A tribute to historical craftsmanship."
+            },
+            {
+                name: "Classic Sovereign Gold",
+                category: "Heritage",
+                salePrice: 95000,
+                originalPrice: 125000,
+                image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3",
+                story: "Timeless gold accents for the distinguished."
+            },
+
+            // --- CHRONOGRAPH CATEGORY ---
+            {
+                name: "Sky-Dweller Chrono",
                 category: "Chronograph",
                 salePrice: 145000,
-                originalPrice: 185000,
-                image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa",
-                story: "The absolute silence of mechanical perfection."
+                originalPrice: 175000,
+                image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7",
+                story: "Precision timing for high-altitude explorers."
             },
             {
-                name: "Stellar Galaxy Silver",
-                category: "Heritage",
-                salePrice: 85000,
-                originalPrice: 115000,
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-                story: "A tribute to the monarchs of old."
+                name: "Speedmaster Professional",
+                category: "Chronograph",
+                salePrice: 210000,
+                originalPrice: 250000,
+                image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7",
+                story: "The legendary pilot's companion."
             },
+
+            // --- COMPLICATION CATEGORY ---
             {
-                name: "Midnight Complication X",
+                name: "Celestial Moonphase X",
                 category: "Complication",
-                salePrice: 225000,
-                originalPrice: 280000,
-                image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ad5",
+                salePrice: 385000,
+                originalPrice: 450000,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
                 story: "Navigation by the stars, on your wrist."
             },
             {
-                name: "Minimalist Slate Pro",
-                category: "Minimalist",
-                salePrice: 42000,
-                originalPrice: 58000,
-                image: "https://images.unsplash.com/photo-1619134778706-7015533a6150",
-                story: "Transparency is the ultimate form of complexity."
-            },
-            {
-                name: "Majestic Gold Complication",
+                name: "Eternal Tourbillon Prime",
                 category: "Complication",
-                salePrice: 540000,
-                originalPrice: 650000,
-                image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7",
-                story: "Tracking time across the horizons of progress."
+                salePrice: 850000,
+                originalPrice: 1050000,
+                image: "https://images.unsplash.com/photo-1622434641406-a15812345ad1",
+                story: "Anti-gravity escapement for perfect accuracy."
+            },
+
+            // --- MINIMALIST CATEGORY ---
+            {
+                name: "Zenith Slimline White",
+                category: "Minimalist",
+                salePrice: 45000,
+                originalPrice: 65000,
+                image: "https://images.unsplash.com/photo-1508685096489-7as5c7f139a1",
+                story: "Pure elegance in its simplest form."
             },
             {
-                name: "Aero Precision Pro",
-                category: "Chronograph",
-                salePrice: 125000,
-                originalPrice: 150000,
-                image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7",
-                story: "Built for those who navigate the skies."
+                name: "Obsidian Matte Black",
+                category: "Minimalist",
+                salePrice: 38000,
+                originalPrice: 52000,
+                image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ad5",
+                story: "Modern reduction for the urban soul."
+            },
+
+            // --- LUXURY / LIMITED CATEGORY ---
+            {
+                name: "Imperial Emerald Edition",
+                category: "Complication",
+                salePrice: 1250000,
+                originalPrice: 1500000,
+                image: "https://images.unsplash.com/photo-1619134778706-7015533a6150",
+                story: "Rare stones and fine mechanical art."
+            },
+            {
+                name: "Noble Graphite Master",
+                category: "Heritage",
+                salePrice: 285000,
+                originalPrice: 340000,
+                image: "https://images.unsplash.com/photo-1549925245-df162985172a",
+                story: "Strong, silent, and exceptionally rare."
             }
         ];
 
