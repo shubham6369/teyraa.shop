@@ -1044,8 +1044,45 @@ async function seed100Watches() {
     loadProducts();
 }
 
+// ===== SYNC PREMIUM ASSETS =====
+async function syncPremiumAssets() {
+    showNotification("Syncing High-Resolution Assets...", "warning");
+
+    const updates = [
+        { name: "Sovereign Precision 81", image: "images/sovereign_precision_81.png" },
+        { name: "Stellar Legacy 22", image: "images/stellar_legacy_22.png" },
+        { name: "Majestic Precision 64", image: "images/majestic_precision_64.png" }
+    ];
+
+    try {
+        const snapshot = await productsCollection.get();
+        let updatedCount = 0;
+
+        for (const doc of snapshot.docs) {
+            const product = doc.data();
+            const match = updates.find(u => product.name.includes(u.name));
+
+            if (match) {
+                await productsCollection.doc(doc.id).update({ image: match.image });
+                updatedCount++;
+            }
+        }
+
+        if (updatedCount > 0) {
+            showNotification(`Synchronized ${updatedCount} premium assets!`, "success");
+            loadProducts();
+        } else {
+            showNotification("No matching timepieces found to update.", "info");
+        }
+    } catch (error) {
+        console.error("Asset Sync Error:", error);
+        showNotification("Failed to synchronize assets.", "error");
+    }
+}
+
 // Attach to window for the hidden action
 window.seed100Watches = seed100Watches;
+window.syncPremiumAssets = syncPremiumAssets;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
