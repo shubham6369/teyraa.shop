@@ -1,0 +1,29 @@
+commit a4b9712534148c6129cb40b4534d9fa64733b1bb
+Author: shubham6369 <shubham@example.com>
+Date:   Fri Feb 27 03:08:33 2026 +0530
+
+    Beautify checkout page and sync product categories
+
+commit 0efab6605463f2e2cee35c21e4a2a241a283a41f
+Author: shubham6369 <shubham@example.com>
+Date:   Fri Feb 27 02:59:13 2026 +0530
+
+    Fix admin login auth deadlock and enhance login aesthetics
+
+commit 9022a89b92753a1cc89ea3cb3d607e9738fc202d
+Author: shubham6369 <shubham@example.com>
+Date:   Thu Feb 26 02:34:59 2026 +0530
+
+    fix: make nav static — scrolls with page, no longer floats over content
+
+commit 50fde7461cf9e57b86084224e018d9f3f7d2d58e
+Author: shubham6369 <shubham@example.com>
+Date:   Thu Feb 26 02:31:25 2026 +0530
+
+    theme: Arctic Blueprint — absolute midnight + electric blue #2D8EFF + vivid cyan #00D4FF, Syne + Space Grotesk fonts, neon glow loader, blue grid, electric pulse button
+
+commit f083c3249161f86c73ac8ede75cbdfca6679da4b
+Author: shubham6369 <shubham@example.com>
+Date:   Thu Feb 26 02:26:38 2026 +0530
+
+    theme: Emerald Maison — forest black + champagne gold + vivid emerald green, Outfit font, gold/emerald gradient loader, marquee, stats bar accent

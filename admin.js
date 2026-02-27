@@ -320,7 +320,7 @@ async function loadProducts(filter = 'all', search = '') {
     filteredProducts.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><img src="${product.image}" alt="${product.name}" class="product-image-cell"></td>
+            <td><img src="${product.image}" alt="${product.name}" class="product-image-cell" onerror="this.src='https://via.placeholder.com/150?text=Premium+Piece'"></td>
             <td class="product-name">${product.name}</td>
             <td><span class="category-badge">${product.category}</span></td>
             <td class="price">₹${product.salePrice.toLocaleString()}</td>
