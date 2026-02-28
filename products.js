@@ -218,6 +218,47 @@ async function seedBoutique() {
                 originalPrice: 340000,
                 image: "https://images.unsplash.com/photo-1549925245-df162985172a",
                 story: "Strong, silent, and exceptionally rare."
+            },
+            // --- BRAND NEW ADDITIONS ---
+            {
+                name: "Titan Edge Ceramic",
+                category: "Minimalist",
+                salePrice: 22000,
+                originalPrice: 26000,
+                image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d",
+                story: "The slimmest ceramic watch in the universe."
+            },
+            {
+                name: "Seiko Presage Cocktail",
+                category: "Heritage",
+                salePrice: 45000,
+                originalPrice: 55000,
+                image: "https://images.unsplash.com/photo-1508685096489-7as5c7f139a1",
+                story: "Inspired by the glamor of the cocktail bar."
+            },
+            {
+                name: "Tag Heuer Carrera",
+                category: "Chronograph",
+                salePrice: 320000,
+                originalPrice: 380000,
+                image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7",
+                story: "Born on the race track."
+            },
+            {
+                name: "Patek Philippe Nautilus",
+                category: "Complication",
+                salePrice: 4500000,
+                originalPrice: 5000000,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+                story: "The epitome of elegant sports watches."
+            },
+            {
+                name: "Cartier Tank Must",
+                category: "Minimalist",
+                salePrice: 280000,
+                originalPrice: 310000,
+                image: "https://images.unsplash.com/photo-1619134778706-7015533a6150",
+                story: "A design classic that never ages."
             }
         ];
 
@@ -229,6 +270,32 @@ async function seedBoutique() {
         }
     }
 }
+
+/**
+ * Utility: Force seed the boutique with the above watches (can be called from console)
+ */
+window.forceSeedWatches = async function () {
+    console.log('🏛️ TEYRAA HOROLOGY - Force Seeding Boutique Inventory...');
+    // We recreate the schema here to ensure it uses the latest
+    const masterpieceSchema = [
+        { name: "Titan Edge Ceramic", category: "Minimalist", salePrice: 22000, originalPrice: 26000, image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d", story: "The slimmest ceramic watch." },
+        { name: "Seiko Presage Cocktail", category: "Heritage", salePrice: 45000, originalPrice: 55000, image: "https://images.unsplash.com/photo-1508685096489-7as5c7f139a1", story: "Cocktail bar inspired." },
+        { name: "Tag Heuer Carrera", category: "Chronograph", salePrice: 320000, originalPrice: 380000, image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7", story: "Born on the race track." },
+        { name: "Casio G-Shock Mudmaster", category: "Chronograph", salePrice: 28000, originalPrice: 35000, image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7", story: "Built for the toughest environments." },
+        { name: "Rolex Submariner Date", category: "Heritage", salePrice: 1250000, originalPrice: 1500000, image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa", story: "The reference among divers' watches." },
+        { name: "Omega Seamaster Aqua Terra", category: "Minimalist", salePrice: 520000, originalPrice: 600000, image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ad5", story: "A tribute to maritime heritage." },
+        { name: "Tissot PRX Powermatic 80", category: "Minimalist", salePrice: 65000, originalPrice: 75000, image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3", story: "Retro-cool design meets modern mechanics." },
+        { name: "Breitling Navitimer", category: "Complication", salePrice: 750000, originalPrice: 850000, image: "https://images.unsplash.com/photo-1549925245-df162985172a", story: "The ultimate aviation chronograph." }
+    ];
+
+    for (const item of masterpieceSchema) {
+        await productsCollection.add({
+            ...item,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    }
+    console.log('✅ Added a new list of watches to the store!');
+};
 
 // --- INITIALIZATION ---
 

@@ -1044,6 +1044,35 @@ async function seed100Watches() {
     loadProducts();
 }
 
+// ===== FORCE SEED SPECIFIC WATCHES =====
+async function forceSeedWatches() {
+    showNotification("Adding new list of premium watches...", "warning");
+
+    const masterpieceSchema = [
+        { name: "Titan Edge Ceramic", category: "Minimalist", salePrice: 22000, originalPrice: 26000, image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d", story: "The slimmest ceramic watch.", rating: 5 },
+        { name: "Seiko Presage Cocktail", category: "Heritage", salePrice: 45000, originalPrice: 55000, image: "https://images.unsplash.com/photo-1508685096489-7as5c7f139a1", story: "Cocktail bar inspired.", rating: 5 },
+        { name: "Tag Heuer Carrera", category: "Chronograph", salePrice: 320000, originalPrice: 380000, image: "https://images.unsplash.com/photo-1548171916-042bdc6b5ad7", story: "Born on the race track.", rating: 5 },
+        { name: "Casio G-Shock Mudmaster", category: "Chronograph", salePrice: 28000, originalPrice: 35000, image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7", story: "Built for the toughest environments.", rating: 5 },
+        { name: "Rolex Submariner Date", category: "Heritage", salePrice: 1250000, originalPrice: 1500000, image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa", story: "The reference among divers' watches.", rating: 5 },
+        { name: "Omega Seamaster Aqua Terra", category: "Minimalist", salePrice: 520000, originalPrice: 600000, image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ad5", story: "A tribute to maritime heritage.", rating: 5 },
+        { name: "Tissot PRX Powermatic 80", category: "Minimalist", salePrice: 65000, originalPrice: 75000, image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3", story: "Retro-cool design meets modern mechanics.", rating: 4 },
+        { name: "Breitling Navitimer", category: "Complication", salePrice: 750000, originalPrice: 850000, image: "https://images.unsplash.com/photo-1549925245-df162985172a", story: "The ultimate aviation chronograph.", rating: 5 }
+    ];
+
+    let count = 0;
+    for (const item of masterpieceSchema) {
+        await productsCollection.add({
+            ...item,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        count++;
+    }
+
+    showNotification(`Successfully added ${count} new timepieces!`, "success");
+    loadProducts();
+}
+
 // ===== SYNC PREMIUM ASSETS =====
 async function syncPremiumAssets() {
     showNotification("Syncing High-Resolution Assets...", "warning");
@@ -1082,6 +1111,7 @@ async function syncPremiumAssets() {
 
 // Attach to window for the hidden action
 window.seed100Watches = seed100Watches;
+window.forceSeedWatches = forceSeedWatches;
 window.syncPremiumAssets = syncPremiumAssets;
 
 // Initialize on load
