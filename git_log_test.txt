@@ -1,1 +1,5 @@
-8db8ac4 Complete rebranding to teyraa.shop
+commit 2c80572f99398c9cad7bc429d22b0790b422ea2b
+Author: shubham6369 <shubham@example.com>
+Date:   Sun Mar 1 00:42:05 2026 +0530
+
+    add a list of watches in store

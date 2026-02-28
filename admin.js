@@ -992,9 +992,9 @@ async function cleanupLegacyProducts() {
     }
 }
 
-// ===== SEEDING 100 LUXURY WATCHES =====
-async function seed100Watches() {
-    if (!confirm('Are you sure you want to add 100 luxury watches to the database? This will significantly expand your inventory.')) return;
+// ===== SEEDING 50 LUXURY WATCHES =====
+async function seed50Watches() {
+    if (!confirm('Are you sure you want to add 50 luxury watches to the database? This will significantly expand your inventory.')) return;
 
     showNotification("Initializing Master Inventory...", "warning");
 
@@ -1015,7 +1015,7 @@ async function seed100Watches() {
     ];
 
     let count = 0;
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
         const prefix = watchPrefixes[Math.floor(Math.random() * watchPrefixes.length)];
         const suffix = watchSuffixes[Math.floor(Math.random() * watchSuffixes.length)];
         const category = watchCategories[Math.floor(Math.random() * watchCategories.length)];
@@ -1037,10 +1037,10 @@ async function seed100Watches() {
 
         await productsCollection.add(productData);
         count++;
-        if (count % 20 === 0) console.log(`Seeded ${count} watches...`);
+        if (count % 10 === 0) console.log(`Seeded ${count} watches...`);
     }
 
-    showNotification(`Successfully seeded 100 luxury timepieces!`, "success");
+    showNotification(`Successfully seeded 50 luxury timepieces!`, "success");
     loadProducts();
 }
 
@@ -1110,7 +1110,7 @@ async function syncPremiumAssets() {
 }
 
 // Attach to window for the hidden action
-window.seed100Watches = seed100Watches;
+window.seed50Watches = seed50Watches;
 window.forceSeedWatches = forceSeedWatches;
 window.syncPremiumAssets = syncPremiumAssets;
 
